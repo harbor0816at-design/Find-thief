@@ -56,7 +56,7 @@ module.exports=async function handler(req,res){
      const occurrence=take(p.occurred_on,10)||null,publication=take(p.source_published_on,10)||null;
      const validDate=v=>v===null||(/^\d{4}-\d{2}-\d{2}$/.test(v)&&!Number.isNaN(Date.parse(v))&&new Date(v).toISOString().slice(0,10)===v&&v<=new Date().toISOString().slice(0,10));
      const privatePattern=/[\w.+-]+@[\w-]+\.[\w.-]+|(?:\+?\d[\d\s-]{9,}\d)/;
-     if(country.length<2||city.length<1||title.length<2||summary.length<5||note.length<5||!allowedSources.includes(source_type)||!allowedEvents.includes(event_kind)||item&&!items.includes(item)||!validDate(occurrence)||!validDate(publication)||privatePattern.test([spot_name,title,summary,note].join(' ')))return res.status(400).json({error:'请检查来源、时间、事件描述，且不要包含任何个人联系方式'});
+     if(country.length<2||city.length<1||title.length<2||summary.length<5||note.length<5||!allowedSources.includes(source_type)||!allowedEvents.includes(event_kind)||item&&!items.includes(item)||!validDate(occurrence)||!validDate(publication)||(!occurrence&&!publication)||(event_kind==='confirmed_theft'&&source_type!=='official_case')||privatePattern.test([spot_name,title,summary,note].join(' ')))return res.status(400).json({error:'请检查来源、时间、事件描述，且不要包含任何个人联系方式'});
      // No automatic publication; coordinates are optional and rounded to approximate grid precision.
      const lat=p.lat==null||p.lat===''?null:Number(p.lat),lon=p.lon==null||p.lon===''?null:Number(p.lon);
      if((lat===null)!==(lon===null)||lat!==null&&(!Number.isFinite(lat)||!Number.isFinite(lon)||Math.abs(lat)>90||Math.abs(lon)>180))return res.status(400).json({error:'坐标无效'});
@@ -75,6 +75,11 @@ module.exports=async function handler(req,res){
    if(p.kind==='event_v2'){
      if(!UUID.test(String(p.id||''))||!['approved','rejected'].includes(p.status))return res.status(400).json({error:'事件审核参数无效'});
      if(p.status==='approved'&&p.confirm_source!==true)return res.status(400).json({error:'请先人工核对来源原文及案发地点和日期'});
+     if(p.status==='approved'){
+       const staged=await db(c,'evidence_events_v2?id=eq.'+p.id+'&review_status=eq.staging&select=id,event_kind,source_published_on,occurred_on&limit=1');
+       if(!staged.length)return res.status(409).json({error:'事件不存在或已经处理'});
+       if(staged[0].event_kind==='safety_mention'||(!staged[0].source_published_on&&!staged[0].occurred_on))return res.status(400).json({error:'一般安全提醒不得当作具体盗窃案件发布；必须有真实事件及可核查日期'});
+     }
      const edits={review_status:p.status,reviewed_at:new Date().toISOString(),reviewed_by:identity.user.email};
      const updated=await db(c,'evidence_events_v2?id=eq.'+p.id+'&review_status=eq.staging&select=id',{method:'PATCH',headers:{Prefer:'return=representation'},body:JSON.stringify(edits)});
      if(!updated.length)return res.status(409).json({error:'事件已处理，请刷新'});
