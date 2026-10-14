@@ -50,6 +50,7 @@ module.exports=async function handler(req,res){
   try{
     const report={country,city,address_private:address,description_private:description,occurred_on:date,category:type,lat_private:lat,lon_private:lon,status:'pending',consent_at:new Date().toISOString(),submission_fingerprint:fingerprint(req),submission_bucket:Math.floor(Date.now()/600000)};
     const rows=await query(c,'loss_reports?select=id',{method:'POST',headers:{...jsonHeader,Prefer:'return=representation'},body:JSON.stringify(report)});
+    try{await fetch(c.u+'/rest/v1/rpc/count_site_metric',{method:'POST',headers:{apikey:c.k,...(c.k.startsWith('sb_secret_')?{}:{Authorization:'Bearer '+c.k}),'Content-Type':'application/json'},body:JSON.stringify({event_name:'report_received',event_city:city}),signal:AbortSignal.timeout(2200)})}catch{/* reporting succeeds even if metrics fail */}
     return res.status(201).json({status:'pending',receipt:rows[0]?.id||null,message:'已收到，待人工审核；不会立即公开'});
   }catch(e){
     if(e.code==='23505')return res.status(429).json({error:'同一设备近期已提交，请十分钟后再试'});

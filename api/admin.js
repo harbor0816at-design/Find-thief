@@ -33,7 +33,12 @@ module.exports=async function handler(req,res){
  try{
    if(req.method==='GET'){
      const rows=await db(c,'loss_reports?select=id,country,city,address_private,lat_private,lon_private,occurred_on,category,description_private,status,created_at,public_summary,reviewed_at,reviewed_by&order=created_at.desc&limit=100');
-     return res.status(200).json({rows,counts:{pending:rows.filter(x=>x.status==='pending').length,approved:rows.filter(x=>x.status==='approved').length,rejected:rows.filter(x=>x.status==='rejected').length},note:'显示最近100条，统计为当前页面'});
+     const since=new Date(Date.now()-30*86400000).toISOString().slice(0,10);
+     let metrics=[],areas=[],leads=[];try{metrics=await db(c,'site_metrics_daily?select=day,metric,city,total&day=gte.'+since+'&limit=5000');areas=await db(c,'evidence_areas?status=eq.published&select=id&limit=500');leads=await db(c,'source_leads?status=eq.needs_review&select=id&limit=500');}catch{/* fails closed for metrics; still permit reviewing reports */}
+     const totals={};const cities={};
+     for(const x of metrics){totals[x.metric]=(totals[x.metric]||0)+Number(x.total||0);if(x.metric==='area_open'&&x.city)cities[x.city]=(cities[x.city]||0)+Number(x.total||0)}
+     const top=Object.entries(cities).sort((a,b)=>b[1]-a[1]).slice(0,10).map(([city,count])=>({city,count}));
+     return res.status(200).json({rows,counts:{pending:rows.filter(x=>x.status==='pending').length,approved:rows.filter(x=>x.status==='approved').length,rejected:rows.filter(x=>x.status==='rejected').length},analytics:{totals,cities:top,publishedAreas:areas.length,waitingLeads:leads.length},note:'报告最近100条，网站指标近30天为匿名聚合次数、可受机器人影响'});
    }
    const p=req.body&&typeof req.body==='object'&&!Array.isArray(req.body)?req.body:{};
    if(!UUID.test(String(p.id||''))||!['approved','rejected'].includes(p.status))return res.status(400).json({error:'审核参数无效'});
