@@ -4,7 +4,7 @@ Free public Home Office data (OGL v3). No login, proxies, personal records, or A
 Uses public documented police.uk endpoints, not commercial/scraped social sites.
 Never outputs point-level incidents: aggregates to approx 0.01-degree cells.
 """
-import datetime as dt, hashlib, json, sys, time, urllib.error, urllib.parse, urllib.request
+import calendar, datetime as dt, hashlib, json, sys, time, urllib.error, urllib.parse, urllib.request
 from collections import defaultdict
 from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
@@ -90,7 +90,7 @@ def main():
             "source_url":"https://data.police.uk/data/",
             "license_note":"UK Open Government Licence v3.0; Contains public sector information licensed under the Open Government Licence v3.0.",
             "period_start":seen[0]+"-01",
-            "period_end":(dt.date(int(seen[-1][:4]),int(seen[-1][5:]),1).replace(day=28)).isoformat(),
+            "period_end":dt.date(int(seen[-1][:4]),int(seen[-1][5:]),calendar.monthrange(int(seen[-1][:4]),int(seen[-1][5:]))[1]).isoformat(),
             "evidence_count":g["count"],
             "method_note":"伦敦警方Theft from the person月度公开数据；对匿名化原始位置按0.01度约1公里网格汇总，去除重叠查询重复记录。记录次数不等于扒窃事件数、个人遇窃概率或真实风险等级。",
             "status":"staging","evidence_verified_at":None
