@@ -170,7 +170,22 @@ async function submit(e){e.preventDefault();if(!reportEnabled){$('reportFeedback
 async function boot(){try{const r=await fetch('/cities.json');const data=await r.json();cities=Array.isArray(data)?data:(Array.isArray(data.cities)?data.cities:[]);fillCountries();fillCities('citySelect');setReportCities();setReportSpots();const hash=decodeURIComponent(location.hash.slice(1));if(hash.startsWith('city=')){const name=hash.slice(5);const c=cities.find(x=>x.name===name);if(c){$('countrySelect').value=c.country;fillCities('citySelect',c.country);$('citySelect').value=String(c.id);selected=c}}}catch(err){$('zoneCards').innerHTML='<div class="empty">城市目录暂时加载失败，请稍后重试。</div>'}
 initMap();if(selected)focus(selected);else {const london=cities.find(c=>c.name==='伦敦');if(london){$('countrySelect').value=london.country;fillCities('citySelect',london.country);$('citySelect').value=String(london.id);focus(london)}else renderCards()}loadEvidence();loadConfig();track('page_view');
 $('btnExplore').onclick=()=>button('explore');$('btnReport').onclick=()=>button('report');$('guideTrigger').onclick=()=>showGuide();$('guideBottom').onclick=()=>showGuide();$('howRisk').onclick=()=>showGuide(true);$('guideOK').onclick=$('closeGuide').onclick=()=>$('guideModal').close();$('guideModal').addEventListener('click',e=>{if(e.target===$('guideModal'))$('guideModal').close()});
-$('citySearch').addEventListener('input',()=>{clearTimeout(searchTimeout);searchTimeout=setTimeout(()=>{fillCities('citySelect',$('countrySelect').value,$('citySearch').value.trim());const term=$('citySearch').value.trim().toLowerCase();if(term){const city=cities.find(x=>x.name.toLowerCase()===term||englishAliases[x.name]?.toLowerCase()===term);if(city)selected=city;else if(selected&&!cityText(selected).includes(term))selected=null;}showAllZones=false;renderCards();if(term)track('search')},420)});
+$('citySearch').addEventListener('input',()=>{clearTimeout(searchTimeout);searchTimeout=setTimeout(()=>{
+ const term=$('citySearch').value.trim().toLowerCase();
+ fillCities('citySelect',$('countrySelect').value,term);
+ if(term){
+  const city=cities.find(x=>x.name.toLowerCase()===term||englishAliases[x.name]?.toLowerCase()===term||
+    (x.sights||[]).some(spot=>spot.toLowerCase().includes(term)));
+  if(city){
+   selected=city;$('countrySelect').value=city.country;fillCities('citySelect',city.country,term);$('citySelect').value=String(city.id);
+   const place=(city.sights||[]).find(x=>x.toLowerCase().includes(term));
+   const pt=place&&city.located?.[place];
+   if(map)map.flyTo(pt||[city.lat,city.lon],pt?14:12);
+   $('mapPlace').textContent=place?city.name+' · '+place+'（景点位置，不代表案发点）':city.name;
+  }else if(selected&&!cityText(selected).includes(term))selected=null;
+ }
+ showAllZones=false;renderCards();if(term)track('search');
+},420)});
 $('countrySelect').onchange=()=>{showAllZones=false;fillCities('citySelect',$('countrySelect').value,$('citySearch').value.trim());selected=null;renderCards()};$('citySelect').onchange=()=>{const c=findCity();if(c){showAllZones=false;focus(c);history.replaceState(null,'','#city='+encodeURIComponent(c.name))}else{selected=null;renderCards()}};
 $('resetMap').onclick=()=>{selected=null;$('citySearch').value='';$('countrySelect').value='';fillCities('citySelect');map?.setView([47,12],5);$('mapPlace').textContent='欧洲 · 风险证据地图';renderCards()};$('useDrag').onclick=()=>{dragEnabled=!dragEnabled;if(map){dragEnabled?map.dragging.enable():map.dragging.disable()}$('map').classList.toggle('map-scroll',!dragEnabled);$('useDrag').textContent='地图拖动：'+(dragEnabled?'开':'关')};
 $('reportCountry').onchange=()=>{setReportCities();setReportSpots()};$('reportCity').onchange=setReportSpots;$('reportDate').max=new Date().toISOString().slice(0,10);$('reportDate').value=$('reportDate').max;
