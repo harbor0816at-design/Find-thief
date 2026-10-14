@@ -2,3 +2,74 @@
 @media(max-width:900px){.top{flex-wrap:wrap;gap:12px}.top nav{order:3;width:100%;display:grid;grid-template-columns:1fr 1fr}.navbtn{font-size:13px;padding:12px 7px}.main-layout{grid-template-columns:1fr}.intro{align-items:flex-start;flex-wrap:wrap}.map-panel{order:1}.controls{order:0}.mini-stats div{min-width:94px}#map{height:440px}.guide-panel{margin:20px}.top .help-link{margin-left:auto}}
 @media(max-width:600px){.top{padding:12px 16px}.intro{padding:25px 18px 16px}.intro h1{font-size:25px}.mini-stats{width:100%}.mini-stats div{flex:1;min-width:0;padding:10px}.mini-stats b{font-size:20px}.main-layout{padding:0 12px;gap:12px}.controls{padding:18px 14px}.map-panel{border-radius:12px}.map-top{flex-wrap:wrap}.map-tools button{padding:9px 8px}.report-section{padding:0 12px 18px}.report-wrap{padding:20px 15px}.two-col{grid-template-columns:1fr;gap:0}#map{height:350px;touch-action:none}.map-bottom{align-items:flex-start}.guide-panel{margin:18px 12px;padding:18px;align-items:flex-start;flex-direction:column}footer{padding:18px 15px;margin-top:12px}.brand b{font-size:18px}.source-note{font-size:12px}}
 .guidance-sect{display:grid;gap:10px;margin-top:21px}.guidance-title{font-size:15px;font-weight:800;margin:3px 0;color:#174e52}.advice-card{border:1px solid #d8e6eb;border-left:4px solid #427c9e;border-radius:11px;padding:13px;background:#f8fbfd}.advice-card h3{font-size:14px;margin:6px 0}.advice-card p{font-size:12px;line-height:1.7;margin:7px 0;color:#3e565e}.advice-tag{font-size:11px;color:#1c617a;background:#e9f2fa;padding:4px 7px;border-radius:5px}.advice-stat{font-weight:800;font-size:18px;color:#244e60}.advice-card .qualify{color:#8a6560}.spot-item-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px}.spot-item{border:1px solid #deebe7;padding:11px;border-radius:10px;background:white;font-size:12px;line-height:1.7}.spot-item b{display:block}.spot-item small{color:#6f8c85}.spot-item button{background:none;color:#078177;font-weight:700;padding:5px 0;border:0;text-decoration:underline}.advice-card .linkbtn{float:right}@media(max-width:420px){.spot-item-grid{grid-template-columns:1fr}}[hidden]{display:none!important}
+
+/* V2 map workspace: outer viewport never scrolls, information panel scrolls independently. */
+html,body{height:100%;max-height:100%;overflow:hidden!important;overscroll-behavior:none}
+body{display:flex;flex-direction:column;height:100vh;height:100dvh;min-height:0}
+.top{flex:0 0 auto;min-height:62px;padding-block:9px}
+main{flex:1 1 auto;display:flex;flex-direction:column;min-height:0;overflow:hidden;width:100%}
+.intro{width:100%;max-width:1460px;flex:0 0 auto;padding:8px 25px 10px;gap:8px}
+.intro h1{font-size:22px;margin:1px 0 3px}.intro p{font-size:12px}.eyebrow{font-size:11px}
+.mini-stats div{padding:6px 10px;min-width:86px}.mini-stats b{font-size:16px}.mini-stats span{font-size:10px}
+.main-layout{flex:1 1 auto;width:100%;height:100%;min-height:0;margin:0 auto;align-items:stretch;overflow:hidden;padding:0 18px 12px}
+.controls{display:flex;flex-direction:column;padding:0;min-height:0;overflow:hidden;height:100%}
+.filter-header{flex:0 0 auto;padding:16px 16px 11px;border-bottom:1px solid var(--line);background:white}
+.filter-header .headrow h2{font-size:19px}.filter-header .headrow p{margin-bottom:9px}
+.filter-header .rowinput{margin:7px 0 7px}.filter-header .explain{padding:8px 10px;font-size:11px;line-height:1.45}
+.filter-header .explain p{margin:2px 0}.filter-header input,.filter-header select{padding:9px 10px}
+.quick-cities{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;margin-top:10px}
+.quick-cities button{background:#ecf7f2;border:1px solid #d3e5dd;border-radius:20px;color:#24685f;font-size:11px;padding:6px 10px;white-space:nowrap}
+.quick-cities button.active{background:#087b70;color:white;border-color:#087b70}
+.panel-scroll{flex:1 1 auto;min-height:0;overflow-y:auto;overscroll-behavior:contain;touch-action:pan-y;padding:6px 15px 22px;scrollbar-gutter:stable}
+.panel-scroll .zone-head{margin:11px 0 8px}
+.zone-card{padding:10px 11px}.zone-card b{font-size:13px}.zone-card .tiny{margin-top:4px;font-size:11px}
+.v2-essential{display:flex;gap:10px;flex-wrap:wrap;color:#50686b;font-size:11px;margin:6px 0}
+.v2-essential strong{color:#214c52}
+.v2-headline{font-size:13px;line-height:1.5;color:#153f45;margin-top:6px}
+.v2-record-summary{font-size:12px;color:#405f62}
+.v2-cards-count{font-size:11px;color:#7c8f90;padding:7px}
+.v2-details{font-size:11px;color:#577479;margin-top:8px}
+.v2-details summary,.legal-note summary{color:#087b70;font-weight:700;cursor:pointer}
+.v2-details p{margin:6px 0}
+.legal-note{font-size:11px;color:#6b8080;margin-top:18px;line-height:1.7}
+.legal-note p{margin:8px 0}
+.guidance-sect{margin-top:12px;gap:8px}
+.advice-card{padding:10px 12px}.advice-card summary{cursor:pointer;list-style:none}
+.advice-card summary::-webkit-details-marker{display:none}
+.advice-card summary:after{content:"展开";color:#087b70;float:right;font-size:11px}
+.advice-card[open] summary:after{content:"收起"}
+.advice-card h3{margin:4px 0;font-size:13px}.advice-card p{margin:5px 0}
+.map-panel{height:100%;min-height:0;display:flex;flex-direction:column}
+.map-top,.map-bottom{flex:0 0 auto;padding:7px 11px;min-height:36px}
+.map-top{font-size:12px}.map-bottom{font-size:10px;min-height:31px}
+#map{flex:1 1 auto;min-height:0;width:100%;height:auto!important;touch-action:none}
+#map.map-scroll .leaflet-pane{pointer-events:auto!important}
+.report-section{flex:1;min-height:0;overflow-y:auto;overscroll-behavior:contain;width:100%;max-width:1100px;padding-top:5px}
+.guide-panel,footer{display:none}
+@media(max-width:900px){
+ .top{padding:8px 13px;gap:7px;min-height:0}
+ .top nav{gap:6px}.navbtn{padding:8px 6px;font-size:12px}
+ .intro{padding:7px 12px;gap:5px}.intro h1{font-size:17px}
+ .intro p{font-size:10px}.intro .eyebrow{display:none}
+ .intro .mini-stats{gap:4px}.intro .mini-stats div{padding:4px 5px;min-width:55px}
+ .intro .mini-stats b{font-size:13px}.intro .mini-stats span{font-size:9px}
+ .main-layout{grid-template-columns:1fr;grid-template-rows:minmax(0, 1fr) minmax(190px, 42%);gap:8px;padding:0 10px 9px}
+ .controls{order:1;min-height:0}.map-panel{order:2;min-height:0}
+ .filter-header{padding:10px 12px 8px}.filter-header .headrow h2{font-size:17px}
+ .filter-header .headrow p{display:none}.filter-header .rowinput{margin:6px 0}
+ .filter-header .explain{display:none}
+ .filter-header .quick-cities{margin-top:7px}
+ .panel-scroll{padding:5px 11px 16px}
+ .map-top{flex-wrap:nowrap}.map-bottom{min-height:24px}
+ .map-bottom span:last-child{display:none}
+}
+@media(max-width:600px){
+ .top{padding:6px 11px}.top .brand small{display:none}
+ .top .brand b{font-size:15px}.top nav{order:3}
+ .intro .mini-stats{display:none}
+ .main-layout{grid-template-rows:minmax(0, 1fr) minmax(190px, 41%);padding:0 8px 8px;gap:7px}
+ .filter-header{padding:9px 11px}.filter-header input,.filter-header select{padding:8px 9px;margin-top:5px}
+ .map-top,.map-bottom{padding:5px 8px}.map-tools button{font-size:11px;padding:5px 7px}
+ .report-section{padding:0 9px 8px}.report-wrap{padding:14px 11px}
+}
+@media(max-height:610px){.intro{display:none}.main-layout{grid-template-rows:minmax(0, 1fr) minmax(155px, 39%)}}
