@@ -23,14 +23,20 @@ jobs:
         with:
           python-version: '3.12'
       - name: Fetch public news index metadata only
+        id: fetch
+        continue-on-error: true
         run: python scripts/collect_media_leads.py
       - name: Commit review-only news URL candidates
-        if: success()
+        if: always() && steps.fetch.outcome != 'skipped'
         run: |
           git add data/media-leads-v21.json
           if ! git diff --cached --quiet; then
             git config user.name "github-actions[bot]"
             git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
             git commit -m "data: refresh European news lead URLs pending source verification"
-            git push
+            git pull --rebase origin main
+            git push origin HEAD:main || { git pull --rebase origin main && git push origin HEAD:main; }
           fi
+      - name: Surface upstream outage
+        if: steps.fetch.outcome == 'failure'
+        run: exit 1

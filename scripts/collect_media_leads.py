@@ -2,7 +2,8 @@
 """GDELT DOC 2.0 (public news search API) -> review-only multi-language news URL/title leads.
 No article body scraping, user data or social platform bypass. Published article date != incident date.
 """
-import datetime as dt, hashlib, json, re, time
+import datetime as dt, email.utils, hashlib, json, re, time
+import xml.etree.ElementTree as ET
 import urllib.error,urllib.parse,urllib.request
 from pathlib import Path
 ROOT=Path(__file__).resolve().parents[1]
@@ -49,8 +50,9 @@ def main():
  rows={};failures=[];api_ok=0
  for country,city,search in QUERIES:
   try:
-   result=query_api(search);api_ok+=1
+   result=query_api(search)
    if not isinstance(result.get("articles"),list):raise RuntimeError("invalid_articles")
+   api_ok+=1
    for doc in result["articles"]:
     raw_url=doc.get("url","")
     parsed=urllib.parse.urlparse(raw_url)
@@ -70,6 +72,27 @@ def main():
       "status":"requires_review_not_published","review_required":"Confirm specific theft, place, incident date, item and original link independently; this title alone is not proof."}
   except Exception as e:failures.append({"country":country,"city":city,"reason":str(e)[:95]})
   time.sleep(6.0)
+ try:
+  # Euronews explicitly publishes a travel RSS feed for readers. Only title/link/date,
+  # no full text, no media copying, no hidden platform access.
+  feed="https://www.euronews.com/rss?level=vertical&name=travel"
+  req=urllib.request.Request(feed,headers={"User-Agent":AGENT,"Accept":"application/rss+xml"})
+  with urllib.request.urlopen(req,timeout=18) as res:
+   contents=res.read(240000)
+  rss=ET.fromstring(contents)
+  for item in rss.findall(".//item")[:60]:
+   title=scrub(item.findtext("title"))
+   url=(item.findtext("link") or "").strip()
+   link=urllib.parse.urlparse(url)
+   if not title or not KEYWORDS.search(title) or link.scheme!="https" or not link.netloc:continue
+   cities=[city for city,aliases in ALIASES.items() if any(alias in title.casefold() for alias in aliases)]
+   if not cities:continue
+   day=None
+   try:day=email.utils.parsedate_to_datetime(item.findtext("pubDate")).date().isoformat()
+   except (ValueError,TypeError):pass
+   key=hashlib.sha256(url.encode("utf8")).hexdigest()[:24]
+   if key not in rows:rows[key]={"id":key,"country_target":None,"city_target":cities[0],"title":title,"url":url,"domain":link.netloc,"source_published_on":day,"incident_occurred_on":None,"item_mentions":[name for name,pat in ITEMS.items() if re.search(pat,title,re.I)],"location_precision":"unverified_article_title","source_type":"public_news","source":"Euronews Travel RSS","status":"requires_review_not_published","review_required":"RSS headline is not evidence of a confirmed incident"}
+ except Exception as e:failures.append({"country":"Europe","city":"Euronews RSS","reason":str(e)[:95]})
  order=sorted(rows.values(),key=lambda x:(x["source_published_on"] or "",x["id"]),reverse=True)
  data={"generated_at":dt.datetime.now(dt.timezone.utc).isoformat(),"query_count":len(QUERIES),
  "successful_queries":api_ok,"failed_queries":failures,"candidate_count":len(order),
@@ -77,6 +100,6 @@ def main():
  "note":"All candidates are title/link discovery results, not police verified events; event date remains unknown. Content is not licensed for full-text republication.",
  "items":order[:180]}
  OUT.write_text(json.dumps(data,ensure_ascii=False,indent=2)+"\n",encoding="utf-8")
- print(json.dumps({"searched":len(QUERIES),"successful":api_ok,"leads":len(order),"failed":len(failures)}))
- if api_ok==0:raise SystemExit("All GDELT queries failed; file contains failure diagnostics and NO fake results")
+ print(json.dumps({"searched":len(QUERIES),"successful":api_ok,"leads":len(order),"failed":len(failures),"error_samples":failures[:6]}))
+ if api_ok==0 and not order:raise SystemExit("No available public media feeds; output diagnostic JSON but never fake leads")
 if __name__=="__main__":main()
