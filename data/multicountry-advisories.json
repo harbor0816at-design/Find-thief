@@ -1,8 +1,8 @@
 {
-  "version": "1.5.1",
+  "version": "2.2.0",
   "updated": "2026-10-14",
-  "status": "documented-statistics-and-public-warnings-not-risk-scores",
-  "description": "国内领事案例、海外公开媒体和官方统计分层呈现。未核验媒体内容不可自动转为景区犯罪概率。",
+  "status": "official-and-cited-context-not-confirmed-attraction-incidents",
+  "description": "中国游客多国地区统计、领事提醒和媒体观察；国家和市级统计不得分摊到单个景点。",
   "items": [
     {
       "id": "milan-duomo-guide",
@@ -173,6 +173,27 @@
       "case_items": []
     },
     {
+      "id": "barcelona-china-consular-2026-summer",
+      "country": "西班牙",
+      "city": "巴塞罗那",
+      "spot_name": "巴塞罗那旅游安全（总领馆提醒）",
+      "latitude": 41.387,
+      "longitude": 2.169,
+      "scope": "citywide",
+      "evidence_kind": "chinese_consular_notice",
+      "source_title": "中国驻巴塞罗那总领馆：2026年暑期中文安全旅行指南",
+      "source_url": "https://barcelona.china-consulate.gov.cn/lsfw/lsbhhxz/202607/t20260728_11993921.htm",
+      "source_date": "2026-07-28",
+      "checked_at": "2026-10-14",
+      "brief_zh": "中国驻巴塞罗那总领馆指出，近期有中国游客遭遇盗抢，建议在公共交通、人流密集区看管证件、行李、个人物品；公布本地112和领保联系方式。",
+      "qualification_zh": "城市范围的领事旅游安全提醒，没有细分到单个景点的案发数量、具体日期或物品排行。",
+      "statistic_value": null,
+      "statistic_label": null,
+      "statistic_year": null,
+      "status": "published",
+      "case_items": []
+    },
+    {
       "id": "barcelona-china-consular-examples",
       "country": "西班牙",
       "city": "巴塞罗那",
@@ -237,6 +258,27 @@
       "statistic_value": 44455,
       "statistic_label": "警方知悉的全部犯罪事件数",
       "statistic_year": 2024,
+      "status": "published",
+      "case_items": []
+    },
+    {
+      "id": "barcelona-metro-tmb-2026-h1",
+      "country": "西班牙",
+      "city": "巴塞罗那",
+      "spot_name": "巴塞罗那地铁全线",
+      "latitude": 41.387,
+      "longitude": 2.169,
+      "scope": "transit",
+      "evidence_kind": "official_statistics",
+      "source_title": "巴塞罗那TMB：2026年上半年地铁全线犯罪记录",
+      "source_url": "https://noticies.tmb.cat/sala-de-premsa/delictes-metro-disminueixen-34-durant-primer-semestre-de-2026",
+      "source_date": "2026-08-10",
+      "checked_at": "2026-10-14",
+      "brief_zh": "TMB公告：2026年上半年地铁全线登记5,528起各类违法犯罪事件，较2025年同期8,388起减少34%。",
+      "qualification_zh": "地铁全网络、半年总犯罪记录，非扒窃专属，绝不能当成某一车站或景点的发生数。",
+      "statistic_value": 5528,
+      "statistic_label": "2026年上半年地铁全线各类犯罪记录",
+      "statistic_year": 2026,
       "status": "published",
       "case_items": []
     },
