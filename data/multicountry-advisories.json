@@ -1,8 +1,8 @@
 {
-  "version": "1.5.0",
+  "version": "1.5.1",
   "updated": "2026-10-14",
-  "status": "official-context-not-confirmed-incidents",
-  "description": "面向中国旅欧游客的多国统计和安全提示，并非具体景点已发生失窃。",
+  "status": "documented-statistics-and-public-warnings-not-risk-scores",
+  "description": "国内领事案例、海外公开媒体和官方统计分层呈现。未核验媒体内容不可自动转为景区犯罪概率。",
   "items": [
     {
       "id": "milan-duomo-guide",
@@ -22,7 +22,8 @@
       "statistic_value": null,
       "statistic_label": null,
       "statistic_year": null,
-      "status": "published"
+      "status": "published",
+      "case_items": []
     },
     {
       "id": "milan-galleria-guide",
@@ -42,7 +43,8 @@
       "statistic_value": null,
       "statistic_label": null,
       "statistic_year": null,
-      "status": "published"
+      "status": "published",
+      "case_items": []
     },
     {
       "id": "rome-colosseum-guide",
@@ -62,7 +64,8 @@
       "statistic_value": null,
       "statistic_label": null,
       "statistic_year": null,
-      "status": "published"
+      "status": "published",
+      "case_items": []
     },
     {
       "id": "rome-transport-historical",
@@ -82,7 +85,8 @@
       "statistic_value": null,
       "statistic_label": null,
       "statistic_year": null,
-      "status": "published"
+      "status": "published",
+      "case_items": []
     },
     {
       "id": "rome-trevi-guide",
@@ -102,7 +106,8 @@
       "statistic_value": null,
       "statistic_label": null,
       "statistic_year": null,
-      "status": "published"
+      "status": "published",
+      "case_items": []
     },
     {
       "id": "paris-eiffel-context",
@@ -122,7 +127,8 @@
       "statistic_value": null,
       "statistic_label": null,
       "statistic_year": null,
-      "status": "published"
+      "status": "published",
+      "case_items": []
     },
     {
       "id": "paris-louvre-context",
@@ -142,7 +148,8 @@
       "statistic_value": null,
       "statistic_label": null,
       "statistic_year": null,
-      "status": "published"
+      "status": "published",
+      "case_items": []
     },
     {
       "id": "paris-transit",
@@ -162,7 +169,34 @@
       "statistic_value": null,
       "statistic_label": null,
       "statistic_year": null,
-      "status": "published"
+      "status": "published",
+      "case_items": []
+    },
+    {
+      "id": "barcelona-china-consular-examples",
+      "country": "西班牙",
+      "city": "巴塞罗那",
+      "spot_name": "巴塞罗那中国游客公开案例（全市）",
+      "latitude": 41.3874,
+      "longitude": 2.1686,
+      "scope": "citywide",
+      "evidence_kind": "chinese_consular_notice",
+      "source_title": "中华人民共和国驻巴塞罗那总领事馆2024年防盗提醒",
+      "source_url": "https://barcelona.china-consulate.gov.cn/lsfw/lsbhhxz/202406/t20240612_11435051.htm",
+      "source_date": "2024-06-12",
+      "checked_at": "2026-10-14",
+      "brief_zh": "中国驻巴塞罗那总领馆公开案例提到行李背包、护照证件、手机、手表等被盗或遭抢情形，涉及购物、地铁站台、酒店与自驾途中。",
+      "qualification_zh": "多个不同地点的匿名化案例；不是特定景区失物排行，也不能推算每件物品的发生频率。",
+      "statistic_value": null,
+      "statistic_label": null,
+      "statistic_year": null,
+      "status": "published",
+      "case_items": [
+        "背包行李",
+        "护照证件",
+        "手机",
+        "手表"
+      ]
     },
     {
       "id": "barcelona-city-theft-2025",
@@ -182,7 +216,8 @@
       "statistic_value": 87342,
       "statistic_label": "警方登记Hurto盗窃事件数",
       "statistic_year": 2025,
-      "status": "published"
+      "status": "published",
+      "case_items": []
     },
     {
       "id": "barcelona-ciutat-vella-2024",
@@ -202,7 +237,8 @@
       "statistic_value": 44455,
       "statistic_label": "警方知悉的全部犯罪事件数",
       "statistic_year": 2024,
-      "status": "published"
+      "status": "published",
+      "case_items": []
     },
     {
       "id": "barcelona-ramblas-guide",
@@ -222,7 +258,29 @@
       "statistic_value": null,
       "statistic_label": null,
       "statistic_year": null,
-      "status": "published"
+      "status": "published",
+      "case_items": []
+    },
+    {
+      "id": "barcelona-ramblas-local-press",
+      "country": "西班牙",
+      "city": "巴塞罗那",
+      "spot_name": "兰布拉大道",
+      "latitude": 41.3818,
+      "longitude": 2.1737,
+      "scope": "site_context",
+      "evidence_kind": "journalism_observation",
+      "source_title": "The Local西班牙2025年巴塞罗那旅行提醒",
+      "source_url": "https://www.thelocal.es/20251104/tourism-in-spain-12-barcelona-travel-hacks-to-make-your-trip-better",
+      "source_date": "2025-11-04",
+      "checked_at": "2026-10-14",
+      "brief_zh": "2025年当地旅行媒体将兰布拉大道列为旅行途中应留意扒窃的街道，并建议不要带全部行李在此停留。",
+      "qualification_zh": "旅游媒体的经验性观察，非警方核验案发数据；不能赋予街道量化危险等级。",
+      "statistic_value": null,
+      "statistic_label": null,
+      "statistic_year": null,
+      "status": "published",
+      "case_items": []
     },
     {
       "id": "barcelona-sagrada-guide",
@@ -242,7 +300,8 @@
       "statistic_value": null,
       "statistic_label": null,
       "statistic_year": null,
-      "status": "published"
+      "status": "published",
+      "case_items": []
     }
   ]
 }
