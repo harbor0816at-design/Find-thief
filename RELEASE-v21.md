@@ -20,3 +20,15 @@
 - Android设备查找保护：https://support.google.com/android/answer/6160491
 - GDELT 官方 DOC 2.0：https://blog.gdeltproject.org/gdelt-doc-2-0-api-debuts/
 - Reddit于2026-10-08公告其RSS将于2026-11-13停止：https://support.reddithelp.com/hc/en-us/articles/54353370049684-Changelog-October-8-2026
+
+## 2026-10-14 production data confirmation
+
+- Vercel Production READY; latest public site with four tabs plus WeChat/system friend-sharing entry.
+- Independent Supabase `tourist_places_v21`: 51 cities, 224 named attractions, 78 with curated approximate directory coordinates; place listing is not proof of theft.
+- Existing official UK police aggregated area grid: 74 cells in sampled London tourist locations.
+- Public multi-country cited travel/statistical advisories: 14 entries (not individual incidents).
+- `evidence_events_v2`: 8 individually sourced events in Rome and Milan. Four have explicit occurrence dates; remaining four display source publication date separately and leave occurrence unknown. Public static backup: `data/verified-events-v21.json`, used only when approved event API is unavailable. Future withdrawals must update the public snapshot as well.
+- Items in anonymous loss reports expanded from 8 to **13 options** including smartwatch, headphones, laptop, suitcase and keys. No submitted visitor records are fabricated.
+- Registered sources: 19 including GDELT API, Weibo, Xiaohongshu and Reddit as permission-gated source entries. Those social platforms are **not automatically crawled**.
+- GDELT initial real run produced HTTP 429 and **zero eligible automated headlines**; diagnostics preserved in `data/media-leads-v21.json`. Public Euronews RSS fallback and workflow push-conflict recovery added; do not advertise news crawling as a currently stable 24/7 data feed.
+- Production user reporting still disabled; China/mobile/WeChat device-level tests and external API end-to-end tests not yet completed. GDELT/RSS are discovery leads only, not crime statistics.

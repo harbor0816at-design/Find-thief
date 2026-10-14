@@ -266,6 +266,66 @@
       "frequency": "manual",
       "enabled": false,
       "scope": "article"
+    },
+    {
+      "source_key": "gdelt-news-index",
+      "country": null,
+      "city": null,
+      "spot_name": null,
+      "name": "GDELT DOC 2.0 公开新闻索引",
+      "url": "https://api.gdeltproject.org/api/v2/doc/doc",
+      "kind": "public_news",
+      "language": "multi",
+      "method": "api",
+      "permission_note": "Public news article titles, URLs and publication timestamps only; subject to rate limits (HTTP 429 observed); never infer individual theft from title",
+      "frequency": "weekly",
+      "enabled": true,
+      "scope": "global_news_index"
+    },
+    {
+      "source_key": "weibo-social-discovery",
+      "country": null,
+      "city": null,
+      "spot_name": null,
+      "name": "微博公开线索（待授权）",
+      "url": "https://weibo.com/",
+      "kind": "public_forum",
+      "language": "zh",
+      "method": "manual_link",
+      "permission_note": "Automated commercial scraping is NOT enabled without platform permission or applicable rights; no login bypass",
+      "frequency": "manual",
+      "enabled": false,
+      "scope": "lead_reference_only"
+    },
+    {
+      "source_key": "xiaohongshu-social-discovery",
+      "country": null,
+      "city": null,
+      "spot_name": null,
+      "name": "小红书公开线索（待授权）",
+      "url": "https://www.xiaohongshu.com/",
+      "kind": "public_forum",
+      "language": "zh",
+      "method": "manual_link",
+      "permission_note": "Await authorized access/rights, do not bulk copy personal posts or evade access restrictions",
+      "frequency": "manual",
+      "enabled": false,
+      "scope": "lead_reference_only"
+    },
+    {
+      "source_key": "reddit-developer-platform",
+      "country": null,
+      "city": null,
+      "spot_name": null,
+      "name": "Reddit旅游社区（待平台接入）",
+      "url": "https://www.reddit.com/dev/api/",
+      "kind": "public_forum",
+      "language": "en",
+      "method": "manual_link",
+      "permission_note": "Reddit RSS ending Nov 13 2026; API access requires compliant Developer Platform workflow; no unapproved scraping",
+      "frequency": "manual",
+      "enabled": false,
+      "scope": "lead_reference_only"
     }
   ]
 }
