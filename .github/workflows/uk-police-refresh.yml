@@ -1,0 +1,35 @@
+name: Refresh UK official police crime candidates
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "41 6 8 * *"
+  push:
+    branches: [main]
+    paths:
+      - "scripts/refresh_uk_police.py"
+      - ".github/workflows/uk-police-refresh.yml"
+permissions:
+  contents: write
+concurrency:
+  group: uk-police-refresh
+  cancel-in-progress: false
+jobs:
+  update-staging:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
+        with:
+          python-version: '3.12'
+      - name: Fetch official public UK data and build review-only area clusters
+        run: python scripts/refresh_uk_police.py
+      - name: Commit staging data (NEVER auto-publish)
+        run: |
+          if ! git diff --quiet -- data/uk-police-staging.json; then
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add data/uk-police-staging.json
+            git commit -m "data: stage UK police crime grid candidates for independent QA"
+            git push
+          fi
