@@ -20,7 +20,7 @@ test('blackout skill drill has 5 non-identifying interactive questions',()=>{
  const html=read('index.html'),code=read('blackout.js');
  assert.match(html,/id="blackoutProgress"/);assert.match(html,/id="blackoutChallenges"/);
  assert.match(code,/answered=new Map/);
- assert.equal((code.match(/^\['[^\n]+',\[/gm)||[]).length,0); // question representation is nested arrays
+ assert.equal((code.match(/^\['[^\n]+',\[/gm)||[]).length,5); // one question tuple per scenario
  assert.ok((code.match(/\[\s*'[^']+'/g)||[]).length>=5);
  assert.doesNotMatch(code,/fetch\(|localStorage|navigator\.geolocation/);
 });
