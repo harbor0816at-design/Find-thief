@@ -65,6 +65,7 @@ function renderCards(){
  wrap.querySelectorAll('[data-zone]').forEach(el=>{const show=()=>{const z=hotspots.find(x=>String(x.id)===el.dataset.zone);if(z)showZone(z)};el.onclick=e=>{if(e.target.closest('a,summary,details'))return;show()};el.onkeydown=e=>{if(e.key==='Enter')show()}});
  const more=$('loadZones');if(more)more.onclick=()=>{showAllZones=!showAllZones;renderCards()};
  renderAdvisoriesAndSpots();
+ window.FindThiefMedia?.render?.(selected?.name||'');
 }
 
 function renderAdvisoriesAndSpots(){
