@@ -19,7 +19,7 @@ jobs:
       - name: Syntax check and unit tests
         run: |
           set -e
-          for f in api/*.js app.js guides.js media.js enhance.js; do node --check "$f"; done
+          for f in api/*.js app.js guides.js media.js blackout.js enhance.js; do node --check "$f"; done
           node --test tests/*.test.js
           python3 -m py_compile scripts/collect_media_leads.py scripts/collect_public_sources.py scripts/extract_event_candidates.py
           python3 -m unittest discover -s tests -p "test_*.py"
