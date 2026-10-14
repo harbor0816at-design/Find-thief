@@ -6,10 +6,10 @@ const MAX_ZONES=180,DISPLAY_RADIUS_M=2000; // 2km map visualization, NOT measure
 const safeUrl=url=>{try{const u=new URL(url);return u.protocol==='https:'?u.href:'#'}catch{return '#'}};
 function track(event,city=''){if(!['page_view','search','area_open','report_open','report_attempt','report_saved','source_open'].includes(event))return;fetch('/api/metrics',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({event,city:city.slice(0,80)}) ,keepalive:true}).catch(()=>{});}
 function button(which){
- const views={explore:'exploreView',report:'reportView',recovery:'recoveryView',prevention:'preventionView'};
+ const views={explore:'exploreView',report:'reportView',recovery:'recoveryView',prevention:'preventionView',blackout:'blackoutView'};
  for(const [key,id] of Object.entries(views)){if($(id))$(id).hidden=key!==which}
- for(const [key,id] of Object.entries({explore:'btnExplore',report:'btnReport',recovery:'btnRecovery',prevention:'btnPrevention'})){if($(id))$(id).classList.toggle('active',which===key)}
- const intro=document.querySelector('.intro');if(intro)intro.hidden=which==='recovery'||which==='prevention';
+ for(const [key,id] of Object.entries({explore:'btnExplore',report:'btnReport',recovery:'btnRecovery',prevention:'btnPrevention',blackout:'btnBlackout'})){if($(id))$(id).classList.toggle('active',which===key)}
+ const intro=document.querySelector('.intro');if(intro)intro.hidden=which==='recovery'||which==='prevention'||which==='blackout';
  if(which==='report'){track('report_open');loadConfig()}else if(which==='explore')setTimeout(()=>map?.invalidateSize(),90);
  $('resultScroll')?.scrollTo({top:0,behavior:'instant'});
 }

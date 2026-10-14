@@ -59,12 +59,13 @@
  function isWx(){return /MicroMessenger/i.test(navigator.userAgent||'')}
  function activeName(){const obj=window.FindThiefUI;return obj?.getCity?.()||''}
  function targetLink(){let suffix='';
-  if(!$('recoveryView')?.hidden)suffix='#guide=recovery';
+  if(!$('blackoutView')?.hidden)suffix='#guide=blackout';
+  else if(!$('recoveryView')?.hidden)suffix='#guide=recovery';
   else if(!$('preventionView')?.hidden)suffix='#guide=prevention';
   else if(!$('exploreView')?.hidden&&activeName())suffix='#city='+encodeURIComponent(activeName());
   return location.origin+location.pathname+suffix;
  }
- function description(){return (!$('preventionView')?.hidden)?'欧洲旅行防窃实用清单':(!$('recoveryView')?.hidden)?'欧洲旅行失窃后紧急处理指南':(activeName()?activeName()+'附近盗窃证据和提醒':'查欧洲盗窃区域与匿名失物提醒')}
+ function description(){return (!$('blackoutView')?.hidden)?'欧洲旅行防窃黑化训练':(!$('preventionView')?.hidden)?'欧洲旅行防窃实用清单':(!$('recoveryView')?.hidden)?'欧洲旅行失窃后紧急处理指南':(activeName()?activeName()+'附近盗窃证据和提醒':'查欧洲盗窃区域与匿名失物提醒')}
  function openShare(){
   const modal=$('shareModal');if(!modal)return;
   const wechat=isWx();$('shareFeedback').textContent='';
@@ -101,6 +102,8 @@
   renderTabs('preventionTabs','preventionContent',P,'prevent');
   $('btnRecovery')?.addEventListener('click',()=>openGuide('recovery'));
   $('btnPrevention')?.addEventListener('click',()=>openGuide('prevention'));
+  $('btnBlackout')?.addEventListener('click',()=>openGuide('blackout'));
+  $('shareBlackout')?.addEventListener('click',openShare);
   $('btnExplore')?.addEventListener('click',()=>{if(location.hash.startsWith('#guide='))history.replaceState(null,'',location.pathname)});
   $('btnReport')?.addEventListener('click',()=>{if(location.hash.startsWith('#guide='))history.replaceState(null,'',location.pathname)});
   $('shareTrigger')?.addEventListener('click',openShare);
@@ -113,7 +116,7 @@
   $('nativeShare')?.addEventListener('click',nativeShare);
   $('copyShare')?.addEventListener('click',async()=>{$('shareFeedback').textContent=await copyLink()?'链接已复制，可发送给微信朋友。':'复制失败，请使用浏览器分享功能。'});
   // Deep links should open the exact emergency / prevention guide from WeChat.
-  const deep=location.hash.match(/^#guide=(recovery|prevention)$/);
+  const deep=location.hash.match(/^#guide=(recovery|prevention|blackout)$/);
   if(deep)window.FindThiefUI?.button?.(deep[1]);
  }
  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init();
