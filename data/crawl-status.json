@@ -1,1 +1,70 @@
-{"generated_at":null,"sources":[{"name":"ICGC Crime map","status":"not-run","reason":"运行环境还未执行定时抓取"},{"name":"Pickpockets.live","status":"not-run","reason":"仅检测公开网页，事件数据需获得复用许可"},{"name":"PickpocketMaps","status":"not-run","reason":"仅检测公开网页，事件数据需获得复用许可"},{"name":"MineCrime","status":"not-run","reason":"其商业数据库未获许可，不抓取事件数据"},{"name":"小红书 / 微博 / Instagram / Facebook","status":"not-authorized","reason":"没有具体公开帖子URL和有效复用许可，不自动爬取"}]}
+{
+  "generated_at": "2026-10-14T12:03:36.783749+00:00",
+  "sources": [
+    {
+      "name": "ICGC Crime map",
+      "url": "https://www.icgc.cat/en/Tools-and-viewers/Viewers/Crime-map",
+      "rights": "check-source-license",
+      "status": "ok",
+      "http_status": 200,
+      "page_title": "Crime map | icgc",
+      "reason": "HTML metadata only; not a licensed event dataset"
+    },
+    {
+      "name": "Pickpockets.live",
+      "url": "https://pickpockets.live/",
+      "rights": "license-required-for-events",
+      "status": "ok",
+      "http_status": 200,
+      "page_title": "pickpockets.live is under construction",
+      "reason": "HTML metadata only; not a licensed event dataset"
+    },
+    {
+      "name": "PickpocketMaps",
+      "url": "https://pickpocketmaps.com/",
+      "rights": "license-required-for-events",
+      "status": "ok",
+      "http_status": 200,
+      "page_title": "Home - PickpocketMaps.com",
+      "reason": "HTML metadata only; not a licensed event dataset"
+    },
+    {
+      "name": "MineCrime",
+      "url": "https://www.minecrime.it/products",
+      "rights": "commercial-license-required",
+      "status": "ok",
+      "http_status": 200,
+      "page_title": "MineCrime - Where data drives your security",
+      "reason": "HTML metadata only; not a licensed event dataset"
+    },
+    {
+      "name": "小红书",
+      "url": "https://www.xiaohongshu.com/",
+      "rights": "platform-rules-apply",
+      "status": "not-authorized",
+      "reason": "Social content needs specific public post URLs and permission; no platform scraping"
+    },
+    {
+      "name": "微博",
+      "url": "https://weibo.com/",
+      "rights": "platform-rules-apply",
+      "status": "not-authorized",
+      "reason": "Social content needs specific public post URLs and permission; no platform scraping"
+    },
+    {
+      "name": "Instagram",
+      "url": "https://www.instagram.com/",
+      "rights": "platform-rules-apply",
+      "status": "not-authorized",
+      "reason": "Social content needs specific public post URLs and permission; no platform scraping"
+    },
+    {
+      "name": "Facebook",
+      "url": "https://www.facebook.com/",
+      "rights": "platform-rules-apply",
+      "status": "not-authorized",
+      "reason": "Social content needs specific public post URLs and permission; no platform scraping"
+    }
+  ],
+  "notes": "No event records imported; metadata only. No CAPTCHA or authentication bypass."
+}
