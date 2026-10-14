@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-10-14T16:38:38.122157+00:00",
+  "generated_at": "2026-10-14T19:10:41.394242+00:00",
   "status": "STAGING_ONLY_NOT_EVIDENCE",
   "source_total": 15,
-  "metadata_ok": 8,
+  "metadata_ok": 7,
   "sources": [
     {
       "source_key": "uk-police",
@@ -104,11 +104,7 @@
       "url": "https://barcelona.china-consulate.gov.cn/lsfw/lsbhhxz/202406/t20240612_11435051.htm",
       "source_kind": "consular_notice",
       "collection_method": "metadata_only",
-      "status": "metadata_ok",
-      "title": "驻巴塞罗那总领馆提醒您暑期出行谨防盗抢 — 中华人民共和国驻巴塞罗那总领馆",
-      "meta_description": "",
-      "last_modified": "",
-      "published_meta": "",
+      "status": "The read operation timed out",
       "theft_keyword_in_metadata": false,
       "ready_for_event_publication": false
     },
@@ -151,7 +147,7 @@
       "status": "metadata_ok",
       "title": "Banche dati e statistiche | Prefettura - Ufficio Territoriale del Governo di Roma",
       "meta_description": "",
-      "last_modified": "Wed, 14 Oct 2026 16:36:58 GMT",
+      "last_modified": "Wed, 14 Oct 2026 19:10:37 GMT",
       "published_meta": "",
       "theft_keyword_in_metadata": false,
       "ready_for_event_publication": false
