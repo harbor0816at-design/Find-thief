@@ -1,10 +1,10 @@
 const UUID=/^[a-f0-9]{8}-[a-f0-9]{4}-[1-8][a-f0-9]{3}-[89ab][a-f0-9]{3}-[a-f0-9]{12}$/i;
 function conf(){
- const u=process.env.SUPABASE_URL,secret=process.env.SUPABASE_SERVICE_ROLE_KEY,pub=process.env.SUPABASE_PUBLISHABLE_KEY;
+ const u=process.env.SUPABASE_URL,secret=(process.env.SUPABASE_SECRET_KEY||process.env.SUPABASE_SERVICE_ROLE_KEY),pub=process.env.SUPABASE_PUBLISHABLE_KEY;
  return u&&secret&&pub&&process.env.ADMIN_EMAILS?{u:u.replace(/\/$/,''),secret,pub}:null;
 }
 async function db(c,p,opt={}){
- const r=await fetch(c.u+'/rest/v1/'+p,{...opt,headers:{apikey:c.secret,Authorization:'Bearer '+c.secret,'Content-Type':'application/json',...(opt.headers||{})},signal:AbortSignal.timeout(8000)});
+ const r=await fetch(c.u+'/rest/v1/'+p,{...opt,headers:{apikey:c.secret,...(c.secret.startsWith('sb_secret_')?{}:{Authorization:'Bearer '+c.secret}),'Content-Type':'application/json',...(opt.headers||{})},signal:AbortSignal.timeout(8000)});
  if(!r.ok)throw Error('Database unavailable: '+r.status);
  return r.json().catch(()=>[]);
 }

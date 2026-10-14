@@ -2,14 +2,14 @@ const crypto = require('node:crypto');
 const categories = new Set(['物品遗失','疑似扒窃','已报警确认失窃','其他物品安全事件']);
 const jsonHeader={'Content-Type':'application/json'};
 function cfg() {
-  const u=process.env.SUPABASE_URL, k=process.env.SUPABASE_SERVICE_ROLE_KEY;
+  const u=process.env.SUPABASE_URL, k=(process.env.SUPABASE_SECRET_KEY||process.env.SUPABASE_SERVICE_ROLE_KEY);
   return u && k && /^https:\/\/[a-z0-9-]+\.supabase\.co\/?$/i.test(u) ? {u:u.replace(/\/$/,''),k} : null;
 }
 const live=()=>Boolean(cfg() && process.env.ENABLE_PUBLIC_REPORTING==='true' && process.env.REPORT_RATE_SECRET && process.env.DATA_CONTROLLER_EMAIL && process.env.DATA_CONTROLLER_NAME && process.env.CRON_SECRET);
 function clean(v,max){return typeof v==='string'?v.trim().replace(/[\x00-\x1f\x7f]/g,' ').slice(0,max+1):''}
 function validCoordinate(x,limit){return x===null||typeof x==='number'&&Number.isFinite(x)&&Math.abs(x)<=limit}
 async function query(c,path,opt={}){
-  const r=await fetch(c.u+'/rest/v1/'+path,{...opt,headers:{apikey:c.k,Authorization:'Bearer '+c.k,Accept:'application/json',...(opt.headers||{})},signal:AbortSignal.timeout(7000)});
+  const r=await fetch(c.u+'/rest/v1/'+path,{...opt,headers:{apikey:c.k,...(c.k.startsWith('sb_secret_')?{}:{Authorization:'Bearer '+c.k}),Accept:'application/json',...(opt.headers||{})},signal:AbortSignal.timeout(7000)});
   if(!r.ok){let errorCode='';try{errorCode=(await r.json()).code||''}catch{};const error=new Error('DB_'+r.status);error.status=r.status;error.code=errorCode;throw error;}
   return await r.json().catch(()=>[]);
 }

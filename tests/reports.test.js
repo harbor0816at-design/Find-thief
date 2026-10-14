@@ -29,3 +29,17 @@ test('retention cron rejects unauthorized caller and no database queries occur',
 test('retention cron removes expired statuses with service credential',async()=>{
  const retention=require('../api/retention.js');Object.assign(process.env,{SUPABASE_URL:'https://foo.supabase.co',SUPABASE_SERVICE_ROLE_KEY:'key',CRON_SECRET:'server-token'});const calls=[];global.fetch=async(u,o)=>{calls.push([u,o.method]);return {ok:true}};const r=res();await retention({method:'GET',headers:{authorization:'Bearer server-token'}},r);assert.equal(r.code,200);assert.equal(calls.length,3);assert.ok(calls.every(c=>c[1]==='DELETE'));assert.ok(calls.every(c=>c[0].includes('loss_reports?status=eq.')));
 });
+
+test('modern sb_secret key uses apikey without bearer on public reports',async()=>{
+ process.env.SUPABASE_URL='https://foo.supabase.co';delete process.env.SUPABASE_SERVICE_ROLE_KEY;process.env.SUPABASE_SECRET_KEY='sb_secret_mock_key';let headers;
+ global.fetch=async(_url,o)=>{headers=o.headers;return {ok:true,json:async()=>[]}};
+ const r=res();await report({method:'GET',headers:{}},r);
+ assert.equal(r.code,200);assert.equal(headers.apikey,'sb_secret_mock_key');assert.equal(headers.Authorization,undefined);
+});
+test('modern sb_secret key not confused with JWT in authorized reviewer database read',async()=>{
+ Object.assign(process.env,{SUPABASE_URL:'https://foo.supabase.co',SUPABASE_SECRET_KEY:'sb_secret_mock_key',SUPABASE_PUBLISHABLE_KEY:'sb_publishable_mock',ADMIN_EMAILS:'a@example.com'});
+ delete process.env.SUPABASE_SERVICE_ROLE_KEY;let dbHeaders;
+ global.fetch=async(u,o)=>{if(String(u).includes('/auth/v1/user'))return {ok:true,json:async()=>({id:'1',email:'a@example.com',email_confirmed_at:'2026-10-14'})};dbHeaders=o.headers;return {ok:true,json:async()=>[]}};
+ const r=res();await admin({method:'GET',headers:{authorization:'Bearer signed.user.jwt'}},r);
+ assert.equal(r.code,200);assert.equal(dbHeaders.apikey,'sb_secret_mock_key');assert.equal(dbHeaders.Authorization,undefined);
+});

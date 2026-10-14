@@ -16,12 +16,13 @@
 
 ## Vercel 环境变量（Production）
 
-**2026-10-14 状态：** `SUPABASE_URL`、`SUPABASE_PUBLISHABLE_KEY`、`ENABLE_PUBLIC_REPORTING=false`、`REPORT_RATE_SECRET`、`CRON_SECRET` 已安全配置（不在 GitHub 中保存密钥）。`ADMIN_EMAILS=harbor0816at@gmail.com`、`DATA_CONTROLLER_NAME=private`（临时公开名称）、`DATA_CONTROLLER_EMAIL=harbor0816at@gmail.com` 已配置。`SUPABASE_SERVICE_ROLE_KEY` 尚未配置，且专用 Supabase Auth 中尚无该邮箱的已确认管理员账户。投稿继续关闭。为防止密钥泄露，必须从专用 Supabase 项目的 API Keys 页面复制服务端密钥，直接在 Vercel 项目环境变量界面设置；不要发到聊天或源码中。配置完成后重新触发 Production 部署，进行端到端测试后才可把开关改为 true。
+**2026-10-14 状态：** `SUPABASE_URL`、`SUPABASE_PUBLISHABLE_KEY`、`ENABLE_PUBLIC_REPORTING=false`、`REPORT_RATE_SECRET`、`CRON_SECRET` 已安全配置（不在 GitHub 中保存密钥）。`ADMIN_EMAILS=harbor0816at@gmail.com`、`DATA_CONTROLLER_NAME=private`（临时公开名称）、`DATA_CONTROLLER_EMAIL=harbor0816at@gmail.com` 已配置。`SUPABASE_SECRET_KEY`（推荐）尚未配置，旧式 `SUPABASE_SERVICE_ROLE_KEY` 保持兼容，且专用 Supabase Auth 中尚无该邮箱的已确认管理员账户。投稿继续关闭。为防止密钥泄露，应从专用 Supabase 项目的 API Keys 页面复制新式 `sb_secret_...` 服务端密钥，直接在 Vercel 项目环境变量 `SUPABASE_SECRET_KEY` 中加密设置；不要发到聊天或源码中。配置完成后重新触发 Production 部署，进行端到端测试后才可把开关改为 true。
 
 | Key | 用途 |
 | --- | --- |
 | `SUPABASE_URL` | 独立项目 URL，格式 `https://<project-ref>.supabase.co` |
-| `SUPABASE_SERVICE_ROLE_KEY` | **仅服务器端** service_role 密钥（sensitive/encrypted，不允许公开） |
+| `SUPABASE_SECRET_KEY` | **推荐**新式 `sb_secret_...` 服务端密钥（sensitive/encrypted，仅后端使用） |
+| `SUPABASE_SERVICE_ROLE_KEY` | 兼容旧式 service_role JWT密钥；新部署不建议使用 |
 | `SUPABASE_PUBLISHABLE_KEY` | 仅用于管理员登录流程的公开密钥 |
 | `ADMIN_EMAILS` | 允许管理员邮箱，逗号分隔，须创建并验证这些账号 |
 | `REPORT_RATE_SECRET` | 至少32字节的独立随机秘密，仅服务器使用，用于防重复提交摘要 |
@@ -50,3 +51,7 @@
 - 未审核或已拒绝报告从 `GET /api/reports` 完全不可见。
 - 审核确认后公开区域保留约 1km 的精度而非原始地址；原始地址只有管理员可以查看。
 - GitHub 工作流 `backend-tests.yml` 通过，Vercel 生产部署 READY，公网与移动端进行真实提交→审核→公开→删除的端到端测试。
+
+## 新式密钥支持（2026-10-14）
+
+后端优先使用 `SUPABASE_SECRET_KEY=sb_secret_...`，REST 请求仅使用 `apikey` 头，不把此非 JWT 密钥写入 `Authorization: Bearer`。旧式 `SUPABASE_SERVICE_ROLE_KEY` 继续兼容，但请勿把任一服务密钥放到客户端、代码仓库或聊天中。设置后须重新部署并通过真实审核测试。
