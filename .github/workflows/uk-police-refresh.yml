@@ -26,7 +26,8 @@ jobs:
         run: python scripts/refresh_uk_police.py
       - name: Commit staging data (NEVER auto-publish)
         run: |
-          if ! git diff --quiet -- data/uk-police-staging.json; then
+          git add data/uk-police-staging.json
+          if ! git diff --cached --quiet; then
             git config user.name "github-actions[bot]"
             git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
             git add data/uk-police-staging.json
