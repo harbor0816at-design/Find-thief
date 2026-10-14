@@ -31,7 +31,7 @@ EMAIL=re.compile(r'[\w.+-]+@[\w.-]+\.[a-z]{2,}',re.I)
 PHONE=re.compile(r'\+?\d[\d\s()-]{10,}\d')
 def scrub(value):
  value=re.sub(r'\s+',' ',str(value or "")).strip()[:180]
- return PHONE.sub('[phone removed]',EMAIL.sub('[email removed]',value)
+ return PHONE.sub('[phone removed]',EMAIL.sub('[email removed]',value))
 def query_api(query):
  params=urllib.parse.urlencode({"query":query,"mode":"artlist","maxrecords":35,"timespan":"3months","sort":"datedesc","format":"json"})
  req=urllib.request.Request(API+"?"+params,headers={"User-Agent":AGENT,"Accept":"application/json"})
