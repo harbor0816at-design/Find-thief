@@ -1,0 +1,71 @@
+{
+  "generated_at": "2026-10-14T19:06:15.139414+00:00",
+  "query_count": 12,
+  "successful_queries": 0,
+  "failed_queries": [
+    {
+      "country": "法国",
+      "city": "巴黎",
+      "reason": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "country": "法国",
+      "city": "巴黎",
+      "reason": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "country": "法国",
+      "city": "巴黎",
+      "reason": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "country": "西班牙",
+      "city": "巴塞罗那",
+      "reason": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "country": "西班牙",
+      "city": "巴塞罗那",
+      "reason": "invalid_articles"
+    },
+    {
+      "country": "西班牙",
+      "city": "巴塞罗那",
+      "reason": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "country": "意大利",
+      "city": "罗马",
+      "reason": "invalid_articles"
+    },
+    {
+      "country": "意大利",
+      "city": "罗马",
+      "reason": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "country": "意大利",
+      "city": "米兰",
+      "reason": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "country": "意大利",
+      "city": "米兰",
+      "reason": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "country": "英国",
+      "city": "伦敦",
+      "reason": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "country": "英国",
+      "city": "伦敦",
+      "reason": "HTTP Error 429: Too Many Requests"
+    }
+  ],
+  "candidate_count": 0,
+  "review_status": "PUBLIC_NEWS_LEADS_ONLY_NOT_CONFIRMED_THEFT",
+  "note": "All candidates are title/link discovery results, not police verified events; event date remains unknown. Content is not licensed for full-text republication.",
+  "items": []
+}
