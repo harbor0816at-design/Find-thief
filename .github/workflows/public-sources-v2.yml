@@ -7,6 +7,7 @@ on:
     branches: [main]
     paths:
       - "scripts/collect_public_sources.py"
+      - "scripts/extract_event_candidates.py"
       - "data/source-targets-v2.json"
       - ".github/workflows/public-sources-v2.yml"
 permissions:
@@ -21,9 +22,10 @@ jobs:
         with:
           python-version: '3.12'
       - run: python scripts/collect_public_sources.py
+      - run: python scripts/extract_event_candidates.py
       - name: Commit review-only metadata
         run: |
-          git add data/source-candidates-v2.json
+          git add data/source-candidates-v2.json data/event-candidates-v2.json
           if ! git diff --cached --quiet; then
             git config user.name "github-actions[bot]"
             git config user.email "41898282+github-actions[bot]@users.noreply.github.com"

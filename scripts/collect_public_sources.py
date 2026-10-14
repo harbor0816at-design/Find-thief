@@ -17,11 +17,13 @@ EMAIL=re.compile(r'[\w.+-]+@[\w.-]+\.[A-Za-z]{2,}')
 PHONE=re.compile(r'(?<!\d)\+?\d[\d ()-]{9,}\d(?!\d)')
 class Meta(HTMLParser):
  def __init__(self):
-  super().__init__();self.in_title=False;self.title="";self.description="";self.heading=""
+  super().__init__();self.in_title=False;self.title="";self.description="";self.heading="";self.published=""
  def handle_starttag(self,tag,attrs):
   attrs=dict(attrs)
   if tag=="title":self.in_title=True
   if tag=="meta" and attrs.get("name","").lower()=="description":self.description=attrs.get("content","")
+  if tag=="meta" and (attrs.get("property","").lower() in ("article:published_time","og:published_time") or attrs.get("name","").lower() in ("date","pubdate","article:published_time")):
+   self.published=attrs.get("content","")[:28]
   if tag=="h1":self.heading="";self.in_heading=True
  def handle_endtag(self,tag):
   if tag=="title":self.in_title=False
@@ -52,7 +54,7 @@ def read_metadata(url):
   doc=Meta();doc.feed(data.decode("utf-8",errors="replace"))
   return {"title":clean(doc.title or doc.heading),
           "meta_description":clean(doc.description),
-          "last_modified":clean(resp.headers.get("Last-Modified",""))}
+          "last_modified":clean(resp.headers.get("Last-Modified","")),"published_meta":clean(doc.published)}
 def run():
  src=json.loads(CONFIG.read_text(encoding="utf-8"))
  entries=[]; cache={}
