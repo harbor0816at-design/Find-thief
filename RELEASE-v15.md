@@ -6,3 +6,10 @@
 项目游客无需账号或填写个人信息，服务端依然校验描述与地址、管理员人工去识别审核；线上接收开关因专用服务端密钥及管理员邀请流程未完成，暂保持关闭。
 存储：专用 Supabase库 RLS；SQL见 supabase/20261014_multicountry_items.sql；静态资料在 data/multicountry-advisories.json。
 真实公开来源链接保留在条目中，内容只复述有限事实，不批量复制第三方社交平台用户文本。
+
+## 生产配置安全修复待办
+
+- 已在 Vercel 配置正确变量名 `SUPABASE_SECRET_KEY`（Sensitive、Production），但之前存在一个**错误以实际密钥字符串作变量名称**的旧 Sensitive 环境变量；此类变量不可重命名。
+- **立即在 Supabase 专用项目 API Keys 页面轮换/撤销受到暴露的旧密钥**，然后在 Vercel 更新正确变量名的值；前往 Vercel 环境变量页面删除那个名称以 `sb_secret_` 开头的错误变量。此文档不会记录任何密钥值。
+- 两处操作完成并重新部署前，保持 `ENABLE_PUBLIC_REPORTING=false`，不要接收真实游客事件。
+- 管理员账户已创建并确认，但用户提供的运营署名为 `private`，不视为完成适用法律所要求的运营者披露。

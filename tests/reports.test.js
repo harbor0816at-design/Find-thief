@@ -43,3 +43,38 @@ test('modern sb_secret key not confused with JWT in authorized reviewer database
  const r=res();await admin({method:'GET',headers:{authorization:'Bearer signed.user.jwt'}},r);
  assert.equal(r.code,200);assert.equal(dbHeaders.apikey,'sb_secret_mock_key');assert.equal(dbHeaders.Authorization,undefined);
 });
+
+test('anonymous report includes a valid item category and attraction only in private record',async()=>{
+ Object.assign(process.env,{SUPABASE_URL:'https://foo.supabase.co',SUPABASE_SERVICE_ROLE_KEY:'test-role',ENABLE_PUBLIC_REPORTING:'true',REPORT_RATE_SECRET:'test-sign',DATA_CONTROLLER_EMAIL:'privacy@example.org',DATA_CONTROLLER_NAME:'private',CRON_SECRET:'test-cron'});
+ delete process.env.SUPABASE_SECRET_KEY;
+ let inserted;global.fetch=async(_url,options)=>{if(options?.body&&String(_url).includes('/rest/v1/loss_reports'))inserted=JSON.parse(options.body);return {ok:true,json:async()=>[{id:'3f62c6ee-9adf-4aa2-b52f-ade7b9eea491'}]}};
+ const r=res();
+ await report({method:'POST',headers:{'content-type':'application/json'},body:{country:'法国',city:'巴黎',address:'卢浮宫地铁站地面出口外面附近',date:'2026-10-12',type:'物品遗失',description:'离开车站时发现一个钱包不在包里，无法确定具体原因。',item_category:'钱包',spot_name:'卢浮宫',consent:true}},r);
+ assert.equal(r.code,201);
+ assert.equal(inserted.item_category,'钱包');
+ assert.equal(inserted.spot_name_private,'卢浮宫');
+ assert.equal(inserted.spot_name_public,undefined);
+});
+test('invalid item category rejected without saving',async()=>{
+ Object.assign(process.env,{SUPABASE_URL:'https://foo.supabase.co',SUPABASE_SERVICE_ROLE_KEY:'test-role',ENABLE_PUBLIC_REPORTING:'true',REPORT_RATE_SECRET:'test-sign',DATA_CONTROLLER_EMAIL:'privacy@example.org',DATA_CONTROLLER_NAME:'private',CRON_SECRET:'test-cron'});
+ delete process.env.SUPABASE_SECRET_KEY;
+ let calls=0;global.fetch=async()=>{calls++;throw Error('should not be called')};
+ const r=res();
+ await report({method:'POST',headers:{'content-type':'application/json'},body:{country:'法国',city:'巴黎',address:'卢浮宫地铁站地面出口外面附近',date:'2026-10-12',type:'物品遗失',description:'离开车站时发现钱包不在包里，无法确定具体原因。',item_category:'信用卡卡号',consent:true}},r);
+ assert.equal(r.code,400);assert.equal(calls,0);
+});
+test('public item stats use approved-only selected columns and suppress fewer than three reports',async()=>{
+ const items=require('../api/lost-items.js');
+ Object.assign(process.env,{SUPABASE_URL:'https://foo.supabase.co',SUPABASE_SERVICE_ROLE_KEY:'test-role'});delete process.env.SUPABASE_SECRET_KEY;
+ let path;
+ global.fetch=async(url)=>{path=String(url);return {ok:true,json:async()=>[
+ {city:'巴黎',spot_name_public:'卢浮宫',item_category:'手机'},
+ {city:'巴黎',spot_name_public:'卢浮宫',item_category:'手机'},
+ {city:'巴黎',spot_name_public:'卢浮宫',item_category:'钱包'},
+ {city:'巴黎',spot_name_public:'卢浮宫',item_category:'钱包'},
+ {city:'巴黎',spot_name_public:'卢浮宫',item_category:'钱包'}
+ ]}};
+ const r=res();await items({method:'GET',headers:{}},r);
+ assert.equal(r.code,200);assert.equal(r.body.items.length,1);assert.equal(r.body.items[0].item_category,'钱包');assert.equal(r.body.items[0].count,3);
+ assert.match(path,/status=eq.approved/);assert.doesNotMatch(path,/address_private|description_private|lat_private/);
+});
