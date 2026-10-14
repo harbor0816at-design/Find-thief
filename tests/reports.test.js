@@ -15,7 +15,7 @@ test('non-whitelisted account cannot review private report',async()=>{
 });
 test('successful anonymous report creates only private pending record and returns receipt',async()=>{
  Object.assign(process.env,{SUPABASE_URL:'https://foo.supabase.co',SUPABASE_SERVICE_ROLE_KEY:'key',ENABLE_PUBLIC_REPORTING:'true',REPORT_RATE_SECRET:'abc',DATA_CONTROLLER_EMAIL:'privacy@example.org',DATA_CONTROLLER_NAME:'Registered Operator',CRON_SECRET:'local-test'});
- let body={};global.fetch=async (_url,options)=>{body=JSON.parse(options.body);return {ok:true,json:async()=>[{id:'3f62c6ee-9adf-4aa2-b52f-ade7b9eea491'}]}};
+ let body={};global.fetch=async (_url,options)=>{if(String(_url).includes('/rest/v1/loss_reports'))body=JSON.parse(options.body);return {ok:true,json:async()=>[{id:'3f62c6ee-9adf-4aa2-b52f-ade7b9eea491'}]}};
  const r=res();await report({method:'POST',headers:{'content-type':'application/json','x-forwarded-for':'1.2.3.4'},body:{country:'法国',city:'巴黎',address:'巴黎地铁站某号出口附近',type:'物品遗失',date:'2026-10-12',description:'在地铁站准备换乘时发现随身背包不见了，希望提醒其他游客。',consent:true}},r);
  assert.equal(r.code,201);assert.equal(r.body.status,'pending');assert.equal(body.status,'pending');assert.equal(body.address_private,'巴黎地铁站某号出口附近');assert.equal(body.consent_at?.length>0,true);assert.equal(body.submission_fingerprint?.length,64);assert.equal(body.public_summary,undefined);
 });
