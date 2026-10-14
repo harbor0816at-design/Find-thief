@@ -1,5 +1,5 @@
 {
-  "description": "面向中国游客的中外双来源登记：中文平台主要发现线索、海外官方数据优先核验；任何网页公开可读并不自动授权采集或复用。国内外来源均先审核后使用。",
+  "description": "面向中国旅欧游客的公开来源索引；来源事实独立摘要、许可标注和核对链接，不导入未经授权的社交全文、图片或识别个人的信息。仅按允许范围检查公开网页元信息，审核后方可在官网显示来源提示。",
   "sources": [
     {
       "name": "ICGC Crime map",
@@ -145,6 +145,66 @@
       "crawl_metadata": true,
       "source_language": "fr",
       "scope": "commune/dept official records are not street incident points"
+    },
+    {
+      "name": "中国驻巴塞罗那总领馆盗抢提醒",
+      "url": "https://barcelona.china-consulate.gov.cn/lsfw/lsbhhxz/202406/t20240612_11435051.htm",
+      "kind": "chinese-consular-cases",
+      "reuserights": "facts-only-with-attribution-avoid-personal-data",
+      "crawl_metadata": true,
+      "source_language": "zh",
+      "scope": "2024 consular anonymized cases, not a spot crime rate"
+    },
+    {
+      "name": "Barcelona municipal theft annual data",
+      "url": "https://portaldades.ajuntament.barcelona.cat/es/estad%C3%ADsticas/pij2di5bf9",
+      "kind": "overseas-official-citywide-statistics",
+      "reuserights": "CC-BY-4.0",
+      "crawl_metadata": true,
+      "source_language": "es",
+      "scope": "2025 citywide theft counts, not location hot spots"
+    },
+    {
+      "name": "Barcelona Ciutat Vella official district report",
+      "url": "https://bcnroc.ajuntament.barcelona.cat/jspui/bitstream/11703/141318/1/informe_01.ciutat_vella.pdf",
+      "kind": "overseas-official-district-report",
+      "reuserights": "check-source-citation",
+      "crawl_metadata": false,
+      "source_language": "ca",
+      "scope": "District crime data, not attraction incident points"
+    },
+    {
+      "name": "UK government France travel theft advice",
+      "url": "https://www.gov.uk/foreign-travel-advice/france/safety-and-security",
+      "kind": "overseas-government-travel-advice",
+      "reuserights": "Open Government Licence with attribution",
+      "crawl_metadata": true,
+      "source_language": "en"
+    },
+    {
+      "name": "UK government Italy travel theft advice",
+      "url": "https://www.gov.uk/foreign-travel-advice/italy/safety-and-security",
+      "kind": "overseas-government-travel-advice",
+      "reuserights": "Open Government Licence with attribution",
+      "crawl_metadata": true,
+      "source_language": "en"
+    },
+    {
+      "name": "UK government Spain travel theft advice",
+      "url": "https://www.gov.uk/foreign-travel-advice/spain/safety-and-security",
+      "kind": "overseas-government-travel-advice",
+      "reuserights": "Open Government Licence with attribution",
+      "crawl_metadata": true,
+      "source_language": "en"
+    },
+    {
+      "name": "The Local Spain La Rambla public observation",
+      "url": "https://www.thelocal.es/20251104/tourism-in-spain-12-barcelona-travel-hacks-to-make-your-trip-better",
+      "kind": "overseas-public-media-travel-observation",
+      "reuserights": "link-and-short-independent-facts-only",
+      "crawl_metadata": false,
+      "source_language": "en",
+      "scope": "Media observation, not statistical or police-confirmed risk"
     }
   ]
 }
