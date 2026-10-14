@@ -1,11 +1,19 @@
-/* Find Thief — Chinese travel audience, two functions, no account required */
+/* Find Thief — Chinese travelers: map, loss report, loss response and prevention */
 (()=>{'use strict';
 const $=id=>document.getElementById(id),h=v=>String(v??'').replace(/[&<>"']/g,s=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;','\'':'&#39;'}[s]));
 let cities=[],map=null,selected=null,hotspots=[],publicReports=[],layers=[],markers=[],selectedPin=null,reportEnabled=false,pickMode=false,dragEnabled=true,searchTimeout,officialLatestMonth='',advisories=[],lostItems=[],verifiedEvents=[],v2Areas=[],showAllZones=false;
-const MAX_ZONES=180;
+const MAX_ZONES=180,DISPLAY_RADIUS_M=2000; // 2km map visualization, NOT measured crime radius
 const safeUrl=url=>{try{const u=new URL(url);return u.protocol==='https:'?u.href:'#'}catch{return '#'}};
 function track(event,city=''){if(!['page_view','search','area_open','report_open','report_attempt','report_saved','source_open'].includes(event))return;fetch('/api/metrics',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({event,city:city.slice(0,80)}) ,keepalive:true}).catch(()=>{});}
-function button(which){$('btnExplore').classList.toggle('active',which==='explore');$('btnReport').classList.toggle('active',which==='report');$('exploreView').hidden=which!=='explore';$('reportView').hidden=which!=='report'; if(which==='report'){track('report_open');loadConfig();}else {setTimeout(()=>map?.invalidateSize(),80);}$('resultScroll')?.scrollTo({top:0,behavior:'instant'});}
+function button(which){
+ const views={explore:'exploreView',report:'reportView',recovery:'recoveryView',prevention:'preventionView'};
+ for(const [key,id] of Object.entries(views)){if($(id))$(id).hidden=key!==which}
+ for(const [key,id] of Object.entries({explore:'btnExplore',report:'btnReport',recovery:'btnRecovery',prevention:'btnPrevention'})){if($(id))$(id).classList.toggle('active',which===key)}
+ const intro=document.querySelector('.intro');if(intro)intro.hidden=which==='recovery'||which==='prevention';
+ if(which==='report'){track('report_open');loadConfig()}else if(which==='explore')setTimeout(()=>map?.invalidateSize(),90);
+ $('resultScroll')?.scrollTo({top:0,behavior:'instant'});
+}
+
 const englishAliases={'巴黎':'Paris','巴塞罗那':'Barcelona','罗马':'Rome','伦敦':'London','米兰':'Milan','威尼斯':'Venice','佛罗伦萨':'Florence','马德里':'Madrid','维也纳':'Vienna','阿姆斯特丹':'Amsterdam','布拉格':'Prague','布达佩斯':'Budapest','苏黎世':'Zurich','慕尼黑':'Munich','柏林':'Berlin','爱丁堡':'Edinburgh','里斯本':'Lisbon','雅典':'Athens','日内瓦':'Geneva','哥本哈根':'Copenhagen','赫尔辛基':'Helsinki','尼斯':'Nice','萨尔茨堡':'Salzburg','布鲁塞尔':'Brussels'};
 function cityText(c){return `${c.country} ${c.name} ${englishAliases[c.name]||''} ${(c.sights||[]).join(' ')}`.toLowerCase()}
 function findCity(){const selectedId=$('citySelect').value;if(selectedId)return cities.find(c=>String(c.id)===selectedId);const q=$('citySearch').value.trim().toLowerCase();return q?cities.find(c=>c.name.toLowerCase()===q||c.country.toLowerCase()===q):null}
@@ -29,7 +37,7 @@ function renderCards(){
   out+=events.map(e=>{
    const date=e.occurred_on?'发生于 '+labelDate(e.occurred_on):'发生时间未公开';
    const publish=e.source_published_on?' · 来源发布 '+labelDate(e.source_published_on):'';
-   const range=e.location_precision==='approx_area'&&e.radius_m?'约 '+e.radius_m+'米模糊范围':e.location_precision==='district'?'区级位置':e.location_precision==='city'?'城市范围':'无可用位置范围';
+   const range=e.location_precision==='approx_area'?'2公里提醒圈（不是案发半径）':e.location_precision==='district'?'区级位置':e.location_precision==='city'?'城市范围':'无可用位置范围';
    const obj=e.item_category||'物品未说明';
    const kind=e.source_type==='official_case'?'官方记录':e.source_type==='consular_case'?'领馆案例':e.source_type==='journalism_case'?'媒体案例':'人工审核游客自述';
    return '<article class="zone-card"><div class="row"><b>'+h(e.city)+' · '+h(e.spot_name||'地点未细化')+'</b><span class="tag confirmed">'+h(kind)+'</span></div><div class="v2-essential"><span><strong>'+h(date)+'</strong></span><span>范围：'+h(range)+'</span><span>物品：'+h(obj)+'</span></div><div class="v2-headline">'+h(e.short_summary)+'</div><details class="v2-details"><summary>查看出处与说明</summary><p>资料发布日期'+h(publish||'：未确认')+' · '+h(e.event_kind==='confirmed_theft'?'盗窃记录':e.event_kind==='alleged_theft'?'疑似盗窃陈述':'物品遗失或安全描述')+'</p><a href="'+h(safeUrl(e.source_url))+'" target="_blank" rel="noopener noreferrer">原始来源 ↗</a></details></article>';
@@ -37,14 +45,14 @@ function renderCards(){
  }
  if(reports.length){
   out+='<div class="guidance-title">游客匿名上传 · 已审核</div>';
-  out+=reports.map(x=>'<article class="zone-card"><div class="row"><b>'+h(x.city)+' · '+h(x.spot_name_public||'匿名区域')+'</b><span class="tag">游客自述</span></div><div class="v2-essential"><span>发现于 '+h(x.occurred_on||'未知日期')+'</span><span>位置：约1公里模糊区域</span><span>物品：'+h(x.item_category||'未分类')+'</span></div><div class="v2-headline">'+h(x.public_summary||'暂无摘要')+'</div><details class="v2-details"><summary>数据说明</summary>游客自述，不等同于警方确认案件。具体地址与个人资料不公开。</details></article>').join('');
+  out+=reports.map(x=>'<article class="zone-card"><div class="row"><b>'+h(x.city)+' · '+h(x.spot_name_public||'匿名区域')+'</b><span class="tag">游客自述</span></div><div class="v2-essential"><span>发现于 '+h(x.occurred_on||'未知日期')+'</span><span>位置：2公里提醒圈（并非案发半径）</span><span>物品：'+h(x.item_category||'未分类')+'</span></div><div class="v2-headline">'+h(x.public_summary||'暂无摘要')+'</div><details class="v2-details"><summary>数据说明</summary>游客自述，不等同于警方确认案件。具体地址与个人资料不公开。</details></article>').join('');
  }
  if(matches.length){
   out+='<div class="guidance-title">警方公开数据 · 区域统计</div>';
   out+=proven.map(z=>{
    const period=z.period_start&&z.period_end?z.period_start.slice(0,7)+'—'+z.period_end.slice(0,7):'统计月份未公布';
    const isUk=z.source_type==='official_street_data';
-   const range=isUk?'约1公里统计网格':'经过模糊处理的统计范围';
+   const range=isUk?'2公里示意圈（底层约1公里警方网格）':'2公里示意提醒范围';
    const n=Number(z.evidence_count)||0;
    const headline=isUk?'警方在伦敦该网格记录 '+n+' 条「从个人身上盗窃」类事件。':'该区域有 '+n+' 条公开核验记录。';
    return '<article class="zone-card" data-zone="'+h(z.id)+'" role="button" tabindex="0"><div class="row"><b>'+h(z.city)+' · '+h(z.label)+'</b><span class="tag confirmed">官方统计</span></div><div class="v2-essential"><span><strong>统计期：'+h(period)+'</strong></span><span>范围：'+h(range)+'</span><span>记录：'+n+'条</span></div><div class="v2-headline">'+h(headline)+'</div><details class="v2-details"><summary>查看统计口径与来源</summary><p>警方原始位置已匿名化，统计不代表最近一宗事件的具体日期，也不代表游客被盗概率。</p><p>'+h(z.method_note||'')+'</p><a href="'+h(safeUrl(z.source_url))+'" target="_blank" rel="noopener noreferrer">官方资料 ↗</a></details></article>';
@@ -84,13 +92,46 @@ function setReportSpots(){
  const c=cities.find(x=>String(x.id)===$('reportCity').value);$('reportSpot').innerHTML='<option value="">不确定或不在景区</option>'+(c?.sights||[]).map(x=>'<option value="'+h(x)+'">'+h(x)+'</option>').join('');
 }
 function riskLabel(z){const n=Number(z.evidence_count||0),t=String(z.source_type||'');if(n<3)return'数据不足';if(t==='official_street_data'){const a=String(z.period_start||'').slice(0,7),b=String(z.period_end||'').slice(0,7);const count=(+b.slice(0,4)-(+a.slice(0,4)))*12+(+b.slice(5)-(+a.slice(5)))+1;const monthly=n/Math.max(1,count);return monthly>=20?'官方记录较集中':monthly>=6?'官方记录较多':'有警方公开记录'}return n>=6?'多条审核记录':'有审核记录'}
-function showZone(z){if(z.lat!=null&&z.lon!=null)map?.flyTo([z.lat,z.lon],14);$('mapPlace').textContent=`${z.city} · ${z.label} · ${riskLabel(z)}`;track('area_open',z.city)}
+function showZone(z){if(z.lat!=null&&z.lon!=null)map?.flyTo([z.lat,z.lon],12);$('mapPlace').textContent=`${z.city} · ${z.label} · ${riskLabel(z)}`;track('area_open',z.city)}
 function clearLayers(){for(const x of [...layers,...markers]){try{map.removeLayer(x)}catch{}}layers=[];markers=[]}
-function drawEvidence(){if(!map||typeof L==='undefined')return;clearLayers();for(const z of hotspots){if(!Number.isFinite(+z.lat)||!Number.isFinite(+z.lon))continue;const density=(Number(z.evidence_count)||0);const shade=density>=60?'#bc4737':density>=18?'#db8b2d':'#efc172';const isPoliceGrid=String(z.id||'').startsWith('policeuk-london-');let circle=isPoliceGrid?L.rectangle([[+z.lat-.005,+z.lon-.005],[+z.lat+.005,+z.lon+.005]],{color:shade,fillColor:shade,fillOpacity:density>=60?.34:.19,weight:2}):L.circle([+z.lat,+z.lon],{radius:Math.min(Math.max(+z.radius_m||600,250),2500),color:shade,fillColor:shade,fillOpacity:.21,weight:2});circle.bindPopup(`<div class="map-popup"><b>${h(z.city)} · ${h(z.label)}</b><br>${h(riskLabel(z))} · ${Number(z.evidence_count)||0}条核验记录<br>${h(z.period_start||'')}—${h(z.period_end||'')}<br><small>该区域为警方匿名位置汇总后的约1公里网格，不是具体案发范围。颜色按样本记录数标注，不是危险概率。</small>${z.source_url?`<br><a href="${h(safeUrl(z.source_url))}" target="_blank" rel="noopener">原始来源↗</a>`:''}</div>`);circle.addTo(map);layers.push(circle)}
-for(const e of verifiedEvents){if(!Number.isFinite(+e.lat)||!Number.isFinite(+e.lon))continue;const p=L.circle([+e.lat,+e.lon],{radius:Number(e.radius_m)||500,color:'#1b7866',fillColor:'#72c4b0',fillOpacity:.17,weight:2});p.bindPopup('<b>'+h(e.city)+' · '+h(e.spot_name||'匿名事件区域')+'</b><br>'+h(e.occurred_on||'发生日期未确认')+' · '+h(e.item_category||'物品不详')+'<br>'+h(e.short_summary)+'<br><a target="_blank" rel="noopener noreferrer" href="'+h(safeUrl(e.source_url))+'">查看出处 ↗</a>');p.addTo(map);layers.push(p)}
-for(const a of advisories){if(!Number.isFinite(+a.latitude)||!Number.isFinite(+a.longitude))continue;const p=L.circleMarker([+a.latitude,+a.longitude],{radius:6,color:'#276481',weight:2,fillColor:'#a6d4ed',fillOpacity:0.85});p.bindPopup('<b>'+h(a.spot_name)+'</b><br>公开提醒定位，非具体案发点<br>'+h(a.brief_zh)+'<br><small>'+h(a.qualification_zh)+'</small><br><a target="_blank" rel="noopener noreferrer" href="'+h(safeUrl(a.source_url))+'">查看来源 ↗</a>');p.addTo(map);layers.push(p)}
-for(const x of publicReports){if(!Number.isFinite(+x.display_lat)||!Number.isFinite(+x.display_lon))continue;const circle=L.circle([+x.display_lat,+x.display_lon],{radius:750,color:'#7759b9',weight:2,fillColor:'#ad94e1',fillOpacity:.18});circle.bindPopup(`<div class="map-popup"><b>${h(x.city)} · 游客自述（人工审核）</b><br>${h(x.category)} · ${h(x.occurred_on)}<br>${h(x.public_summary)}<br><small>模糊区域，非警方确认；仅代表用户叙述。</small></div>`);circle.addTo(map);layers.push(circle)}
-$('statAreas').textContent=hotspots.length;$('statReports').textContent=countReports();$('statUpdated').textContent=hotspots.length?(officialLatestMonth||'已载入'):'待更新';}
+function drawEvidence(){
+ if(!map||typeof L==='undefined')return;clearLayers();
+ for(const z of hotspots){
+  if(!Number.isFinite(+z.lat)||!Number.isFinite(+z.lon))continue;
+  const n=Number(z.evidence_count)||0,shade=n>=60?'#bd614b':n>=18?'#d99532':'#e5bb66';
+  const area=L.circle([+z.lat,+z.lon],{radius:DISPLAY_RADIUS_M,color:shade,fillColor:shade,fillOpacity:n>=60?.13:.065,weight:1.3});
+  area.bindPopup('<b>'+h(z.city)+' · 官方警方记录</b><br>统计期：'+h((z.period_start||'').slice(0,7))+'—'+h((z.period_end||'').slice(0,7))+'<br>记录：'+n+' 条<br><small>2公里是地图示意缓冲圈，不是犯罪影响范围。实际统计来自匿名化网格。</small><br><a href="'+h(safeUrl(z.source_url))+'" target="_blank" rel="noopener noreferrer">官方出处 ↗</a>');
+  area.addTo(map);layers.push(area);
+ }
+ for(const e of verifiedEvents){
+  if(!Number.isFinite(+e.lat)||!Number.isFinite(+e.lon))continue;
+  const area=L.circle([+e.lat,+e.lon],{radius:DISPLAY_RADIUS_M,color:'#15856f',fillColor:'#6cc7aa',fillOpacity:.13,weight:2});
+  area.bindPopup('<b>'+h(e.city)+' · '+h(e.spot_name||'已审核事件')+'</b><br>发生：'+h(e.occurred_on||'时间未公开')+' · 物品：'+h(e.item_category||'未说明')+'<br>'+h(e.short_summary)+'<br><small>2公里为查询提醒范围，非实际案发半径。</small><br><a href="'+h(safeUrl(e.source_url))+'" target="_blank" rel="noopener noreferrer">事件来源 ↗</a>');
+  area.addTo(map);layers.push(area);
+ }
+ for(const a of v2Areas){
+  if(!Number.isFinite(+a.lat)||!Number.isFinite(+a.lon))continue;
+  const area=L.circle([+a.lat,+a.lon],{radius:DISPLAY_RADIUS_M,color:'#188b74',fillColor:'#70c6af',fillOpacity:.08,weight:2});
+  area.bindPopup('<b>'+h(a.city)+' · '+h(a.spot_name)+'</b><br>已审核事件 '+Number(a.verified_event_count||0)+' 条<br><small>2公里查询示意范围，并非实际犯罪半径。</small>');
+  area.addTo(map);layers.push(area);
+ }
+ for(const a of advisories){
+  // General national/city notices have no local crime radius: only site-context gets a dotted browsing buffer.
+  if(a.scope!=='site_context'||!Number.isFinite(+a.latitude)||!Number.isFinite(+a.longitude))continue;
+  const area=L.circle([+a.latitude,+a.longitude],{radius:DISPLAY_RADIUS_M,color:'#548eb1',fillColor:'#a8d3ed',fillOpacity:.035,weight:1,dashArray:'6 7',opacity:.7});
+  area.bindPopup('<b>'+h(a.spot_name)+'</b><br><strong>公开旅行安全建议，非经核验案发地</strong><br>'+h(a.brief_zh)+'<br><small>蓝色虚线2公里只用于周边资料浏览。</small><br><a href="'+h(safeUrl(a.source_url))+'" target="_blank" rel="noopener noreferrer">查看出处 ↗</a>');
+  area.addTo(map);layers.push(area);
+ }
+ for(const x of publicReports){
+  if(!Number.isFinite(+x.display_lat)||!Number.isFinite(+x.display_lon))continue;
+  const area=L.circle([+x.display_lat,+x.display_lon],{radius:DISPLAY_RADIUS_M,color:'#7759b9',fillColor:'#baabdf',fillOpacity:.12,weight:2});
+  area.bindPopup('<b>'+h(x.city)+' · 游客已审核自述</b><br>'+h(x.occurred_on)+' · '+h(x.item_category||'失物未说明')+'<br>'+h(x.public_summary)+'<br><small>2公里提醒圈并非警方确认的盗窃范围。</small>');
+  area.addTo(map);layers.push(area);
+ }
+ $('statAreas').textContent=hotspots.length;$('statReports').textContent=countReports();
+ $('statUpdated').textContent=hotspots.length?(officialLatestMonth||'已载入'):'待更新';
+}
+
 function initMap(){if(typeof L==='undefined'){$('map').innerHTML='<div class="empty">地图网络资源加载失败。请刷新页面，或使用搜索列表。</div>';return}map=L.map('map',{center:[47,12],zoom:5,minZoom:3,scrollWheelZoom:false,tap:false,zoomControl:true,attributionControl:true,dragging:dragEnabled});L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'&copy; OpenStreetMap contributors',maxZoom:18}).addTo(map);if(!dragEnabled)$('map').classList.add('map-scroll');$('useDrag').textContent='地图拖动：'+(dragEnabled?'开':'关');map.on('click',ev=>{if(!pickMode)return;selectedPin={lat:+ev.latlng.lat.toFixed(5),lon:+ev.latlng.lng.toFixed(5)};pickMode=false;button('report');$('pinText').textContent=`已选事发点 ${selectedPin.lat}, ${selectedPin.lon}；仅内部审核使用`;});setTimeout(()=>map?.invalidateSize(),150);drawEvidence();}
 function showGuide(risk=false){$('modalTitle').textContent=risk?'危险程度如何判断？':'3步使用小偷在哪里';$('modalBody').innerHTML=risk?`<p>只有可核查的警方公开数据、允许复用的来源或人工审核的游客报告，才进入地图的事件层。</p><div class="guide-step"><b>记录较集中</b><p>同一官方采样网格平均每月至少20条相关记录，显示为「较集中」。这不是警方危险等级，也未按客流归一化。</p></div><div class="guide-step"><b>多条记录 / 有核验记录</b><p>公开记录月均6—19条显示「较多」，3条以上显示「有警方公开记录」；未确认社交帖子不进入评级。</p></div><div class="guide-step"><b>数据不足</b><p>缺乏足够且可核查的记录时不评级；0条记录绝不意味着“安全”。不同城市的原始计数不可直接比较危险程度。</p></div>`:`<div class="guide-step"><b>01 搜索地点</b><p>输入中国游客常用的中文城市、国家或景点名称，地图会定位。左侧信息区独立上下滚动，地图始终保持原位，可独立拖动。</p></div><div class="guide-step"><b>02 判断证据</b><p>点开区域，先看事件数、时间、数据类型与原始来源；没有证据就显示数据不足。</p></div><div class="guide-step"><b>03 匿名报失</b><p>不需账户，不填姓名或电话，只填具体地址、时间、类型与经过。审核后仅公开大致范围，不能作为正式报警。</p></div><p class="muted">使用方向：为中国游客服务；中国的小红书、微博、携程、马蜂窝、穷游、中文媒体及海外公开资料均可成为待核验线索；只有许可清楚、具备证据且经过审核的记录才形成地图区域。</p>`;$('guideModal').showModal()}
 function showSources(){$('modalTitle').textContent='当前公开证据来源';$('modalBody').innerHTML=`<div class="guide-step"><b>英国警方公开犯罪记录（开放CSV）</b><p><a target="_blank" rel="noopener" href="https://data.police.uk/data/">data.police.uk/data</a> · OGL v3，包含匿名化街道级犯罪事件，可按时间聚合。</p></div><div class="guide-step"><b>法国政府SSMSI统计</b><p><a target="_blank" rel="noopener" href="https://www.data.gouv.fr/datasets/bases-statistiques-communale-departementale-et-regionale-de-la-delinquance-enregistree-par-la-police-et-la-gendarmerie-nationales">市镇/省级统计</a> · 不当成具体街道事件。</p></div><div class="guide-step"><b>加泰罗尼亚ICGC犯罪统计地图</b><p><a href="https://www.icgc.cat/en/Tools-and-viewers/Viewers/Crime-map" target="_blank" rel="noopener">警方分区数据</a> · 仅能映射相应分区，不能伪造精确发生点。</p></div><div class="guide-step"><b>国内中文来源（线索发现）</b><p>小红书、微博、微信公众号、携程、马蜂窝、穷游以及中国公开新闻报道；优先识别中国游客常用地名和中文失窃描述。未获授权的帖文不抓取全文、不直接作为风险等级。</p></div><div class="guide-step"><b>海外来源（事实核验）</b><p>当地警方开放数据、政府统计、当地公开新闻与允许复用的旅游安全公告。提供日期、案件类别、区划或模糊位置及原始链接。</p></div><p class="muted">海外与国内均属于信息来源；地图只展示经核验且有合法复用依据的区域。</p>`;$('guideModal').showModal()}
