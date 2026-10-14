@@ -31,7 +31,7 @@ class Meta(HTMLParser):
   if getattr(self,"in_heading",False):self.heading+=d
 def clean(s):
  s=html.unescape(re.sub(r'\s+',' ',s or "")).strip()[:200]
- return PHONE.sub('[removed]',EMAIL.sub('[removed]',s)
+ return PHONE.sub('[removed]',EMAIL.sub('[removed]',s))
 def read_metadata(url):
  u=urllib.parse.urlsplit(url)
  if u.scheme!="https" or not u.netloc:raise ValueError("HTTPS required")
