@@ -13,14 +13,13 @@ async function query(c,path,opt={}){
   if(!r.ok){let errorCode='';try{errorCode=(await r.json()).code||''}catch{};const error=new Error('DB_'+r.status);error.status=r.status;error.code=errorCode;throw error;}
   return await r.json().catch(()=>[]);
 }
-function fingerprint(req){
-  const header=String(req.headers['x-vercel-forwarded-for']||req.headers['x-forwarded-for']||'').split(',')[0].trim();
-  // Never accept an arbitrary user-supplied client-address header unless routed via trusted Vercel.
-  const network=header && /^[a-f0-9:.]{3,50}$/i.test(header)?header:'none';
-  const salt=process.env.REPORT_RATE_SECRET;
-  // Truncate UA and rotate the long-lived secret only via env release.
-  return crypto.createHmac('sha256',salt).update(network+'|'+String(req.headers['user-agent']||'').slice(0,120)).digest('hex');
+function fingerprint(report){
+  // Repeat-content dedupe without reading or storing IP, user-agent, cookies or accounts.
+  return crypto.createHmac('sha256',process.env.REPORT_RATE_SECRET)
+   .update(JSON.stringify([report.country,report.city,report.address,report.date,report.type,report.description]))
+   .digest('hex');
 }
+
 module.exports=async function handler(req,res){
   res.setHeader('Cache-Control','no-store');res.setHeader('X-Content-Type-Options','nosniff');
   const c=cfg();
@@ -48,12 +47,12 @@ module.exports=async function handler(req,res){
   if(/[\w.+-]+@[\w-]+\.[\w.-]+/.test(description)||/(?:\+?\d[\d\s-]{9,}\d)/.test(description))return res.status(400).json({error:'请删除邮箱、电话号码和其他个人信息后重新提交'});
   if(!validCoordinate(lat,90)||!validCoordinate(lon,180)||((lat===null)!==(lon===null)))return res.status(400).json({error:'地图坐标无效'});
   try{
-    const report={country,city,address_private:address,description_private:description,occurred_on:date,category:type,lat_private:lat,lon_private:lon,status:'pending',consent_at:new Date().toISOString(),submission_fingerprint:fingerprint(req),submission_bucket:Math.floor(Date.now()/600000)};
+    const report={country,city,address_private:address,description_private:description,occurred_on:date,category:type,lat_private:lat,lon_private:lon,status:'pending',consent_at:new Date().toISOString(),submission_fingerprint:fingerprint({country,city,address,date,type,description}),submission_bucket:Math.floor(Date.now()/600000)};
     const rows=await query(c,'loss_reports?select=id',{method:'POST',headers:{...jsonHeader,Prefer:'return=representation'},body:JSON.stringify(report)});
     try{await fetch(c.u+'/rest/v1/rpc/count_site_metric',{method:'POST',headers:{apikey:c.k,...(c.k.startsWith('sb_secret_')?{}:{Authorization:'Bearer '+c.k}),'Content-Type':'application/json'},body:JSON.stringify({event_name:'report_received',event_city:city}),signal:AbortSignal.timeout(2200)})}catch{/* reporting succeeds even if metrics fail */}
     return res.status(201).json({status:'pending',receipt:rows[0]?.id||null,message:'已收到，待人工审核；不会立即公开'});
   }catch(e){
-    if(e.code==='23505')return res.status(429).json({error:'同一设备近期已提交，请十分钟后再试'});
+    if(e.code==='23505')return res.status(429).json({error:'相同内容近期已提交，请十分钟后再试'});
     return res.status(503).json({error:'上报服务暂不可用，可先保存本机草稿'});
   }
 };
