@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-10-14T19:10:41.394242+00:00",
+  "generated_at": "2026-10-14T19:48:59.167406+00:00",
   "status": "STAGING_ONLY_NOT_EVIDENCE",
-  "source_total": 15,
-  "metadata_ok": 7,
+  "source_total": 23,
+  "metadata_ok": 10,
   "sources": [
     {
       "source_key": "uk-police",
@@ -104,7 +104,11 @@
       "url": "https://barcelona.china-consulate.gov.cn/lsfw/lsbhhxz/202406/t20240612_11435051.htm",
       "source_kind": "consular_notice",
       "collection_method": "metadata_only",
-      "status": "The read operation timed out",
+      "status": "metadata_ok",
+      "title": "驻巴塞罗那总领馆提醒您暑期出行谨防盗抢 — 中华人民共和国驻巴塞罗那总领馆",
+      "meta_description": "",
+      "last_modified": "",
+      "published_meta": "",
       "theft_keyword_in_metadata": false,
       "ready_for_event_publication": false
     },
@@ -147,7 +151,7 @@
       "status": "metadata_ok",
       "title": "Banche dati e statistiche | Prefettura - Ufficio Territoriale del Governo di Roma",
       "meta_description": "",
-      "last_modified": "Wed, 14 Oct 2026 19:10:37 GMT",
+      "last_modified": "Wed, 14 Oct 2026 19:48:51 GMT",
       "published_meta": "",
       "theft_keyword_in_metadata": false,
       "ready_for_event_publication": false
@@ -202,6 +206,98 @@
       "city": "巴塞罗那",
       "scope": "article",
       "url": "https://www.thelocal.es/20251104/tourism-in-spain-12-barcelona-travel-hacks-to-make-your-trip-better",
+      "source_kind": "public_news",
+      "collection_method": "manual_link",
+      "status": "link_only_not_fetched"
+    },
+    {
+      "source_key": "gdelt-news-index",
+      "country": null,
+      "city": null,
+      "scope": "global_news_index",
+      "url": "https://api.gdeltproject.org/api/v2/doc/doc",
+      "source_kind": "public_news",
+      "collection_method": "api",
+      "status": "link_only_not_fetched"
+    },
+    {
+      "source_key": "weibo-social-discovery",
+      "country": null,
+      "city": null,
+      "scope": "lead_reference_only",
+      "url": "https://weibo.com/",
+      "source_kind": "public_forum",
+      "collection_method": "manual_link",
+      "status": "link_only_not_fetched"
+    },
+    {
+      "source_key": "xiaohongshu-social-discovery",
+      "country": null,
+      "city": null,
+      "scope": "lead_reference_only",
+      "url": "https://www.xiaohongshu.com/",
+      "source_kind": "public_forum",
+      "collection_method": "manual_link",
+      "status": "link_only_not_fetched"
+    },
+    {
+      "source_key": "reddit-developer-platform",
+      "country": null,
+      "city": null,
+      "scope": "lead_reference_only",
+      "url": "https://www.reddit.com/dev/api/",
+      "source_kind": "public_forum",
+      "collection_method": "manual_link",
+      "status": "link_only_not_fetched"
+    },
+    {
+      "source_key": "barcelona-tmb-metro-h1-2026",
+      "country": "西班牙",
+      "city": "巴塞罗那",
+      "scope": "all_city_metro",
+      "url": "https://noticies.tmb.cat/sala-de-premsa/delictes-metro-disminueixen-34-durant-primer-semestre-de-2026",
+      "source_kind": "official_statistics",
+      "collection_method": "metadata_only",
+      "status": "metadata_ok",
+      "title": "Els delictes al metro disminueixen un 34% durant el primer semestre de 2026 | TMB Notícies",
+      "meta_description": "Els fets delictius registrats a la xarxa de metro de Transports Metropolitans de Barcelona (TMB) han disminuït un 34% durant els sis primers mesos de 2026. Així, respecte al mateix període de 2025 en ",
+      "last_modified": "",
+      "published_meta": "",
+      "theft_keyword_in_metadata": false,
+      "ready_for_event_publication": false
+    },
+    {
+      "source_key": "china-consulate-barcelona-2026",
+      "country": "西班牙",
+      "city": "巴塞罗那",
+      "scope": "consular_notice",
+      "url": "https://barcelona.china-consulate.gov.cn/lsfw/lsbhhxz/202607/t20260728_11993921.htm",
+      "source_kind": "consular_notice",
+      "collection_method": "metadata_only",
+      "status": "metadata_ok",
+      "title": "巴塞罗那安全畅游指南上线啦！ — 中华人民共和国驻巴塞罗那总领馆",
+      "meta_description": "",
+      "last_modified": "",
+      "published_meta": "",
+      "theft_keyword_in_metadata": false,
+      "ready_for_event_publication": false
+    },
+    {
+      "source_key": "italy-police-rome-daily",
+      "country": "意大利",
+      "city": "罗马",
+      "scope": "official_press_archive",
+      "url": "https://questure.poliziadistato.it/it/Roma",
+      "source_kind": "official_advice",
+      "collection_method": "manual_link",
+      "status": "link_only_not_fetched"
+    },
+    {
+      "source_key": "barcelona-news-case-index",
+      "country": "西班牙",
+      "city": "巴塞罗那",
+      "scope": "news_case_links",
+      "url": "https://www.lavanguardia.com/local/barcelona",
       "source_kind": "public_news",
       "collection_method": "manual_link",
       "status": "link_only_not_fetched"
