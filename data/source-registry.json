@@ -1,0 +1,13 @@
+{
+  "description":"公开信息核验入口；链接不等于有数据复用授权；自动采集仅记录许可范围内的公开元数据。",
+  "sources":[
+    {"name":"ICGC Crime map","url":"https://www.icgc.cat/en/Tools-and-viewers/Viewers/Crime-map","kind":"official-information","reuserights":"check-source-license","crawl_metadata":true,"scope":"Catalonia police-area aggregate statistics, not exact incident points"},
+    {"name":"Pickpockets.live","url":"https://pickpockets.live/","kind":"third-party-platform","reuserights":"license-required-for-events","crawl_metadata":true},
+    {"name":"PickpocketMaps","url":"https://pickpocketmaps.com/","kind":"third-party-platform","reuserights":"license-required-for-events","crawl_metadata":true},
+    {"name":"MineCrime","url":"https://www.minecrime.it/products","kind":"third-party-commercial-database","reuserights":"commercial-license-required","crawl_metadata":true},
+    {"name":"小红书","url":"https://www.xiaohongshu.com/","kind":"social-platform","reuserights":"platform-rules-apply","crawl_metadata":false,"status":"specific-public-post-urls-and-permissions-required"},
+    {"name":"微博","url":"https://weibo.com/","kind":"social-platform","reuserights":"platform-rules-apply","crawl_metadata":false,"status":"specific-public-post-urls-and-permissions-required"},
+    {"name":"Instagram","url":"https://www.instagram.com/","kind":"social-platform","reuserights":"platform-rules-apply","crawl_metadata":false,"status":"specific-public-post-urls-and-permissions-required"},
+    {"name":"Facebook","url":"https://www.facebook.com/","kind":"social-platform","reuserights":"platform-rules-apply","crawl_metadata":false,"status":"specific-public-post-urls-and-permissions-required"}
+  ]
+}

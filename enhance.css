@@ -1,0 +1,54 @@
+/* V1.1: document scroll and safety regions */
+html, body {height:auto;min-height:100%;overflow-x:hidden;scroll-behavior:smooth}
+.app {height:100dvh; min-height:580px; overflow:visible}
+.sidebar {min-height:0;overflow:hidden}
+.sidebar-scroll {min-height:0;overflow-y:auto;overscroll-behavior:contain}
+.world {min-height:0}
+.region-panel {position:absolute;z-index:420;right:22px;bottom:24px;width:min(325px,calc(100% - 44px));background:#fff;border:1px solid #dde9e6;border-radius:14px;box-shadow:0 12px 38px #102f2828;padding:13px 15px;font-size:12px;line-height:1.7;max-height:38dvh;overflow-y:auto;pointer-events:auto}
+.region-panel b {font-size:13px;color:#183b36}
+.region-panel .region-head{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.region-panel .region-note{font-size:11px;color:#697f7b;margin:3px 0 7px}
+.region-panel a{color:#047c71;text-decoration:underline;text-underline-offset:3px}
+.region-item{border-top:1px solid #e9eeee;padding:8px 0}
+.region-item .region-title{font-weight:700}
+.region-mark{display:inline-block;border-radius:7px;padding:1px 5px;font-size:10px;background:#e9f6f2;color:#12675d;margin-right:5px}
+.area-banner{font-size:11px;background:#f0f8f5;border:1px solid #d8eee7;color:#315c53;border-radius:10px;padding:10px 12px;line-height:1.65;margin-bottom:11px}
+.pill-warning{border-radius:6px;background:#fff8e6;color:#966120;border:1px solid #f6de9e;padding:2px 7px;display:inline-block;font-size:10px}
+.map-areas-switch{position:absolute;right:20px;top:84px;z-index:450;border:1px solid #d0e7e0;border-radius:10px;background:white;color:#007c71;font-size:12px;padding:9px 12px;font-weight:700;box-shadow:0 4px 18px #172c2c21}
+.report-help{font-size:12px;line-height:1.75;background:#edf8f5;border:1px solid #c7e7de;color:#275c51;padding:10px 12px;border-radius:11px;margin-top:10px}
+.report-toolbox{display:flex;gap:8px;flex-wrap:wrap;margin:9px 0}
+.report-toolbox button{border:1px solid #c9d7d3;background:white;border-radius:8px;padding:9px 10px;font-size:12px}
+.report-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.report-grid>*{min-width:0}
+.help-extra{border:1px solid #cfdedb;border-radius:12px;padding:14px;margin:12px 0;background:#fff}
+.help-extra details{padding:6px 0}
+.help-extra summary{font-size:13px;font-weight:750;cursor:pointer;color:#274f4b}
+.help-extra p{font-size:12px;line-height:1.9}
+.help-extra a{color:#008076}
+.myreminder{display:block;width:100%;margin-top:9px;border:1px solid #c7ded6;background:#edf8f3;color:#096b61;padding:11px;border-radius:10px;font-weight:750;cursor:pointer}
+.modalselectpin{cursor:crosshair!important}
+@media(max-width:780px){
+  body{overflow-y:auto;-webkit-overflow-scrolling:touch}
+  .app{height:auto;min-height:100dvh;display:flex;flex-direction:column;overflow:visible}
+  .world{order:0;height:65dvh;min-height:420px;flex:0 0 auto}
+  .sidebar{order:1;position:relative;transform:none!important;bottom:auto;left:auto;right:auto;width:100%;height:auto;max-height:none;overflow:visible;border-radius:18px 18px 0 0}
+  .sidebar.collapsed{transform:none!important}
+  .sidebar-scroll{overflow:visible;min-height:0;padding-bottom:22px}
+  .sidebar .mobile-grip{display:none}
+  .side-foot{display:flex;flex-wrap:wrap;gap:8px;padding:15px}
+  .maplegend{display:none}
+  .region-panel{position:relative;right:auto;bottom:auto;left:auto;width:auto;max-height:none;box-shadow:none;border-radius:10px;margin:0 12px 12px;z-index:0}
+  #regionPanel{display:none}
+  .map-areas-switch{top:68px;right:12px;padding:8px}
+  .topline{flex-wrap:wrap;justify-content:flex-end}
+  .location-chip{width:100%;max-width:100%;justify-content:center}
+  .chip-actions{max-width:100%}
+  .chip-actions button{font-size:11px}
+  .floating{bottom:18px}
+  .info-card{max-height:39dvh}
+  .modal-bg{align-items:flex-end;padding:0}
+  .modal{width:100%;max-height:92dvh;border-radius:16px 16px 0 0;padding:19px}
+}
+@media(max-width:360px){.chip-actions{flex-wrap:wrap}.world{height:72dvh}}
+@media(max-width:780px){.map-areas-switch{top:160px!important;right:12px!important}.map-areas-switch:nth-of-type(2){top:204px!important}}
+@media(max-width:780px){.world .locate{top:251px;right:12px}}
