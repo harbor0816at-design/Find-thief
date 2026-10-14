@@ -158,7 +158,9 @@ async function loadEvidence(){
   }catch(e){}
   try{const r=await fetch('/data/multicountry-advisories.json',{cache:'no-store'});if(r.ok){const j=await r.json();advisories=Array.isArray(j.items)?j.items:[]}}catch{}
   try{const r=await fetch('/api/lost-items',{cache:'no-store'});if(r.ok){const j=await r.json();lostItems=Array.isArray(j.items)?j.items:[]}}catch{}
-  try{const r=await fetch('/api/events-v2',{cache:'no-store'});if(r.ok){const j=await r.json();verifiedEvents=Array.isArray(j.items)?j.items:[];v2Areas=Array.isArray(j.areas)?j.areas:[]}}catch{}
+  let approvedEventsApiAvailable=false;
+  try{const r=await fetch('/api/events-v2',{cache:'no-store'});if(r.ok){const j=await r.json();if(j.available===true){approvedEventsApiAvailable=true;verifiedEvents=Array.isArray(j.items)?j.items:[];v2Areas=Array.isArray(j.areas)?j.areas:[]}}}catch{}
+  if(!approvedEventsApiAvailable){try{const r=await fetch('/data/verified-events-v21.json',{cache:'no-store'});if(r.ok){const j=await r.json();if(j.verified_public_snapshot===true&&Array.isArray(j.items)){verifiedEvents=j.items;v2Areas=[];}}}catch{}}
   drawEvidence();renderCards();
 }
 async function loadConfig(){try{const r=await fetch('/api/config',{cache:'no-store'});if(!r.ok)throw Error('接口不可用');const o=await r.json();reportEnabled=o.reportSubmissionsEnabled===true;$('reportState').classList.toggle('warning',!reportEnabled);$('reportState').textContent=reportEnabled?'在线提交已开启：报告只进入待审核队列，不会直接公开；无需注册。':'线上数据库投稿暂未开放：你可以在本机保存草稿，但尚不能上传服务器。请勿误认为保存成功即已送交审核。';$('sendReport').disabled=!reportEnabled;$('sendReport').textContent=reportEnabled?'提交待审核':'线上提交暂不可用'}catch{$('reportState').textContent='无法确认服务状态；只允许本机保存草稿。';$('reportState').classList.add('warning');$('sendReport').disabled=true}}
