@@ -27,9 +27,10 @@ function labelDate(value){return value&&/^\d{4}-\d{2}-\d{2}$/.test(value)?value:
 function renderCards(){
  const q=$('citySearch').value.trim().toLowerCase(),country=$('countrySelect').value,wrap=$('zoneCards');
  const matchLocation=o=>(!selected||o.city===selected.name)&&(!country||o.country===country)&&(!q||[o.country,o.city,o.spot_name||o.label||'',o.short_summary||''].join(' ').toLowerCase().includes(q));
- const events=verifiedEvents.filter(matchLocation).slice(0,20);
+ const events=verifiedEvents.filter(matchLocation).sort((a,b)=>String(b.occurred_on||b.source_published_on||'').localeCompare(String(a.occurred_on||a.source_published_on||''))).slice(0,20);
  const reports=publicReports.filter(matchLocation).slice(0,12);
  const matches=hotspots.filter(matchLocation).sort((a,b)=>Number(b.evidence_count||0)-Number(a.evidence_count||0));
+ const multiCases=v2Areas.filter(matchLocation);
  const proven=showAllZones?matches.slice(0,MAX_ZONES):matches.slice(0,12);
  let out='';
  if(events.length){
@@ -42,6 +43,10 @@ function renderCards(){
    const kind=e.source_type==='official_case'?'官方记录':e.source_type==='consular_case'?'领馆案例':e.source_type==='journalism_case'?'媒体案例':'人工审核游客自述';
    return '<article class="zone-card"><div class="row"><b>'+h(e.city)+' · '+h(e.spot_name||'地点未细化')+'</b><span class="tag confirmed">'+h(kind)+'</span></div><div class="v2-essential"><span><strong>'+h(date)+'</strong></span><span>范围：'+h(range)+'</span><span>物品：'+h(obj)+'</span></div><div class="v2-headline">'+h(e.short_summary)+'</div><details class="v2-details"><summary>查看出处与说明</summary><p>资料发布日期'+h(publish||'：未确认')+' · '+h(e.event_kind==='confirmed_theft'?'盗窃记录':e.event_kind==='alleged_theft'?'疑似盗窃陈述':'物品遗失或安全描述')+'</p><a href="'+h(safeUrl(e.source_url))+'" target="_blank" rel="noopener noreferrer">原始来源 ↗</a></details></article>';
   }).join('');
+ }
+ if(multiCases.length){
+  out+='<div class="guidance-title">🚨 警方调查多案汇总（不按单案拆分）</div>';
+  out+=multiCases.map(a=>'<article class="zone-card regional-series"><div class="row"><b>'+h(a.city)+' · '+h(a.spot_name)+'</b><span class="tag confirmed">多起事件汇总</span></div><div class="v2-essential"><span>资料发布：'+h(a.last_source_on||'未确认')+'</span><span>展示半径：2公里</span><span>来源记载：'+Number(a.verified_event_count||0)+'起</span></div><p class="v2-headline">'+h(a.sample_summary||'警方公开调查记录')+'</p><details class="v2-details"><summary>查看原始报道和口径</summary><p>这是调查报告中的系列案件汇总，不是 '+Number(a.verified_event_count||0)+'条单独上传事件。地图2公里仅是查询区域，不代表每处都发生盗窃。</p>'+((a.source_urls||[]).filter(x=>safeUrl(x)!=='#').map(x=>'<p><a href="'+h(safeUrl(x))+'" rel="noopener noreferrer" target="_blank">阅读来源 ↗</a></p>').join(''))+'</details></article>').join('');
  }
  if(reports.length){
   out+='<div class="guidance-title">游客匿名上传 · 已审核</div>';
@@ -61,7 +66,7 @@ function renderCards(){
  }
  if(!out){out=selected?'<div class="empty"><b>'+h(selected.name)+'：暂无可核验的逐条失窃记录</b><p>下方有公开旅游防盗资料（如有）。你也可以匿名提供亲历事件。</p></div>':'<div class="empty">请选择城市或景点查看来源和记录。没有记录不等于安全。</div>'}
  wrap.innerHTML=out;
- $('zoneCount').textContent=matches.length+'片警方统计区域 · '+events.length+'条核验个案 · '+reports.length+'条游客报告';
+ $('zoneCount').textContent=matches.length+'片警方网格 · '+events.length+'条来源个案 · '+multiCases.length+'片系列汇总';
  wrap.querySelectorAll('[data-zone]').forEach(el=>{const show=()=>{const z=hotspots.find(x=>String(x.id)===el.dataset.zone);if(z)showZone(z)};el.onclick=e=>{if(e.target.closest('a,summary,details'))return;show()};el.onkeydown=e=>{if(e.key==='Enter')show()}});
  const more=$('loadZones');if(more)more.onclick=()=>{showAllZones=!showAllZones;renderCards()};
  renderAdvisoriesAndSpots();
@@ -82,7 +87,10 @@ function renderAdvisoriesAndSpots(){
  }).join(''):(selected?'<p class="muted">该城市暂无精确到景区的可核验事件资料。</p>':'');
  wrap.querySelectorAll('[data-advice]').forEach(b=>b.onclick=()=>{const a=advisories.find(x=>x.id===b.dataset.advice);if(a&&map){map.flyTo([a.latitude,a.longitude],14);$('mapPlace').textContent=a.city+' · '+a.spot_name+'（资料参考位置）'}});
  const box=$('lostWhatPanel');if(!selected){box.innerHTML='';return}
- box.innerHTML='<div class="guidance-title">🎒 这些景点丢过什么？</div><p class="muted">仅使用审核后的匿名游客报告；不足3条的类别暂不显示。</p><div class="spot-item-grid">'+(selected.sights||[]).slice(0,8).map(name=>{
+ const sourced=verifiedEvents.filter(e=>e.city===selected.name&&e.item_category);
+ const counts={};for(const e of sourced)counts[e.item_category]=(counts[e.item_category]||0)+1;
+ const sourcedText=Object.keys(counts).length?'<div class="sourced-items"><b>🧳 此城有出处的事件涉及</b><div>'+Object.entries(counts).sort((a,b)=>b[1]-a[1]).map(([name,n])=>'<span class="sourced-item-chip">'+h(name)+' '+n+'条来源个案</span>').join('')+'</div><small>这是已收录的报道/官方个案分类，不是该城市实际失窃率；不同媒体重复报道已尽量去重。</small></div>':'<p class="muted">本城暂无已核验的单独失窃事件物品记录。</p>';
+ box.innerHTML='<div class="guidance-title">🎒 这些景区报道都丢了什么？</div>'+sourcedText+'<p class="muted">游客匿名上传的排行榜另行统计，目前每类不足3条不会显示。</p><div class="spot-item-grid">'+(selected.sights||[]).slice(0,8).map(name=>{
  const a=lostItems.filter(x=>x.city===selected.name&&x.spot_name===name);
  const summary=a.length?a.map(x=>h(x.item_category)+' '+Number(x.count)+'条').join('、'):'暂无已审核物品数据';
  return '<div class="spot-item"><b>'+h(name)+'</b><small>'+summary+'</small><button type="button" data-report-spot="'+h(name)+'">我也要报丢失</button></div>'
@@ -160,7 +168,7 @@ async function loadEvidence(){
   try{const r=await fetch('/api/lost-items',{cache:'no-store'});if(r.ok){const j=await r.json();lostItems=Array.isArray(j.items)?j.items:[]}}catch{}
   let approvedEventsApiAvailable=false;
   try{const r=await fetch('/api/events-v2',{cache:'no-store'});if(r.ok){const j=await r.json();if(j.available===true){approvedEventsApiAvailable=true;verifiedEvents=Array.isArray(j.items)?j.items:[];v2Areas=Array.isArray(j.areas)?j.areas:[]}}}catch{}
-  if(!approvedEventsApiAvailable){try{const r=await fetch('/data/verified-events-v21.json',{cache:'no-store'});if(r.ok){const j=await r.json();if(j.verified_public_snapshot===true&&Array.isArray(j.items)){verifiedEvents=j.items;v2Areas=[];}}}catch{}}
+  if(!approvedEventsApiAvailable){try{const r=await fetch('/data/verified-events-v21.json',{cache:'no-store'});if(r.ok){const j=await r.json();if(j.verified_public_snapshot===true&&Array.isArray(j.items)){verifiedEvents=j.items;v2Areas=Array.isArray(j.areas)?j.areas:[];}}}catch{}}
   drawEvidence();renderCards();
 }
 async function loadConfig(){try{const r=await fetch('/api/config',{cache:'no-store'});if(!r.ok)throw Error('接口不可用');const o=await r.json();reportEnabled=o.reportSubmissionsEnabled===true;$('reportState').classList.toggle('warning',!reportEnabled);$('reportState').textContent=reportEnabled?'在线提交已开启：报告只进入待审核队列，不会直接公开；无需注册。':'线上数据库投稿暂未开放：你可以在本机保存草稿，但尚不能上传服务器。请勿误认为保存成功即已送交审核。';$('sendReport').disabled=!reportEnabled;$('sendReport').textContent=reportEnabled?'提交待审核':'线上提交暂不可用'}catch{$('reportState').textContent='无法确认服务状态；只允许本机保存草稿。';$('reportState').classList.add('warning');$('sendReport').disabled=true}}
