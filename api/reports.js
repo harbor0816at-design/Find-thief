@@ -1,4 +1,5 @@
 const crypto = require('node:crypto');
+const itemCategories=new Set(['手机','钱包','护照证件','背包行李','银行卡现金','相机电子设备','首饰','其他物品']);
 const categories = new Set(['物品遗失','疑似扒窃','已报警确认失窃','其他物品安全事件']);
 const jsonHeader={'Content-Type':'application/json'};
 function cfg() {
@@ -26,7 +27,7 @@ module.exports=async function handler(req,res){
   if(req.method==='GET'){
     if(!c)return res.status(200).json({enabled:false,items:[],message:'尚无独立的在线事件库'});
     try{
-      const items=await query(c,'loss_reports?status=eq.approved&select=id,country,city,category,occurred_on,created_at,public_summary,display_lat,display_lon&order=occurred_on.desc&limit=150');
+      const items=await query(c,'loss_reports?status=eq.approved&select=id,country,city,category,item_category,spot_name_public,occurred_on,created_at,public_summary,display_lat,display_lon&order=occurred_on.desc&limit=150');
       return res.status(200).json({enabled:true,items});
     }catch{return res.status(503).json({error:'暂时无法读取审核记录'});}
   }
@@ -40,6 +41,7 @@ module.exports=async function handler(req,res){
   if(d.website)return res.status(202).json({status:'accepted'}); // honeypot
   if(d.consent!==true)return res.status(400).json({error:'提交前请阅读并同意隐私说明'});
   const country=clean(d.country,60),city=clean(d.city,100),address=clean(d.address,160),description=clean(d.description,800),type=d.type;
+  const itemCategory=clean(d.item_category||'其他物品',40),spotName=clean(d.spot_name||'',100);if(!itemCategories.has(itemCategory))return res.status(400).json({error:'请选择有效丢失物品类别'});
   const date=clean(d.date,10);let lat=d.lat==null||d.lat===''?null:Number(d.lat),lon=d.lon==null||d.lon===''?null:Number(d.lon);
   if(!country||!city||address.length<6||description.length<12||address.length>160||description.length>800||!categories.has(type))return res.status(400).json({error:'请提供完整且不含个人身份信息的地点及经过'});
   if(!/^\d{4}-\d{2}-\d{2}$/.test(date)||Number.isNaN(Date.parse(date))||new Date(date).toISOString().slice(0,10)!==date || date>new Date().toISOString().slice(0,10))return res.status(400).json({error:'日期无效'});
@@ -47,7 +49,7 @@ module.exports=async function handler(req,res){
   if(/[\w.+-]+@[\w-]+\.[\w.-]+/.test(description)||/(?:\+?\d[\d\s-]{9,}\d)/.test(description))return res.status(400).json({error:'请删除邮箱、电话号码和其他个人信息后重新提交'});
   if(!validCoordinate(lat,90)||!validCoordinate(lon,180)||((lat===null)!==(lon===null)))return res.status(400).json({error:'地图坐标无效'});
   try{
-    const report={country,city,address_private:address,description_private:description,occurred_on:date,category:type,lat_private:lat,lon_private:lon,status:'pending',consent_at:new Date().toISOString(),submission_fingerprint:fingerprint({country,city,address,date,type,description}),submission_bucket:Math.floor(Date.now()/600000)};
+    const report={country,city,item_category:itemCategory,spot_name_private:spotName||null,address_private:address,description_private:description,occurred_on:date,category:type,lat_private:lat,lon_private:lon,status:'pending',consent_at:new Date().toISOString(),submission_fingerprint:fingerprint({country,city,address,date,type,description,itemCategory,spotName}),submission_bucket:Math.floor(Date.now()/600000)};
     const rows=await query(c,'loss_reports?select=id',{method:'POST',headers:{...jsonHeader,Prefer:'return=representation'},body:JSON.stringify(report)});
     try{await fetch(c.u+'/rest/v1/rpc/count_site_metric',{method:'POST',headers:{apikey:c.k,...(c.k.startsWith('sb_secret_')?{}:{Authorization:'Bearer '+c.k}),'Content-Type':'application/json'},body:JSON.stringify({event_name:'report_received',event_city:city}),signal:AbortSignal.timeout(2200)})}catch{/* reporting succeeds even if metrics fail */}
     return res.status(201).json({status:'pending',receipt:rows[0]?.id||null,message:'已收到，待人工审核；不会立即公开'});

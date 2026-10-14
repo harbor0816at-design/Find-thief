@@ -32,7 +32,7 @@ module.exports=async function handler(req,res){
  if(!identity.ok)return res.status(identity.status).json({error:identity.mfa?'需要管理员双重验证':identity.status===403?'无审核权限':'请登录管理员账户'});
  try{
    if(req.method==='GET'){
-     const rows=await db(c,'loss_reports?select=id,country,city,address_private,lat_private,lon_private,occurred_on,category,description_private,status,created_at,public_summary,reviewed_at,reviewed_by&order=created_at.desc&limit=100');
+     const rows=await db(c,'loss_reports?select=id,country,city,address_private,lat_private,lon_private,occurred_on,category,item_category,spot_name_private,spot_name_public,description_private,status,created_at,public_summary,reviewed_at,reviewed_by&order=created_at.desc&limit=100');
      const since=new Date(Date.now()-30*86400000).toISOString().slice(0,10);
      let metrics=[],areas=[],leads=[];try{metrics=await db(c,'site_metrics_daily?select=day,metric,city,total&day=gte.'+since+'&limit=5000');areas=await db(c,'evidence_areas?status=eq.published&select=id&limit=500');leads=await db(c,'source_leads?status=eq.needs_review&select=id&limit=500');}catch{/* fails closed for metrics; still permit reviewing reports */}
      const totals={};const cities={};
@@ -48,8 +48,8 @@ module.exports=async function handler(req,res){
      const lat=Number(p.display_lat),lon=Number(p.display_lon);
      if(summary.length<12||summary.length>240||!Number.isFinite(lat)||!Number.isFinite(lon)||Math.abs(lat)>90||Math.abs(lon)>180)return res.status(400).json({error:'匿名摘要12–240字，且须填写近似区域坐标'});
      if(/[\w.+-]+@[\w-]+\.[\w.-]+/.test(summary)||/(?:\+?\d[\d\s-]{9,}\d)/.test(summary))return res.status(400).json({error:'摘要含疑似个人联系信息，请移除'});
-     changes.public_summary=summary;changes.display_lat=+lat.toFixed(2);changes.display_lon=+lon.toFixed(2);
-   }else{changes.public_summary=null;changes.display_lat=null;changes.display_lon=null;}
+     changes.public_summary=summary;changes.display_lat=+lat.toFixed(2);changes.display_lon=+lon.toFixed(2);changes.spot_name_public=String(p.spot_name_public||'').trim().slice(0,100)||null;
+   }else{changes.public_summary=null;changes.display_lat=null;changes.display_lon=null;changes.spot_name_public=null;}
    // Only pending reports can be approved/rejected. DB trigger writes audit atomically.
    const changed=await db(c,'loss_reports?id=eq.'+p.id+'&status=eq.pending&select=id',{method:'PATCH',headers:{Prefer:'return=representation'},body:JSON.stringify(changes)});
    if(!changed.length)return res.status(409).json({error:'该报告已处理，刷新后查看'});
