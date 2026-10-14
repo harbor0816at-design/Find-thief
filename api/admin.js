@@ -50,7 +50,7 @@ module.exports=async function handler(req,res){
      const source_type=take(p.source_type,35),event_kind=take(p.event_kind,35);
      const allowedSources=['official_case','consular_case','journalism_case','moderated_report'];
      const allowedEvents=['confirmed_theft','alleged_theft','loss','safety_mention'];
-     const items=['手机','钱包','护照证件','背包行李','银行卡现金','相机电子设备','首饰','其他物品'];
+     const items=['手机','钱包','护照证件','背包行李','银行卡现金','相机电子设备','首饰','其他物品','智能手表','耳机','笔记本电脑','行李箱','钥匙'];
      const item=take(p.item_category,30)||null;
      let url;try{url=new URL(String(p.source_url||''));if(url.protocol!=='https:'||url.username||url.password)throw Error('bad');}catch{return res.status(400).json({error:'请填写可公开核实的 HTTPS 来源链接'});}
      const occurrence=take(p.occurred_on,10)||null,publication=take(p.source_published_on,10)||null;

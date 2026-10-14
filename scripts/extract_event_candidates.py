@@ -21,7 +21,12 @@ ITEMS={
  '背包行李':r'背包|行李|backpack|luggage|zaino|maleta',
  '银行卡现金':r'现金|银行卡|cash|bank card|credit card|dinero',
  '相机电子设备':r'相机|camera|laptop|相机|电脑',
- '首饰':r'首饰|手表|珠宝|jewelry|watch|orologio'
+ '首饰':r'首饰|珠宝|jewelry',
+ '智能手表':r'智能手表|smartwatch|apple watch',
+ '耳机':r'耳机|airpods|headphones|earbuds',
+ '笔记本电脑':r'笔记本电脑|laptop|macbook',
+ '行李箱':r'行李箱|suitcase',
+ '钥匙':r'钥匙|keys',
 }
 def classify(meta, catalog):
  title=(meta.get('title') or '');desc=(meta.get('meta_description') or '')

@@ -25,7 +25,12 @@ ITEMS={
  "护照证件":r'passport|pasaporte|passaporto|护照',
  "背包行李":r'bag|backpack|luggage|borsa|mochila|包|行李',
  "银行卡现金":r'cash|bank card|credit card|dinero|efectivo|现金|银行卡',
- "相机电子设备":r'camera|laptop|相机|电脑',
+ "相机电子设备":r'camera|相机|电脑',
+ "智能手表":r'smartwatch|apple watch|智能手表',
+ "耳机":r'earbuds|airpods|headphones|耳机',
+ "笔记本电脑":r'laptop|macbook|笔记本电脑',
+ "行李箱":r'suitcase|行李箱',
+ "钥匙":r'keys|钥匙',
  "首饰":r'watch|jewelry|jewellery|gioiell|手表|首饰'
 }
 EMAIL=re.compile(r'[\w.+-]+@[\w.-]+\.[a-z]{2,}',re.I)

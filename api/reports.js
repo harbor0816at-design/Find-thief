@@ -1,5 +1,5 @@
 const crypto = require('node:crypto');
-const itemCategories=new Set(['手机','钱包','护照证件','背包行李','银行卡现金','相机电子设备','首饰','其他物品']);
+const itemCategories=new Set(['手机','钱包','护照证件','背包行李','银行卡现金','相机电子设备','首饰','其他物品','智能手表','耳机','笔记本电脑','行李箱','钥匙']);
 const categories = new Set(['物品遗失','疑似扒窃','已报警确认失窃','其他物品安全事件']);
 const jsonHeader={'Content-Type':'application/json'};
 function cfg() {
