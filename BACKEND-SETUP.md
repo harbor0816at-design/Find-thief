@@ -4,17 +4,19 @@
 
 ## 当前状态
 
-前端公开版和后端服务代码已纳入 GitHub。新的专属 Supabase 项目在确认组织和费用前**尚未创建**。`ENABLE_PUBLIC_REPORTING` 默认为关闭，用户稿件保留在浏览器，不会被误导为已经在线提交成功。
+前端公开版和后端服务代码已纳入 GitHub。**专属 Supabase 项目已于2026-10-14创建成功**（项目 `find-thief-europe` / ID `smwqqiebkdaheikihbrg` / EU Frankfurt），初始迁移 `init_find_thief_reports_and_moderation` 已应用并验证，两张业务表均开启 RLS，初始零记录。`ENABLE_PUBLIC_REPORTING` 默认为关闭，用户稿件保留在浏览器，不会被误导为已经在线提交成功。
 
 ## 独立的 Supabase 项目
 
-1. 在 Supabase 组织中创建全新的项目 `find-thief-europe`，推荐欧盟区域（Frankfurt `eu-central-1`）；无需复用任何现有项目。
-2. 在新项目 SQL Editor 执行 `supabase/schema.sql`，或使用迁移工具。请勿在其他项目中执行。
+1. **已完成**：在 `harbor0816at@gmail.com's Org` 下创建独立数据库 `find-thief-europe`（EU Frankfurt）。
+2. **已完成**：`supabase/schema.sql` 已在独立库执行，并确认 `loss_reports` / `moderation_audit` 均为 RLS 启用。严禁在其他项目重复执行。
 3. 数据表 `loss_reports` 和 `moderation_audit` 开启了 RLS，已禁用匿名/普通已认证用户的直接读写；只有服务端 `service_role` 能够访问。
 4. 通过 Supabase Auth > Users 单独**邀请管理员**，并启用邮箱确认；不公开管理员注册入口。配置 `ADMIN_EMAILS` 白名单，仅允许白名单中的已验证账号进行审核。建议在全部管理员完成 MFA 设置后启用 `REQUIRE_ADMIN_MFA=true`。
 5. 在管理员后台检查事件审批流程：提交（pending）→ 审核、匿名摘要、模糊区域坐标 → 批准（approved）或拒绝（rejected）。数据库触发器同事务记录审核操作。
 
 ## Vercel 环境变量（Production）
+
+**2026-10-14 状态：** `SUPABASE_URL`、`SUPABASE_PUBLISHABLE_KEY`、`ENABLE_PUBLIC_REPORTING=false`、`REPORT_RATE_SECRET`、`CRON_SECRET` 已安全配置（不在 GitHub 中保存密钥）。`SUPABASE_SERVICE_ROLE_KEY`、`ADMIN_EMAILS`、`DATA_CONTROLLER_NAME`、`DATA_CONTROLLER_EMAIL` 尚未配置，投稿继续关闭。为防止密钥泄露，必须从专用 Supabase 项目的 API Keys 页面复制服务端密钥，直接在 Vercel 项目环境变量界面设置；不要发到聊天或源码中。配置完成后重新触发 Production 部署，进行端到端测试后才可把开关改为 true。
 
 | Key | 用途 |
 | --- | --- |
