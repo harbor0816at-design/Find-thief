@@ -1,0 +1,37 @@
+[
+  {
+    "name": "欧盟官方112",
+    "url": "https://europa.eu/youreurope/citizens/travel/security-and-emergencies/emergency/index_en.htm",
+    "type": "official",
+    "mode": "link-only",
+    "status": "verified"
+  },
+  {
+    "name": "英国紧急电话",
+    "url": "https://www.gov.uk/guidance/999-and-112-the-uks-national-emergency-numbers",
+    "type": "official",
+    "mode": "link-only",
+    "status": "verified"
+  },
+  {
+    "name": "中国外交部12308",
+    "url": "https://cs.mfa.gov.cn/zggmcgx/lsbhyxz/12308lbrx/202607/t20260713_11981004.html",
+    "type": "official",
+    "mode": "link-only",
+    "status": "verified"
+  },
+  {
+    "name": "Pickpocket Alert",
+    "url": "https://www.pickpocketalert.com/",
+    "type": "external-community",
+    "mode": "link-only",
+    "status": "requires-licence"
+  },
+  {
+    "name": "PickpocketMaps",
+    "url": "https://pickpocketmaps.com/",
+    "type": "external-community",
+    "mode": "link-only",
+    "status": "requires-licence"
+  }
+]
