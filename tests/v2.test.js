@@ -44,3 +44,39 @@ test('V2 sources are explicitly not published theft events',()=>{
  assert.ok(obj.sources.length>=12);
  assert.ok(obj.sources.every(s=>s.permission_note&&s.url.startsWith('https://')));
 });
+
+test('admin can only stage a sourced event; it never becomes approved automatically',async()=>{
+ const admin=require('../api/admin.js');
+ Object.assign(process.env,{SUPABASE_URL:'https://foo.supabase.co',SUPABASE_SECRET_KEY:'sb_secret_mock',SUPABASE_PUBLISHABLE_KEY:'sb_publishable_mock',ADMIN_EMAILS:'a@example.com'});
+ let insert;
+ global.fetch=async (url,opt)=>{if(String(url).includes('/auth/v1/user'))return {ok:true,json:async()=>({id:'user-id',email:'a@example.com',email_confirmed_at:'2026-10-12'})};
+   if(String(url).includes('/rest/v1/evidence_events_v2')){insert=JSON.parse(opt.body);return {ok:true,json:async()=>[{id:'9a86c7bb-2ae4-4f0a-93c3-cd8ee3c57940'}]}};
+   throw Error('unexpected URL')};
+ const response=mockRes();
+ await admin({method:'POST',headers:{authorization:'Bearer abc.def.ghi'},body:{action:'stage_event',country:'西班牙',city:'巴塞罗那',spot_name:'兰布拉大道',event_kind:'alleged_theft',source_type:'consular_case',source_title:'巴塞罗那领馆公开案例',source_url:'https://example.org/consulate-note',source_published_on:'2026-10-01',occurred_on:'',item_category:'钱包',short_summary:'有公开领事案例称游客随身钱包被盗',evidence_note:'原文提及具体案例和城市，发生日期未明确，不将城市误称成景区',lat:'',lon:''}},response);
+ assert.equal(response.code,201);
+ assert.equal(insert.review_status,'staging');
+ assert.equal(insert.occurred_on,null);
+ assert.equal(insert.source_published_on,'2026-10-01');
+ assert.equal(insert.lat,null);
+ assert.equal(insert.confidence,'reported_claim');
+});
+test('admin rejects invented published incident with no cited date',async()=>{
+ const admin=require('../api/admin.js');
+ Object.assign(process.env,{SUPABASE_URL:'https://foo.supabase.co',SUPABASE_SECRET_KEY:'sb_secret_mock',SUPABASE_PUBLISHABLE_KEY:'sb_publishable_mock',ADMIN_EMAILS:'a@example.com'});
+ let dbCalls=0;global.fetch=async url=>{if(String(url).includes('/auth/v1/user'))return {ok:true,json:async()=>({id:'1',email:'a@example.com',email_confirmed_at:'2026-10-12'})};dbCalls++;throw Error('Should not reach DB')};
+ const response=mockRes();
+ await admin({method:'POST',headers:{authorization:'Bearer abc.def.ghi'},body:{action:'stage_event',country:'法国',city:'巴黎',source_title:'Paris travel advice',source_url:'https://example.org/advice',source_type:'journalism_case',event_kind:'alleged_theft',short_summary:'有人在巴黎被偷',evidence_note:'未核实任何具体事件发生日或原始发表日'}},response);
+ assert.equal(response.code,400);
+ assert.equal(dbCalls,0);
+});
+test('general travel advice cannot be approved as a specific theft incident',async()=>{
+ const admin=require('../api/admin.js');
+ Object.assign(process.env,{SUPABASE_URL:'https://foo.supabase.co',SUPABASE_SECRET_KEY:'sb_secret_mock',SUPABASE_PUBLISHABLE_KEY:'sb_publishable_mock',ADMIN_EMAILS:'a@example.com'});
+ let patchCount=0;
+ global.fetch=async(url,opt)=>{if(String(url).includes('/auth/v1/user'))return {ok:true,json:async()=>({id:'1',email:'a@example.com',email_confirmed_at:'2026-10-12'})};
+   if(opt?.method==='PATCH')patchCount++;
+   return {ok:true,json:async()=>[{id:'9a86c7bb-2ae4-4f0a-93c3-cd8ee3c57940',event_kind:'safety_mention',source_published_on:'2026-10-01',occurred_on:null}]}};
+ const response=mockRes();await admin({method:'PATCH',headers:{authorization:'Bearer abc.def.ghi'},body:{kind:'event_v2',id:'9a86c7bb-2ae4-4f0a-93c3-cd8ee3c57940',status:'approved',confirm_source:true}},response);
+ assert.equal(response.code,400);assert.equal(patchCount,0);
+});
