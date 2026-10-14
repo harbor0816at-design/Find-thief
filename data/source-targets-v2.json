@@ -326,6 +326,66 @@
       "frequency": "manual",
       "enabled": false,
       "scope": "lead_reference_only"
+    },
+    {
+      "source_key": "barcelona-tmb-metro-h1-2026",
+      "country": "西班牙",
+      "city": "巴塞罗那",
+      "spot_name": null,
+      "name": "TMB official metro crime statistics 2026 H1",
+      "url": "https://noticies.tmb.cat/sala-de-premsa/delictes-metro-disminueixen-34-durant-primer-semestre-de-2026",
+      "kind": "official_statistics",
+      "language": "ca",
+      "method": "metadata_only",
+      "permission_note": "Official transit-source public metadata and facts only; 5528 total crime incidents across all metro in H1 2026, not theft-only or station-level",
+      "frequency": "monthly",
+      "enabled": true,
+      "scope": "all_city_metro"
+    },
+    {
+      "source_key": "china-consulate-barcelona-2026",
+      "country": "西班牙",
+      "city": "巴塞罗那",
+      "spot_name": null,
+      "name": "Consulate General of PRC Barcelona 2026 safety notice",
+      "url": "https://barcelona.china-consulate.gov.cn/lsfw/lsbhhxz/202607/t20260728_11993921.htm",
+      "kind": "consular_notice",
+      "language": "zh",
+      "method": "metadata_only",
+      "permission_note": "Public consular safety notice, no identifiable victims or location-specific incident counts",
+      "frequency": "weekly",
+      "enabled": true,
+      "scope": "consular_notice"
+    },
+    {
+      "source_key": "italy-police-rome-daily",
+      "country": "意大利",
+      "city": "罗马",
+      "spot_name": null,
+      "name": "Polizia di Stato Rome city case releases",
+      "url": "https://questure.poliziadistato.it/it/Roma",
+      "kind": "official_advice",
+      "language": "it",
+      "method": "manual_link",
+      "permission_note": "Site has anti-automation protections; only manually verified public press links, do not evade protection",
+      "frequency": "manual",
+      "enabled": false,
+      "scope": "official_press_archive"
+    },
+    {
+      "source_key": "barcelona-news-case-index",
+      "country": "西班牙",
+      "city": "巴塞罗那",
+      "spot_name": null,
+      "name": "La Vanguardia Barcelona police-report examples",
+      "url": "https://www.lavanguardia.com/local/barcelona",
+      "kind": "public_news",
+      "language": "es",
+      "method": "manual_link",
+      "permission_note": "Copyright news links only; case-specific excerpt facts manually verified, no bulk article scraping",
+      "frequency": "manual",
+      "enabled": false,
+      "scope": "news_case_links"
     }
   ]
 }
