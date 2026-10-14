@@ -73,3 +73,29 @@ main{flex:1 1 auto;display:flex;flex-direction:column;min-height:0;overflow:hidd
  .report-section{padding:0 9px 8px}.report-wrap{padding:14px 11px}
 }
 @media(max-height:610px){.intro{display:none}.main-layout{grid-template-rows:minmax(0, 1fr) minmax(155px, 39%)}}
+
+/* V2.1: four focused utilities with fixed workspace height */
+.top{gap:10px}.top nav{flex-wrap:wrap;justify-content:center}
+.top .share-link{white-space:nowrap;border-radius:20px;border:1px solid #b4d7d1;padding:7px 10px;color:#067b70}
+.content-workspace{flex:1 1 auto;min-height:0;overflow-y:auto;overscroll-behavior:contain;width:100%;padding:12px clamp(10px,4vw,36px) 30px;scrollbar-gutter:stable}
+.content-inner{max-width:920px;margin:0 auto;background:white;border:1px solid #d8e6e4;border-radius:18px;padding:clamp(15px,3vw,30px);box-shadow:0 5px 28px #1d484408}
+.content-inner h2{font-size:clamp(22px,3vw,32px);color:#153941;margin:9px 0}
+.guide-kicker{color:#12776b;font-size:12px;font-weight:800;letter-spacing:1px}
+.guide-intro{color:#617778;font-size:14px;line-height:1.7;margin:7px 0 18px}
+.guide-tabs{display:flex;flex-wrap:wrap;gap:8px;margin:13px 0 17px}
+.guide-tabs button{border:1px solid #d6e5e3;border-radius:12px;background:#f2f8f6;color:#28625d;padding:9px 13px;font-size:13px}
+.guide-tabs button.active{background:#087d72;color:#fff;border-color:#087d72}
+.guide-cards{display:grid;gap:10px}
+.guide-action-card{border:1px solid #e0eae8;background:#fbfefd;border-radius:12px;padding:13px 15px}
+.guide-action-card b{display:block;color:#184248;margin-bottom:5px;font-size:15px}
+.guide-action-card p{color:#536c6e;line-height:1.65;font-size:13px;margin:4px 0}
+.guide-action-card small{color:#73918f}
+.guide-actions{display:flex;gap:9px;flex-wrap:wrap;margin:14px 0}
+.guide-actions a,.guide-actions button,.share-actions button{border:1px solid #aad3c9;border-radius:10px;padding:10px 13px;color:#076c62;background:#e9f8f2;font-size:13px;font-weight:750;text-decoration:none}
+.guide-source{border-top:1px solid #e0eae8;padding-top:13px;margin-top:18px;color:#658082;font-size:12px;line-height:1.8}
+.guide-source summary{cursor:pointer;color:#077c70;font-weight:700}
+.share-actions{display:flex;gap:8px;flex-wrap:wrap;margin:16px 0}
+.share-actions button{flex:1}
+.modal{max-width:min(500px,92vw)}
+@media(max-width:900px){.top .brand small{display:none}.top nav{width:100%;order:2;gap:5px}.top .share-link{order:3;padding:5px 8px;font-size:11px}.top #guideTrigger{order:4;font-size:11px}.navbtn{font-size:11px;padding:6px 7px}.intro h1{font-size:15px}.intro p{font-size:10px}.content-workspace{padding:8px 10px 20px}}
+@media(max-width:600px){.top nav{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));width:100%;gap:5px}.navbtn{font-size:11px;padding:7px 4px}.top{row-gap:4px}.content-inner{padding:14px 12px}.guide-tabs button{flex:1 1 43%;font-size:12px}.share-actions{flex-direction:column}}
