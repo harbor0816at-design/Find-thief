@@ -1,13 +1,150 @@
 {
-  "description":"公开信息核验入口；链接不等于有数据复用授权；自动采集仅记录许可范围内的公开元数据。",
-  "sources":[
-    {"name":"ICGC Crime map","url":"https://www.icgc.cat/en/Tools-and-viewers/Viewers/Crime-map","kind":"official-information","reuserights":"check-source-license","crawl_metadata":true,"scope":"Catalonia police-area aggregate statistics, not exact incident points"},
-    {"name":"Pickpockets.live","url":"https://pickpockets.live/","kind":"third-party-platform","reuserights":"license-required-for-events","crawl_metadata":true},
-    {"name":"PickpocketMaps","url":"https://pickpocketmaps.com/","kind":"third-party-platform","reuserights":"license-required-for-events","crawl_metadata":true},
-    {"name":"MineCrime","url":"https://www.minecrime.it/products","kind":"third-party-commercial-database","reuserights":"commercial-license-required","crawl_metadata":true},
-    {"name":"小红书","url":"https://www.xiaohongshu.com/","kind":"social-platform","reuserights":"platform-rules-apply","crawl_metadata":false,"status":"specific-public-post-urls-and-permissions-required"},
-    {"name":"微博","url":"https://weibo.com/","kind":"social-platform","reuserights":"platform-rules-apply","crawl_metadata":false,"status":"specific-public-post-urls-and-permissions-required"},
-    {"name":"Instagram","url":"https://www.instagram.com/","kind":"social-platform","reuserights":"platform-rules-apply","crawl_metadata":false,"status":"specific-public-post-urls-and-permissions-required"},
-    {"name":"Facebook","url":"https://www.facebook.com/","kind":"social-platform","reuserights":"platform-rules-apply","crawl_metadata":false,"status":"specific-public-post-urls-and-permissions-required"}
+  "description": "面向中国游客的中外双来源登记：中文平台主要发现线索、海外官方数据优先核验；任何网页公开可读并不自动授权采集或复用。国内外来源均先审核后使用。",
+  "sources": [
+    {
+      "name": "ICGC Crime map",
+      "url": "https://www.icgc.cat/en/Tools-and-viewers/Viewers/Crime-map",
+      "kind": "official-information",
+      "reuserights": "check-source-license",
+      "crawl_metadata": true,
+      "scope": "Catalonia police-area aggregate statistics, not exact incident points",
+      "source_language": "en"
+    },
+    {
+      "name": "Pickpockets.live",
+      "url": "https://pickpockets.live/",
+      "kind": "third-party-platform",
+      "reuserights": "license-required-for-events",
+      "crawl_metadata": true
+    },
+    {
+      "name": "PickpocketMaps",
+      "url": "https://pickpocketmaps.com/",
+      "kind": "third-party-platform",
+      "reuserights": "license-required-for-events",
+      "crawl_metadata": true
+    },
+    {
+      "name": "MineCrime",
+      "url": "https://www.minecrime.it/products",
+      "kind": "third-party-commercial-database",
+      "reuserights": "commercial-license-required",
+      "crawl_metadata": true
+    },
+    {
+      "name": "小红书",
+      "url": "https://www.xiaohongshu.com/",
+      "kind": "social-platform",
+      "reuserights": "platform-rules-apply",
+      "crawl_metadata": false,
+      "status": "specific-public-post-urls-and-permissions-required",
+      "source_language": "zh"
+    },
+    {
+      "name": "微博",
+      "url": "https://weibo.com/",
+      "kind": "social-platform",
+      "reuserights": "platform-rules-apply",
+      "crawl_metadata": false,
+      "status": "specific-public-post-urls-and-permissions-required",
+      "source_language": "zh"
+    },
+    {
+      "name": "Instagram",
+      "url": "https://www.instagram.com/",
+      "kind": "social-platform",
+      "reuserights": "platform-rules-apply",
+      "crawl_metadata": false,
+      "status": "specific-public-post-urls-and-permissions-required"
+    },
+    {
+      "name": "Facebook",
+      "url": "https://www.facebook.com/",
+      "kind": "social-platform",
+      "reuserights": "platform-rules-apply",
+      "crawl_metadata": false,
+      "status": "specific-public-post-urls-and-permissions-required"
+    },
+    {
+      "name": "中华人民共和国外交部领事服务",
+      "url": "https://cs.mfa.gov.cn/",
+      "kind": "chinese-official-travel-advisory",
+      "reuserights": "check-notice-permission-and-attribution",
+      "crawl_metadata": false,
+      "source_language": "zh",
+      "status": "public-advisory-reference-only"
+    },
+    {
+      "name": "携程旅行公开游记",
+      "url": "https://www.ctrip.com/",
+      "kind": "chinese-travel-ugc",
+      "reuserights": "platform-rules-and-author-permission-required",
+      "crawl_metadata": false,
+      "source_language": "zh",
+      "status": "link-only-pending-permission"
+    },
+    {
+      "name": "马蜂窝公开游记",
+      "url": "https://www.mafengwo.cn/",
+      "kind": "chinese-travel-ugc",
+      "reuserights": "platform-rules-and-author-permission-required",
+      "crawl_metadata": false,
+      "source_language": "zh",
+      "status": "link-only-pending-permission"
+    },
+    {
+      "name": "穷游网旅行游记",
+      "url": "https://www.qyer.com/",
+      "kind": "chinese-travel-ugc",
+      "reuserights": "platform-rules-and-author-permission-required",
+      "crawl_metadata": false,
+      "source_language": "zh",
+      "status": "link-only-pending-permission"
+    },
+    {
+      "name": "微信公众号公开文章",
+      "url": "https://mp.weixin.qq.com/",
+      "kind": "chinese-social-media",
+      "reuserights": "platform-rules-and-author-permission-required",
+      "crawl_metadata": false,
+      "source_language": "zh",
+      "status": "link-only-pending-permission"
+    },
+    {
+      "name": "知乎公开问答",
+      "url": "https://www.zhihu.com/",
+      "kind": "chinese-social-media",
+      "reuserights": "platform-rules-and-author-permission-required",
+      "crawl_metadata": false,
+      "source_language": "zh",
+      "status": "link-only-pending-permission"
+    },
+    {
+      "name": "中国媒体公开报道（澎湃新闻）",
+      "url": "https://www.thepaper.cn/",
+      "kind": "chinese-news",
+      "reuserights": "article-license-and-attribution-required",
+      "crawl_metadata": false,
+      "source_language": "zh",
+      "status": "source-url-discovery-only"
+    },
+    {
+      "name": "英国警方开放街面犯罪CSV",
+      "url": "https://data.police.uk/data/",
+      "kind": "overseas-government-open-csv",
+      "reuserights": "Open Government Licence v3; review attribution",
+      "crawl_metadata": true,
+      "source_language": "en",
+      "scope": "anonymized street-level crime; theft from person != all pickpocket crime"
+    },
+    {
+      "name": "法国官方犯罪统计（data.gouv.fr）",
+      "url": "https://www.data.gouv.fr/",
+      "kind": "overseas-government-aggregate",
+      "reuserights": "dataset-specific-open-license-check",
+      "crawl_metadata": true,
+      "source_language": "fr",
+      "scope": "commune/dept official records are not street incident points"
+    }
   ]
 }
