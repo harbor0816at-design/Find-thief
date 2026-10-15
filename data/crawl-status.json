@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-14T12:03:36.783749+00:00",
+  "generated_at": "2026-10-15T11:41:03.963983+00:00",
   "sources": [
     {
       "name": "ICGC Crime map",
@@ -62,6 +62,132 @@
       "name": "Facebook",
       "url": "https://www.facebook.com/",
       "rights": "platform-rules-apply",
+      "status": "not-authorized",
+      "reason": "Social content needs specific public post URLs and permission; no platform scraping"
+    },
+    {
+      "name": "中华人民共和国外交部领事服务",
+      "url": "https://cs.mfa.gov.cn/",
+      "rights": "check-notice-permission-and-attribution",
+      "status": "not-authorized",
+      "reason": "Social content needs specific public post URLs and permission; no platform scraping"
+    },
+    {
+      "name": "携程旅行公开游记",
+      "url": "https://www.ctrip.com/",
+      "rights": "platform-rules-and-author-permission-required",
+      "status": "not-authorized",
+      "reason": "Social content needs specific public post URLs and permission; no platform scraping"
+    },
+    {
+      "name": "马蜂窝公开游记",
+      "url": "https://www.mafengwo.cn/",
+      "rights": "platform-rules-and-author-permission-required",
+      "status": "not-authorized",
+      "reason": "Social content needs specific public post URLs and permission; no platform scraping"
+    },
+    {
+      "name": "穷游网旅行游记",
+      "url": "https://www.qyer.com/",
+      "rights": "platform-rules-and-author-permission-required",
+      "status": "not-authorized",
+      "reason": "Social content needs specific public post URLs and permission; no platform scraping"
+    },
+    {
+      "name": "微信公众号公开文章",
+      "url": "https://mp.weixin.qq.com/",
+      "rights": "platform-rules-and-author-permission-required",
+      "status": "not-authorized",
+      "reason": "Social content needs specific public post URLs and permission; no platform scraping"
+    },
+    {
+      "name": "知乎公开问答",
+      "url": "https://www.zhihu.com/",
+      "rights": "platform-rules-and-author-permission-required",
+      "status": "not-authorized",
+      "reason": "Social content needs specific public post URLs and permission; no platform scraping"
+    },
+    {
+      "name": "中国媒体公开报道（澎湃新闻）",
+      "url": "https://www.thepaper.cn/",
+      "rights": "article-license-and-attribution-required",
+      "status": "not-authorized",
+      "reason": "Social content needs specific public post URLs and permission; no platform scraping"
+    },
+    {
+      "name": "英国警方开放街面犯罪CSV",
+      "url": "https://data.police.uk/data/",
+      "rights": "Open Government Licence v3; review attribution",
+      "status": "ok",
+      "http_status": 200,
+      "page_title": "Data downloads | data.police.uk",
+      "reason": "HTML metadata only; not a licensed event dataset"
+    },
+    {
+      "name": "法国官方犯罪统计（data.gouv.fr）",
+      "url": "https://www.data.gouv.fr/",
+      "rights": "dataset-specific-open-license-check",
+      "status": "ok",
+      "http_status": 200,
+      "page_title": "data.gouv.fr : Plateforme ouverte des données publiques françaises",
+      "reason": "HTML metadata only; not a licensed event dataset"
+    },
+    {
+      "name": "中国驻巴塞罗那总领馆盗抢提醒",
+      "url": "https://barcelona.china-consulate.gov.cn/lsfw/lsbhhxz/202406/t20240612_11435051.htm",
+      "rights": "facts-only-with-attribution-avoid-personal-data",
+      "status": "ok",
+      "http_status": 200,
+      "page_title": "驻巴塞罗那总领馆提醒您暑期出行谨防盗抢 — 中华人民共和国驻巴塞罗那总领馆",
+      "reason": "HTML metadata only; not a licensed event dataset"
+    },
+    {
+      "name": "Barcelona municipal theft annual data",
+      "url": "https://portaldades.ajuntament.barcelona.cat/es/estad%C3%ADsticas/pij2di5bf9",
+      "rights": "CC-BY-4.0",
+      "status": "ok",
+      "http_status": 200,
+      "page_title": "Portal Barcelona Dades",
+      "reason": "HTML metadata only; not a licensed event dataset"
+    },
+    {
+      "name": "Barcelona Ciutat Vella official district report",
+      "url": "https://bcnroc.ajuntament.barcelona.cat/jspui/bitstream/11703/141318/1/informe_01.ciutat_vella.pdf",
+      "rights": "check-source-citation",
+      "status": "not-authorized",
+      "reason": "Social content needs specific public post URLs and permission; no platform scraping"
+    },
+    {
+      "name": "UK government France travel theft advice",
+      "url": "https://www.gov.uk/foreign-travel-advice/france/safety-and-security",
+      "rights": "Open Government Licence with attribution",
+      "status": "ok",
+      "http_status": 200,
+      "page_title": "Safety and security - France travel advice - GOV.UKGOV.UK",
+      "reason": "HTML metadata only; not a licensed event dataset"
+    },
+    {
+      "name": "UK government Italy travel theft advice",
+      "url": "https://www.gov.uk/foreign-travel-advice/italy/safety-and-security",
+      "rights": "Open Government Licence with attribution",
+      "status": "ok",
+      "http_status": 200,
+      "page_title": "Safety and security - Italy travel advice - GOV.UKGOV.UK",
+      "reason": "HTML metadata only; not a licensed event dataset"
+    },
+    {
+      "name": "UK government Spain travel theft advice",
+      "url": "https://www.gov.uk/foreign-travel-advice/spain/safety-and-security",
+      "rights": "Open Government Licence with attribution",
+      "status": "ok",
+      "http_status": 200,
+      "page_title": "Safety and security - Spain travel advice - GOV.UKGOV.UK",
+      "reason": "HTML metadata only; not a licensed event dataset"
+    },
+    {
+      "name": "The Local Spain La Rambla public observation",
+      "url": "https://www.thelocal.es/20251104/tourism-in-spain-12-barcelona-travel-hacks-to-make-your-trip-better",
+      "rights": "link-and-short-independent-facts-only",
       "status": "not-authorized",
       "reason": "Social content needs specific public post URLs and permission; no platform scraping"
     }
