@@ -1,6 +1,6 @@
 // Server-side aggregate metrics only. No cookies, IP addresses, device identifiers,
 // referrers or raw query texts are persisted in the metrics table.
-const events=new Set(['page_view','search','area_open','report_open','report_attempt','report_saved','source_open']);
+const events=new Set(["page_view","search","area_open","report_open","report_attempt","report_saved","report_received","source_open","city_select","item_filter","case_open","map_area_open","report_draft_generate","rescue_open","prevention_open","gear_view","gear_add","gear_copy","share_open","share_native_attempt","share_native_success","share_copy_link","share_copy_text","share_wechat_guide","map_view"]);
 module.exports=async function handler(req,res){
  res.setHeader('Cache-Control','no-store');res.setHeader('X-Content-Type-Options','nosniff');
  if(req.method!=='POST')return res.status(405).json({error:'Method not allowed'});
