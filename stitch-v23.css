@@ -1,0 +1,24 @@
+/* Faithful Stitch artwork; full-image scaling on web and mobile. */
+img[src*="safety-illustration.webp"],img[src*="anti-theft-gear.webp"]{display:block;width:100%!important;height:auto!important;max-height:360px!important;object-fit:contain!important;object-position:center!important;background:#f8fbfd}
+.stitch-mobile-art{margin:9px 0;border-radius:16px;border:1px solid #e2e8ef;overflow:hidden;background:#f8fafc}
+.stitch-mobile-art img{max-height:210px!important;aspect-ratio:16/9;object-fit:contain!important}
+.stitch-mobile-art figcaption{font-size:10px;color:#63758a;padding:5px 8px}
+.stitch-selected-area{font-size:12px;padding:9px 12px;margin:10px 0;border-left:3px solid #245be8;border-radius:9px;background:#f1f5ff;color:#425777;line-height:1.5}
+.stitch-gear{margin:15px 0;padding:15px;border-radius:18px;background:#f8fafc;border:1px solid #e2e8f2}
+.stitch-gear h3{font-size:19px;font-weight:900;margin:0 0 7px;color:#233956}
+.stitch-gear>p{font-size:12px;line-height:1.7;color:#607288;margin-bottom:12px}
+.stitch-gear-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+.stitch-good{background:#fff;border:1px solid #e3e9f2;padding:12px;border-radius:13px;min-width:0}
+.stitch-good h4{font-size:14px;font-weight:900;color:#233450;margin:0 0 6px}
+.stitch-good p{font-size:11px;line-height:1.65;color:#5b6d80;min-height:45px}
+.stitch-good small{font-size:10px;color:#245be8}
+.stitch-good button,.stitch-gear-copy{border:1px solid #d2def2;border-radius:10px;background:#edf3ff;color:#2856ba;font-size:11px;font-weight:800;padding:9px 10px;margin-top:7px;cursor:pointer}
+.stitch-good button.selected,.stitch-gear-copy{background:#e2f736;color:#293416;border-color:#e2f736}
+.stitch-gear-note{font-size:10px!important;color:#738196!important;margin-top:10px}
+#stitch-wechat-one-tap{background:#07aa61!important;color:#fff!important;font-weight:900;border-color:#07aa61!important}
+@media(max-width:700px){
+ img[src*="safety-illustration.webp"],img[src*="anti-theft-gear.webp"]{max-height:210px!important}
+ .stitch-gear-grid{grid-template-columns:1fr}
+ .stitch-gear{padding:12px}
+ .stitch-good{padding:11px}
+}
