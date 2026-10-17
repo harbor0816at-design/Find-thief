@@ -37,7 +37,7 @@ async function check(condition,why){if(!condition)throw Error(why)}
    await images.nth(i).scrollIntoViewIfNeeded();
    assert.equal(await images.nth(i).evaluate(el=>el.complete&&el.naturalWidth>0),true,'mobile painting '+i);
   }
-  await mobile.locator('.city-btn[data-city="barcelona"]').first().click();
+  await mobile.locator('.city-btn').filter({hasText:'巴塞罗那'}).first().click();
   assert.match(await mobile.locator('h2').filter({hasText:'实况避雷雷达'}).first().innerText(),/巴塞罗那/);
   await mobile.evaluate(()=>window.showRescueModal('phone'));
   assert.equal(await mobile.locator('#rescue-modal').isVisible(),true,'mobile rescue modal should open');
