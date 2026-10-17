@@ -2,7 +2,7 @@ const test=require('node:test'),assert=require('node:assert/strict'),fs=require(
 const f=n=>fs.readFileSync(path.join(__dirname,'..',n),'utf8');
 test('new primary domain in desktop/mobile canonical, sitemap and robots',()=>{
  assert.match(f('index.html'),/rel="canonical" href="https:\/\/fangbaleida\.com\/"/);
- assert.match(f('stitch-mobile.html'),/rel="canonical" href="https:\/\/fangbaleida\.com\/"/);
+ assert.match(f('stitch-mobile.html'),/href="https:\/\/fangbaleida\.com\/" rel="canonical"/);
  assert.match(f('sitemap.xml'),/https:\/\/fangbaleida\.com\/privacy\.html/);
  assert.match(f('robots.txt'),/https:\/\/fangbaleida\.com\/sitemap\.xml/);
  assert.doesNotMatch(f('stitch-mobile.html'),/find-thief\.vercel\.app/);

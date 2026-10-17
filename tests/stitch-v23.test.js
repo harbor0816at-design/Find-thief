@@ -22,7 +22,7 @@ test('WeChat supports system share + signed official JS-SDK only after credentia
  assert.match(client,/navigator\.share/);assert.match(client,/MicroMessenger/);
  assert.match(wx,/updateAppMessageShareData/);assert.match(wx,/updateTimelineShareData/);
  assert.match(api,/WECHAT_APP_ID/);assert.match(api,/WECHAT_APP_SECRET/);
- assert.match(api,/url\.origin!=='https:\/\/find-thief\.vercel\.app'/);
+ assert.match(api,/https:\/\/fangbaleida\.com/);assert.match(api,/\.has\(url\.origin\)/);
 });
 test('Anonymous aggregated visitor events never persist raw search or devices',()=>{
  const js=read('stitch-v23.js'),metrics=read('api/metrics.js'),admin=read('admin.html');

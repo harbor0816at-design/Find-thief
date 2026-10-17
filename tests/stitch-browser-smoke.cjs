@@ -1,11 +1,13 @@
 const {chromium}=require('playwright');
 const assert=require('node:assert/strict');
 const BASE='http://127.0.0.1:8765';
+async function blockExternal(page){await page.route('**/*',route=>{const u=new URL(route.request().url());return u.hostname==='127.0.0.1'?route.continue():route.abort()});}
 async function check(condition,why){if(!condition)throw Error(why)}
 (async()=>{
  const browser=await chromium.launch({headless:true,args:['--no-sandbox']});
  try{
   const pc=await browser.newPage({viewport:{width:1440,height:900},acceptDownloads:true});
+  await blockExternal(pc);
   await pc.goto(BASE+'/',{waitUntil:'domcontentloaded',timeout:25000});
   await pc.locator('#stitch-gear').waitFor({timeout:15000});
   assert.match(await pc.locator('h2').filter({hasText:'实况避雷雷达'}).first().innerText(),/罗马/);
@@ -29,6 +31,7 @@ async function check(condition,why){if(!condition)throw Error(why)}
   await pc.close();
 
   const mobile=await browser.newPage({viewport:{width:390,height:844},isMobile:true,hasTouch:true,deviceScaleFactor:2});
+  await blockExternal(mobile);
   await mobile.goto(BASE+'/stitch-mobile.html',{waitUntil:'domcontentloaded',timeout:25000});
   await mobile.locator('#stitch-gear').waitFor({timeout:15000});
   assert.equal(await mobile.locator('figure.stitch-mobile-art img').count(),2,'two mobile illustrations added');
