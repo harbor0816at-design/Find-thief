@@ -1,9 +1,9 @@
 /* Official WeChat Share: activates only after verified Official Account credentials. */
 (()=>{'use strict';let ready=false,initialized=false;const inWx=/MicroMessenger/i.test(navigator.userAgent||'');
 const title=()=> '小偷在哪里 · 欧洲防扒实况避雷雷达';
-const destination=()=>window.StitchEnhanceV23?.shareLink?.()||location.origin+'/';
+const destination=()=>window.StitchEnhanceV23?.shareLink?.()||'https://fangbaleida.com/';
 const description='查看有出处的欧洲失窃案例，分享防扒避雷提醒。2公里仅为地图展示圈，非犯罪影响范围。';
-const image=()=>location.origin+'/stitch-assets/safety-illustration.webp';
+const image=()=> 'https://fangbaleida.com/stitch-assets/safety-illustration.webp';
 function update(){
  if(!ready||!window.wx)return;const data={title:title(),desc:description,link:destination(),imgUrl:image(),
   success:()=>{const label=document.getElementById('stitch-share-message');if(label)label.textContent='已在微信内准备分享卡片，请在分享菜单中选择朋友并确认发送。';}};

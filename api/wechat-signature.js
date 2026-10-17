@@ -11,7 +11,7 @@ module.exports=async function handler(req,res){
  if(!/^[A-Za-z0-9_-]{6,80}$/.test(appId))return res.status(503).json({configured:false,error:'Invalid WeChat account configuration'});
  const raw=typeof req.query?.url==='string'?req.query.url:'';
  let url;try{url=new URL(raw)}catch{return res.status(400).json({error:'URL invalid'})}
- if(url.protocol!=='https:'||url.origin!=='https://find-thief.vercel.app'||url.username||url.password||raw.length>350)return res.status(400).json({error:'Invalid share URL'});
+ if(url.protocol!=='https:'||!new Set(['https://fangbaleida.com','https://www.fangbaleida.com','https://find-thief.vercel.app']).has(url.origin)||url.username||url.password||raw.length>350)return res.status(400).json({error:'Invalid share URL'});
  url.hash='';
  const get=async target=>{
   const r=await fetch(target,{signal:AbortSignal.timeout(7000),headers:{Accept:'application/json'}});

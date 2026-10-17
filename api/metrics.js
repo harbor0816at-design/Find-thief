@@ -6,7 +6,7 @@ module.exports=async function handler(req,res){
  if(req.method!=='POST')return res.status(405).json({error:'Method not allowed'});
  // Same-origin browser events; not a security boundary; metrics are approximate and bot-prone.
  const origin=String(req.headers.origin||'');
- if(origin&&origin!=='https://find-thief.vercel.app')return res.status(204).end();
+ if(origin&&!new Set(['https://fangbaleida.com','https://www.fangbaleida.com','https://find-thief.vercel.app']).has(origin))return res.status(204).end();
  if(Number(req.headers['content-length']||0)>512)return res.status(204).end();
  const d=req.body&&typeof req.body==='object'?req.body:{};
  if(!events.has(d.event)||typeof d.city!=='string'||d.city.length>80||/[<>\x00-\x1f]/.test(d.city))return res.status(204).end();

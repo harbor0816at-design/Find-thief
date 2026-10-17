@@ -35,7 +35,7 @@ module.exports=async function handler(req,res){
   if(!live())return res.status(503).json({error:'线上上报尚未开放，当前可保存本机记录'});
   if(!/^application\/json(?:;|$)/i.test(req.headers['content-type']||''))return res.status(415).json({error:'仅支持JSON格式'});
   const origin=String(req.headers.origin||'');
-  if(origin && origin!=='https://find-thief.vercel.app' && !(process.env.ALLOWED_REPORT_ORIGINS||'').split(',').map(s=>s.trim()).includes(origin))return res.status(403).json({error:'提交来源不允许'});
+  if(origin && !new Set(['https://fangbaleida.com','https://www.fangbaleida.com','https://find-thief.vercel.app']).has(origin) && !(process.env.ALLOWED_REPORT_ORIGINS||'').split(',').map(s=>s.trim()).includes(origin))return res.status(403).json({error:'提交来源不允许'});
   if(Number(req.headers['content-length']||0)>8192)return res.status(413).json({error:'内容过大'});
   const d=req.body && typeof req.body==='object' && !Array.isArray(req.body)?req.body:{};
   if(d.website)return res.status(202).json({status:'accepted'}); // honeypot

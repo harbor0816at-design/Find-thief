@@ -45,7 +45,7 @@ function recommendations(){
  $('stitch-gear-copy').onclick=async()=>{const all=products.filter(x=>gear.size===0||gear.has(x[0]));const text='【欧洲防扒购物清单】\\n'+all.map((x,i)=>(i+1)+'. '+x[1]+'：'+x[4]).join('\\n')+'\\n任何用品均不能保证百分百防盗。';const ok=await copy(text);metric('gear_copy','清单');$('stitch-gear-copy').textContent=ok?'✓ 已复制，可粘贴微信':'复制失败，请手动选择';};
  if('IntersectionObserver' in window){const observer=new IntersectionObserver(es=>{if(es.some(x=>x.isIntersecting)){metric('gear_view',cities[chosen]);observer.disconnect()}},{threshold:.2});observer.observe(section)}
 }
-function link(){return location.origin+'/#city='+encodeURIComponent(cities[chosen]||'罗马')}
+function link(){return 'https://fangbaleida.com/#city='+encodeURIComponent(cities[chosen]||'罗马')}
 async function share(){
  metric('share_native_attempt',cities[chosen]);
  if(typeof navigator.share==='function'){try{await navigator.share({title:'小偷在哪里 · '+cities[chosen]+'避雷雷达',text:'公开信息可追溯，2公里仅为查询圈；出行前查一查。',url:link()});metric('share_native_success',cities[chosen]);notice('系统分享已唤起；是否发给微信好友以微信界面为准。');return}catch(e){if(e?.name==='AbortError')return}}
@@ -79,6 +79,6 @@ function init(){
  const admin=document.createElement('a');admin.textContent='管理后台';admin.href='/admin.html';admin.style.cssText='font-size:11px;margin:8px;color:#4567b4;text-decoration:underline';document.querySelector('footer')?.append(admin);
  metric('page_view','');
 }
-window.StitchEnhanceV23={metric,share,updateHead};
+window.StitchEnhanceV23={metric,share,updateHead,shareLink:link};
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init();
 })();
