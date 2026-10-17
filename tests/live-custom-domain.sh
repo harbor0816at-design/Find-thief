@@ -20,4 +20,8 @@ status=$(curl -sS --connect-timeout 8 --max-time 18 --output /dev/null --write-o
 echo "www response: $status"
 [[ "$status" == 308* || "$status" == 301* || "$status" == 302* ]]
 [[ "$status" == *"fangbaleida.com"* ]]
-echo 'Live custom-domain SSL, homepage, API and www redirect verified.'
+old=$(curl -sS --connect-timeout 8 --max-time 18 --output /dev/null --write-out '%{http_code}|%{redirect_url}' "https://find-thief.vercel.app/privacy.html")
+echo "old-domain redirect response: $old"
+[[ "$old" == 308* ]]
+[[ "$old" == *"https://fangbaleida.com/privacy.html"* ]]
+echo 'Live new-domain SSL, homepage, API, www and old-domain redirect verified.'

@@ -28,7 +28,7 @@
 ## 2026-10-18 正式域名接入
 - fangbaleida.com 为主域名，已在 Vercel 已有 `find-thief` 项目中添加，域名所有权 `verified=true`。
 - www.fangbaleida.com 已配置 Vercel 308 重定向到不带 www 的主域名。
-- `find-thief.vercel.app` 暂时保留为旧分享链接的访问入口；只设 canonical，新域名 DNS/HTTPS 对外可访问确认后再统一做旧域跳转，避免用户被重定向到尚未传播的域名。
+- `find-thief.vercel.app` 暂时保留为旧分享链接的入口；新域名于2026-10-17由外部 GitHub runner 成功实测 HTTPS 首页与 API，随后通过 `vercel.json` 按 Host 条件设置 308 永久跳转，保留原路径与参数。
 - 原始海报标识、匿名分享链接、微信图片绝对地址、XML sitemap、robots、移动版 canonical 与主页面 OG 均使用 `https://fangbaleida.com/`。
 - `/api/metrics`、`/api/reports`、`/api/wechat-signature` 严格允许新旧官方域名来源，不允许任意第三方域名；旧链接仍正常。
 - 尚未取得微信公众平台授权，JS-SDK 签名和官方卡片须确认 fangbaleida.com 域名安全白名单且添加后端生产密钥才会自动启用。

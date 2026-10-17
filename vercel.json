@@ -41,5 +41,18 @@
       "path": "/api/retention",
       "schedule": "0 4 * * *"
     }
+  ],
+  "redirects": [
+    {
+      "source": "/:path*",
+      "has": [
+        {
+          "type": "host",
+          "value": "find-thief.vercel.app"
+        }
+      ],
+      "destination": "https://fangbaleida.com/:path*",
+      "permanent": true
+    }
   ]
 }
