@@ -9,7 +9,7 @@
 - **匿名报失**：Stitch 个人战报可本地生成图片/分享，但不等于已提交审核。正式上报保留 `/legacy.html#report`，若线上开关仍为 `false`，只能在本机保存草稿，须完成运营者披露和生产全流程测试后才能开放服务器收件。
 
 ## 微信一键分享配置前提
-1. 运营方准备合规的**微信公众平台**账号，并将网站域名 `find-thief.vercel.app` 添加到微信 JS 接口安全域名，完成平台要求的域名控制验证及相应权限。不要把 AppSecret 放在 GitHub 或发送到聊天。
+1. 运营方准备合规的**微信公众平台**账号，并将网站域名 `fangbaleida.com` 添加到微信 JS 接口安全域名，完成平台要求的域名控制验证及相应权限。不要把 AppSecret 放在 GitHub 或发送到聊天。
 2. 在 Vercel `find-thief` 的 Production 环境变量中分别新增 **Sensitive** 的 `WECHAT_APP_ID` 和 `WECHAT_APP_SECRET`。重新部署。
 3. 服务器端 `/api/wechat-signature` 将依官方接口取得 ticket，计算原始页面地址（不含 hash）的 SHA1 签名；前端仅在微信浏览器且已配置时加载官方 `jweixin-1.6.0.js`，调用 `updateAppMessageShareData` 和 `updateTimelineShareData`。
 4. 在真实微信客户端验收分享卡片名称/简介/图片、当前城市深链接、朋友收到并打开后的城市定位。**发送本身必须由用户在微信菜单确认**，网页不能代替用户自动私信指定好友。
@@ -24,3 +24,12 @@
 - GitHub `Backend safety tests` 负责 Node/Python 业务、安全和静态结构检查。
 - GitHub `Stitch real browser smoke` 负责 Chromium 打开桌面/手机界面、图片、城市按钮、好物清单、急救弹窗、分享入口、管理员看板静态构建。
 - 线上真实微信送达、中国大陆移动网络、实名运营披露和开放游客报告仍需现场验收。
+
+## 2026-10-18 正式域名接入
+- fangbaleida.com 为主域名，已在 Vercel 已有 `find-thief` 项目中添加，域名所有权 `verified=true`。
+- www.fangbaleida.com 已配置 Vercel 308 重定向到不带 www 的主域名。
+- `find-thief.vercel.app` 暂时保留为旧分享链接的访问入口；只设 canonical，新域名 DNS/HTTPS 对外可访问确认后再统一做旧域跳转，避免用户被重定向到尚未传播的域名。
+- 原始海报标识、匿名分享链接、微信图片绝对地址、XML sitemap、robots、移动版 canonical 与主页面 OG 均使用 `https://fangbaleida.com/`。
+- `/api/metrics`、`/api/reports`、`/api/wechat-signature` 严格允许新旧官方域名来源，不允许任意第三方域名；旧链接仍正常。
+- 尚未取得微信公众平台授权，JS-SDK 签名和官方卡片须确认 fangbaleida.com 域名安全白名单且添加后端生产密钥才会自动启用。
+- 启用域名的购买注册、解析及可能的证书延迟与实际备案合规是独立步骤，Vercel verified 不等于独立浏览器端 HTTPS 验证通过。

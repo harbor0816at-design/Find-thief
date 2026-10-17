@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 Disallow: /admin.html
-Sitemap: https://find-thief.vercel.app/sitemap.xml
+Sitemap: https://fangbaleida.com/sitemap.xml
