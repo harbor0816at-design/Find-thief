@@ -39,7 +39,18 @@ module.exports=async function handler(req,res){
      const totals={};const cities={};
      for(const x of metrics){totals[x.metric]=(totals[x.metric]||0)+Number(x.total||0);if(x.metric==='area_open'&&x.city)cities[x.city]=(cities[x.city]||0)+Number(x.total||0)}
      const top=Object.entries(cities).sort((a,b)=>b[1]-a[1]).slice(0,10).map(([city,count])=>({city,count}));
-     return res.status(200).json({rows,stagedEvents,counts:{pending:rows.filter(x=>x.status==='pending').length,approved:rows.filter(x=>x.status==='approved').length,rejected:rows.filter(x=>x.status==='rejected').length},analytics:{totals,cities:top,publishedAreas:areas.length,waitingLeads:leads.length,publishedAdvisories:advice.length,pendingEvidence:stagedEvents.length},note:'报告最近100条，网站指标近30天为匿名聚合次数、可受机器人影响'});
+     const byDay=new Map(),dimensions={};
+     for(const x of metrics){
+       let record=byDay.get(x.day);if(!record){record={day:x.day};byDay.set(x.day,record)}
+       record[x.metric]=(record[x.metric]||0)+Number(x.total||0);
+       if(['gear_add','item_filter'].includes(x.metric)){
+         const key=x.metric+':'+(x.city||'未分类');
+         dimensions[key]=(dimensions[key]||0)+Number(x.total||0);
+       }
+     }
+     const daily=[...byDay.values()].sort((a,b)=>a.day.localeCompare(b.day));
+     const funnel=['page_view','city_select','case_open','report_draft_generate','share_open','share_native_success'].map(key=>({key,count:Number(totals[key]||0)}));
+     return res.status(200).json({rows,stagedEvents,counts:{pending:rows.filter(x=>x.status==='pending').length,approved:rows.filter(x=>x.status==='approved').length,rejected:rows.filter(x=>x.status==='rejected').length},analytics:{totals,cities:top,publishedAreas:areas.length,waitingLeads:leads.length,publishedAdvisories:advice.length,pendingEvidence:stagedEvents.length,daily,funnel,dimensions,periodDays:30,timezone:'UTC'},note:'报告最近100条，网站指标近30天为匿名聚合次数、可受机器人影响'});
    }
    const p=req.body&&typeof req.body==='object'&&!Array.isArray(req.body)?req.body:{};
    if(req.method==='POST'){
