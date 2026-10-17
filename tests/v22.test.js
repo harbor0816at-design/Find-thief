@@ -1,7 +1,7 @@
 const test=require('node:test'),assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path');
 const read=f=>fs.readFileSync(path.join(__dirname,'..',f),'utf8');
 test('five requested function names have matching navigable views',()=>{
- const html=read('index.html'),app=read('app.js'),guides=read('guides.js');
+ const html=read('legacy.html'),app=read('app.js'),guides=read('guides.js');
  for(const [id,label] of [['btnExplore','小偷雷达'],['btnReport','实况避雷'],['btnRecovery','急速抢救'],['btnPrevention','防扒指南'],['btnBlackout','防窃黑化']]){
   assert.match(html,new RegExp('id="'+id+'"[^>]*>[\\s\\S]{0,55}'+label));
  }
@@ -17,7 +17,7 @@ test('Stitch-inspired mobile footer tabs, white panels and palette',()=>{
  assert.match(css,/html,body\{height:100%;max-height:100%;overflow:hidden!important/);
 });
 test('blackout skill drill has 5 non-identifying interactive questions',()=>{
- const html=read('index.html'),code=read('blackout.js');
+ const html=read('legacy.html'),code=read('blackout.js');
  assert.match(html,/id="blackoutProgress"/);assert.match(html,/id="blackoutChallenges"/);
  assert.match(code,/answered=new Map/);
  assert.equal((code.match(/^\['[^\n]+',\[/gm)||[]).length,5); // one question tuple per scenario

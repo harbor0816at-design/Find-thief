@@ -26,7 +26,7 @@ test('V2 events API does not accept edits',async()=>{
 });
 test('Fixed map layout has scroll only in information panel',()=>{
  const css=fs.readFileSync(require.resolve('../app.css'),'utf-8');
- const html=fs.readFileSync(require.resolve('../index.html'),'utf-8');
+ const html=fs.readFileSync(require.resolve('../legacy.html'),'utf-8');
  const app=fs.readFileSync(require.resolve('../app.js'),'utf-8');
  assert.match(css,/html,body\{height:100%;max-height:100%;overflow:hidden!important/);
  assert.match(css,/\.panel-scroll\{[^}]*overflow-y:auto/);

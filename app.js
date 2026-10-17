@@ -201,7 +201,7 @@ $('resetMap').onclick=()=>{selected=null;$('citySearch').value='';$('countrySele
 $('reportCountry').onchange=()=>{setReportCities();setReportSpots()};$('reportCity').onchange=setReportSpots;$('reportDate').max=new Date().toISOString().slice(0,10);$('reportDate').value=$('reportDate').max;
 document.querySelectorAll('[data-pick-city]').forEach(b=>{b.onclick=()=>{const c=cities.find(x=>x.name===b.dataset.pickCity);if(!c)return;$('citySearch').value='';$('countrySelect').value=c.country;fillCities('citySelect',c.country);$('citySelect').value=String(c.id);focus(c);history.replaceState(null,'','#city='+encodeURIComponent(c.name));$('resultScroll')?.scrollTo({top:0,behavior:'instant'});document.querySelectorAll('[data-pick-city]').forEach(q=>q.classList.toggle('active',q===b))}});
 $('reportForm').onsubmit=submit;$('saveDraft').onclick=localSave;$('selectPin').onclick=()=>{if(!map){$('pinText').textContent='地图资源暂不可用，请输入具体地址';return}const c=cities.find(x=>String(x.id)===$('reportCity').value);if(c)map.setView([c.lat,c.lon],14);pickMode=true;dragEnabled=true;map.dragging.enable();$('map').classList.remove('map-scroll');$('useDrag').textContent='地图拖动：开';button('explore');$('mapPlace').textContent='📍 请点击地图选择事发点（只保存于你的表单）';$('pinText').textContent='等待地图点击…';$('map').focus({preventScroll:true})};
-/* V2: first screen opens directly on the map; user can tap “如何使用” any time. */}
+/* Keep legacy anonymous submission reachable via designed site's report button. */if(location.hash==='#report')button('report');}
 window.FindThiefUI={button,getCity:()=>selected?.name||''};
 boot();
 })();

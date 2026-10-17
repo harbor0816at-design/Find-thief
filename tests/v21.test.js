@@ -3,7 +3,7 @@ const assert=require('node:assert/strict');
 const fs=require('node:fs'),path=require('node:path');
 const read=p=>fs.readFileSync(path.join(__dirname,'..',p),'utf8');
 test('V2.1 has four focused pages and friend-sharing dialog',()=>{
- const html=read('index.html');
+ const html=read('legacy.html');
  for(const id of ['btnExplore','btnReport','btnRecovery','btnPrevention','shareTrigger','recoveryView','preventionView','shareModal','lossGuideContent','preventionContent'])assert.match(html,new RegExp('id="'+id+'"'));
  assert.match(html,/defer src="\/guides.js"/);assert.match(html,/defer src="\/media.js"/);
 });

@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+
+<html lang="zh-CN"><head><meta charset="utf-8"/><link href="/stitch-tailwind-mobile.css" rel="stylesheet"/><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport"/><meta content="mobile_tab" name="shell-type"/><title>Where is the Thief · 欧洲防扒雷达</title><link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;family=Space+Grotesk:wght@500;600;700&amp;display=swap" rel="stylesheet"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{width:100%;margin:0;padding:0;}body{overscroll-behavior:none;background-color:#FAF7F2;color:#1E232A;}.pb-safe{padding-bottom:env(safe-area-inset-bottom,0px);}.pt-safe{padding-top:env(safe-area-inset-top,0px);}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}@keyframes soft-pulse{0%,100%{opacity:1;transform:scale(1);}50%{opacity:0.4;transform:scale(0.9);}}.tactical-blinker{animation:soft-pulse 1.8s cubic-bezier(0.4,0,0.6,1) infinite;}@keyframes wave-ping{0%{transform:scale(0.85);opacity:0.8;}80%,100%{transform:scale(1.9);opacity:0;}}.radar-wave{animation:wave-ping 2.4s cubic-bezier(0,0,0.2,1) infinite;}</style><style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+<link href="/stitch-integrate.css" rel="stylesheet"/><link href="https://find-thief.vercel.app/" rel="canonical"/><link href="https://cdn.bootcdn.net/ajax/libs/leaflet/1.9.4/leaflet.css" rel="stylesheet"/></head><body class="bg-[#FAF7F2] font-body-md text-slate-ink flex justify-center min-h-screen selection:bg-[#E2F736] selection:text-slate-ink"><div class="w-full max-w-md min-h-screen flex flex-col relative bg-[#FAF7F2] shadow-[0_4px_35px_rgba(0,0,0,0.06)] border-x border-slate-200/60"><header class="fixed top-0 max-w-md w-full z-50 bg-[#FAF7F2]/90 backdrop-blur-xl border-b border-slate-200/70 pt-safe"><div class="h-16 px-4 flex items-center justify-between gap-2"><div class="flex items-center gap-2 min-w-0"><div class="h-9 w-9 rounded-2xl bg-amber-100 flex items-center justify-center shrink-0 border border-amber-200/80 shadow-sm relative"><span class="text-[20px] select-none">🕵️‍♂️</span><span class="absolute -bottom-0.5 -right-0.5 text-[11px] leading-none">🐾</span></div><div class="flex flex-col min-w-0"><div class="flex items-center gap-1.5"><span class="font-caption-code text-[14px] font-bold tracking-tight text-slate-ink">防扒雷达</span><div class="flex items-center gap-1 bg-emerald-50 border border-emerald-200/60 px-1.5 py-0.5 rounded-full"><span class="w-1.5 h-1.5 rounded-full bg-emerald-500 tactical-blinker"></span><span class="font-caption-code text-[9px] font-bold text-emerald-700 tracking-wider leading-none">ONLINE</span></div></div><span class="font-caption-code text-[10px] text-text-muted truncate">EUROPE THIEF RADAR · 避坑情报</span></div></div><div class="flex items-center gap-1.5 shrink-0"><button class="h-8 px-2.5 rounded-full bg-white border border-slate-200/80 hover:bg-slate-50 transition-colors flex items-center gap-1 text-slate-ink shadow-xs"><span class="text-xs leading-none">🇮🇹</span><span class="font-caption-code text-[12px] font-bold">罗马</span><span class="material-symbols-outlined text-[15px] text-slate-400">expand_more</span></button><div class="h-8 px-2 rounded-full bg-amber-50 border border-amber-200/70 flex items-center gap-1"><span class="material-symbols-outlined text-[14px] text-amber-600">verified_user</span><span class="font-caption-code text-[10px] font-bold text-amber-700">小心防扒</span></div><div class="w-8 h-8 rounded-full bg-slate-100 border border-slate-200 flex items-center justify-center shrink-0 hover:bg-slate-200 transition-colors text-slate-700"><span class="material-symbols-outlined text-[18px]">sentiment_satisfied</span></div></div></div></header><main class="flex flex-col relative w-full px-4 pt-16 pb-28 bg-[#FAF7F2] min-h-screen"><div aria-live="polite" id="stitch-data-notice" role="status">正在载入有出处的事件数据。地图展示半径2公里为查询范围，不代表实际案发半径。</div><div class="flex flex-col w-full space-y-4">
+<!-- 1. 趣味战况广播条 (Humorous Live Ticker) -->
+<div class="w-full bg-white rounded-2xl p-2.5 shadow-sm border border-slate-200/70 flex items-center gap-2 overflow-hidden mt-2">
+<div class="flex items-center gap-1 shrink-0 bg-red-50 text-accent-coral px-2 py-0.5 rounded-full border border-red-100">
+<span class="material-symbols-outlined text-[14px] animate-pulse">campaign</span>
+<span class="font-caption-code text-[10px] font-bold tracking-wide">今日热梗速报</span>
+</div>
+<div class="relative w-full overflow-hidden h-5">
+<div class="absolute flex flex-col w-full transition-transform duration-500 ease-out" id="ticker-slider"><div class="h-5 flex items-center text-[12px]">公开来源记录 · 案发时间与发文时间分开标注</div></div>
+</div>
+</div>
+<!-- Slogan 与 趣味今日状态看板 -->
+<div class="w-full bg-white rounded-3xl p-5 shadow-sm border border-slate-200/80 flex flex-col gap-3 relative overflow-hidden">
+<div class="absolute -right-6 -bottom-6 w-32 h-32 bg-lime-100/70 rounded-full blur-2xl pointer-events-none"></div>
+<div class="flex items-start justify-between">
+<div>
+<div class="inline-flex items-center gap-1.5 bg-lime-50 border border-lime-200/80 px-2.5 py-0.5 rounded-full mb-2">
+<span class="w-1.5 h-1.5 rounded-full bg-lime-500 tactical-blinker"></span>
+<span class="font-caption-code text-[11px] text-lime-900 font-bold">罗马防扒情报：来源可查 ✌️</span>
+</div>
+<h1 class="font-headline-lg text-[25px] leading-tight text-slate-ink tracking-tight font-bold">
+          查哪里被偷过，<br/><span class="text-lime-700 underline decoration-lime-300 decoration-4 underline-offset-3">反手一个匿名避雷！</span>
+</h1>
+</div>
+<button class="shrink-0 w-10 h-10 rounded-full bg-slate-50 hover:bg-slate-100 border border-slate-200 flex items-center justify-center text-slate-700 shadow-xs transition-transform active:scale-95" onclick="openShareModal()" title="分享给怨种旅伴">
+<span class="material-symbols-outlined text-[20px]">ios_share</span>
+</button>
+</div>
+<p class="font-body-sm text-[13px] text-text-muted leading-relaxed">地点、作案手法、心痛指数一目了然，带你一眼看破欧洲扒手的老套路。</p>
+<!-- 城市快捷胶囊切换 (轻潮明亮色彩) -->
+<div class="flex items-center gap-1.5 overflow-x-auto pb-1 pt-1 scrollbar-none -mx-1 px-1">
+<button class="city-btn shrink-0 px-3.5 py-1.5 rounded-full bg-[#E2F736] text-slate-ink border border-lime-300 font-caption-code text-[12px] font-bold shadow-xs transition-all" onclick="switchCity('rome', this)">🇮🇹 罗马</button>
+<button class="city-btn shrink-0 px-3.5 py-1.5 rounded-full bg-slate-100 text-slate-600 hover:text-slate-900 border border-slate-200 font-caption-code text-[12px] transition-all" onclick="switchCity('paris', this)">🇫🇷 巴黎</button>
+<button class="city-btn shrink-0 px-3.5 py-1.5 rounded-full bg-slate-100 text-slate-600 hover:text-slate-900 border border-slate-200 font-caption-code text-[12px] transition-all" onclick="switchCity('barcelona', this)">🇪🇸 巴塞罗那</button>
+<button class="city-btn shrink-0 px-3.5 py-1.5 rounded-full bg-slate-100 text-slate-600 hover:text-slate-900 border border-slate-200 font-caption-code text-[12px] transition-all" onclick="switchCity('milan', this)">🇮🇹 米兰</button>
+<button class="city-btn shrink-0 px-3.5 py-1.5 rounded-full bg-slate-100 text-slate-600 hover:text-slate-900 border border-slate-200 font-caption-code text-[12px] transition-all" onclick="switchCity('london', this)">🇬🇧 伦敦</button>
+<button class="city-btn shrink-0 px-3.5 py-1.5 rounded-full bg-slate-100 text-slate-600 hover:text-slate-900 border border-slate-200 font-caption-code text-[12px] transition-all" onclick="switchCity('florence', this)">🇮🇹 佛罗伦萨</button>
+</div>
+</div>
+<!-- 2. 核心模块一：动态战区地图与高危段位排行榜 (插画轻色风) -->
+<div class="w-full bg-white rounded-3xl p-4 shadow-sm border border-slate-200/80 flex flex-col gap-3.5">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="w-7 h-7 rounded-lg bg-lime-100 text-lime-800 flex items-center justify-center">
+<span class="material-symbols-outlined text-[19px]">explore</span>
+</span>
+<h2 class="font-headline-sm text-[17px] font-bold text-slate-ink">动态实况避雷雷达</h2>
+</div>
+<div class="flex items-center gap-1 bg-slate-50 border border-slate-200 px-2 py-0.5 rounded-full">
+<button class="flex items-center gap-1 text-[11px] font-caption-code font-bold text-emerald-700" id="map-drag-toggle" onclick="toggleMapDrag()">
+<span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+<span>拖动: 开</span>
+</button>
+</div>
+</div>
+<!-- 清新插画风矢量地图卡片 -->
+<div class="relative w-full h-56 rounded-2xl overflow-hidden bg-[#EFF4FA] border border-sky-100 shadow-inner" data-location="Rome, Italy">
+<!-- 简约清新街道网格纹理 -->
+<div class="absolute inset-0 bg-[linear-gradient(to_right,#e2e8f0_1px,transparent_1px),linear-gradient(to_bottom,#e2e8f0_1px,transparent_1px)] bg-[size:28px_28px] opacity-40"></div>
+<div class="absolute top-1/4 left-0 right-0 h-6 bg-sky-200/30 -rotate-6 transform scale-110"></div>
+<div class="absolute -top-10 left-1/3 bottom-0 w-8 bg-sky-200/40 rotate-12"></div>
+<!-- 模拟雷达扫描波纹 (清新绿蓝轻感) -->
+<div class="absolute inset-0 pointer-events-none flex items-center justify-center">
+<div class="w-44 h-44 rounded-full border-2 border-emerald-400/40 radar-wave"></div>
+<div class="w-32 h-32 rounded-full border border-sky-300/60 bg-sky-100/20"></div>
+</div>
+<!-- 动态高危点位气泡 (清新配色+幽默标签) -->
+<div class="absolute top-6 left-8 z-10 flex flex-col items-center group cursor-pointer" onclick="showHotspot('termini')">
+<span class="px-2.5 py-1 rounded-xl bg-accent-coral text-white font-caption-code text-[10px] font-bold shadow-md flex items-center gap-1 border border-white">
+<span class="w-1.5 h-1.5 rounded-full bg-white animate-ping"></span>特米尼站地下黑洞
+        </span>
+<span class="material-symbols-outlined text-accent-coral text-[22px] -mt-1 drop-shadow-sm">location_on</span>
+</div>
+<div class="absolute top-16 right-10 z-10 flex flex-col items-center group cursor-pointer" onclick="showHotspot('vatican')">
+<span class="px-2.5 py-1 rounded-xl bg-accent-orange text-white font-caption-code text-[10px] font-bold shadow-md border border-white">
+          梵蒂冈排队伪装秀
+        </span>
+<span class="material-symbols-outlined text-accent-orange text-[22px] -mt-1 drop-shadow-sm">location_on</span>
+</div>
+<div class="absolute bottom-8 left-24 z-10 flex flex-col items-center group cursor-pointer" onclick="showHotspot('colosseo')">
+<span class="px-2.5 py-1 rounded-xl bg-[#E2F736] text-slate-ink font-caption-code text-[10px] font-bold shadow-md border border-slate-800/10">
+          手绳侠物理热情区
+        </span>
+<span class="material-symbols-outlined text-amber-500 text-[22px] -mt-1 drop-shadow-sm">location_on</span>
+</div>
+<!-- 地图浮层图例 -->
+<div class="absolute bottom-2 left-2 right-2 bg-white/90 backdrop-blur-md rounded-xl p-1.5 px-3 flex justify-between items-center text-[10px] font-caption-code text-slate-600 border border-slate-200/60 shadow-xs">
+<span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-accent-coral"></span>高危警报区</span>
+<span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-accent-orange"></span>游客易中招</span>
+<span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-emerald-500"></span>便衣安全巡逻</span>
+</div>
+</div>
+<!-- 筛选标签 (马卡龙清潮撞色药丸) -->
+<div class="flex items-center gap-1.5 overflow-x-auto pb-0.5 scrollbar-none text-[11px] font-caption-code">
+<button class="tier-filter px-3 py-1.5 rounded-full bg-[#E2F736] text-slate-ink border border-lime-300 font-bold shadow-xs" onclick="filterIncidents('all', this)">全部(—)</button>
+<button class="tier-filter px-3 py-1.5 rounded-full bg-sky-50 text-sky-700 border border-sky-100 hover:bg-sky-100 transition-colors" onclick="filterIncidents('phone', this)">📱 手机被掏(—)</button>
+<button class="tier-filter px-3 py-1.5 rounded-full bg-rose-50 text-rose-700 border border-rose-100 hover:bg-rose-100 transition-colors" onclick="filterIncidents('bag', this)">👜 名牌包被割(—)</button>
+<button class="tier-filter px-3 py-1.5 rounded-full bg-indigo-50 text-indigo-700 border border-indigo-100 hover:bg-indigo-100 transition-colors" onclick="filterIncidents('passport', this)">📘 护照惨案(—)</button>
+<button class="tier-filter px-3 py-1.5 rounded-full bg-amber-50 text-amber-700 border border-amber-100 hover:bg-amber-100 transition-colors" onclick="filterIncidents('luggage', this)">🧳 整箱飞升(—)</button>
+</div>
+<!-- 小偷段位天梯榜 (卡片纯白底配细边框微阴影) -->
+<div class="flex flex-col gap-2.5 mt-1" id="incident-container"><p class="source-loading">正在加载经核验的地点记录…</p></div>
+</div>
+<!-- 3. 核心模块二：极速匿名避雷上报通道 (受害者匿名吐槽与避雷卡) -->
+<div class="w-full bg-white rounded-3xl p-5 shadow-sm border border-slate-200/80 flex flex-col gap-3 relative">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="w-7 h-7 rounded-lg bg-lime-100 text-lime-800 flex items-center justify-center">
+<span class="material-symbols-outlined text-[19px]">edit_note</span>
+</span>
+<div>
+<h2 class="font-headline-sm text-[17px] font-bold text-slate-ink">受害者匿名吐槽与避雷</h2>
+<span class="font-caption-code text-[10px] text-text-muted">挂出来救救姐妹 · 免登录 · 30秒生成避雷战报卡</span>
+</div>
+</div>
+<span class="px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 font-caption-code text-[10px] font-bold">已匿名保护</span>
+</div>
+<form class="flex flex-col gap-3 pt-1" data-stitch-draft="true" id="expose-form" onsubmit="generateWarReport(event)">
+<div class="grid grid-cols-2 gap-2">
+<div>
+<label class="block font-caption-code text-[11px] text-slate-500 mb-1">国家 / 城市</label>
+<div class="bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 flex items-center justify-between">
+<span class="text-xs font-bold text-slate-800">🇮🇹 意大利 · 罗马</span>
+<span class="material-symbols-outlined text-slate-400 text-[16px]">expand_more</span>
+</div>
+</div>
+<div>
+<label class="block font-caption-code text-[11px] text-slate-500 mb-1">案发场景</label>
+<select class="w-full bg-slate-50 border border-slate-200 text-xs text-slate-800 rounded-xl px-2.5 py-2.5 outline-none font-body-sm" id="scene-select">
+<option value="地铁/车厢内部">🚇 地铁 / 车厢内部</option>
+<option value="知名景区/排队区">🏛️ 景区 / 露天排队</option>
+<option value="露天餐厅/咖啡馆">☕ 露天餐厅 / 椅子后背</option>
+<option value="火车车站上下台阶">🧳 火车车站 / 上下台阶</option>
+</select>
+</div>
+</div>
+<div>
+<label class="block font-caption-code text-[11px] text-slate-500 mb-1">被偷走的心爱之物 (多选)</label>
+<div class="grid grid-cols-4 gap-1.5">
+<button class="item-chip px-2 py-2 rounded-xl bg-lime-100 text-slate-900 border border-lime-300 text-[11px] font-caption-code text-center font-bold" onclick="toggleItemChip(this, 'iPhone 16 Pro')" type="button">📱 iPhone</button>
+<button class="item-chip px-2 py-2 rounded-xl bg-slate-50 text-slate-600 border border-slate-200 text-[11px] font-caption-code text-center" onclick="toggleItemChip(this, 'Goyard/大牌包')" type="button">👜 奢侈包</button>
+<button class="item-chip px-2 py-2 rounded-xl bg-slate-50 text-slate-600 border border-slate-200 text-[11px] font-caption-code text-center" onclick="toggleItemChip(this, '中国护照')" type="button">📘 护照</button>
+<button class="item-chip px-2 py-2 rounded-xl bg-slate-50 text-slate-600 border border-slate-200 text-[11px] font-caption-code text-center" onclick="toggleItemChip(this, '整只拉杆箱')" type="button">🧳 行李箱</button>
+</div>
+</div>
+<div>
+<label class="block font-caption-code text-[11px] text-slate-500 mb-1">小偷作案套路 (至少勾选1项)</label>
+<div class="flex flex-wrap gap-1.5">
+<span class="tactic-chip cursor-pointer px-3 py-1.5 rounded-full bg-slate-50 border border-slate-200 text-[11px] font-caption-code text-slate-600 hover:bg-slate-100 transition-colors" onclick="toggleTacticChip(this)">🍅 泼酱汁假装帮你擦</span>
+<span class="tactic-chip cursor-pointer px-3 py-1.5 rounded-full bg-slate-50 border border-slate-200 text-[11px] font-caption-code text-slate-600 hover:bg-slate-100 transition-colors" onclick="toggleTacticChip(this)">📋 假签名板遮挡视线</span>
+<span class="tactic-chip cursor-pointer px-3 py-1.5 rounded-full bg-slate-50 border border-slate-200 text-[11px] font-caption-code text-slate-600 hover:bg-slate-100 transition-colors" onclick="toggleTacticChip(this)">👶 假娃娃/强抱求助</span>
+<span class="tactic-chip cursor-pointer px-3 py-1.5 rounded-full bg-slate-50 border border-slate-200 text-[11px] font-caption-code text-slate-600 hover:bg-slate-100 transition-colors" onclick="toggleTacticChip(this)">⚡ 地铁关门秒抢跳车</span>
+</div>
+</div>
+<div>
+<label class="block font-caption-code text-[11px] text-slate-500 mb-1">一句话受害经过 (不含任何个人隐私)</label>
+<textarea class="w-full bg-slate-50 border border-slate-200 text-slate-800 text-xs rounded-xl p-2.5 outline-none font-body-sm resize-none placeholder:text-slate-400" id="incident-desc" placeholder="例：Termini地铁换乘时，突然被两个穿风衣的人挤在车门边，几秒后拉链就被扯开了..." rows="2"></textarea>
+</div>
+<button class="w-full py-3.5 bg-[#E2F736] hover:bg-[#d4eb2a] text-slate-900 rounded-2xl font-caption-code text-[13px] font-bold tracking-wide flex items-center justify-center gap-1.5 shadow-sm active:scale-98 transition-all border border-lime-300" type="submit">
+<span class="material-symbols-outlined text-[19px]">share_reviews</span>
+<span>生成小红书/朋友圈【防坑避雷战报】</span>
+</button>
+</form>
+</div>
+<!-- 4. 核心模块三：丢了别慌！生活急救盒风格清单 (Panic Box 112) -->
+<div class="w-full bg-white rounded-3xl p-5 shadow-sm border border-slate-200/80 flex flex-col gap-3.5">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="w-8 h-8 rounded-xl bg-red-100 text-accent-coral flex items-center justify-center">
+<span class="material-symbols-outlined text-[20px]">medical_services</span>
+</span>
+<div>
+<h2 class="font-headline-sm text-[17px] font-bold text-slate-ink">丢了别慌！生活急救盒</h2>
+<span class="font-caption-code text-[11px] text-accent-coral font-bold">黄金30分钟内极速阻断指南</span>
+</div>
+</div>
+<a class="px-3 py-1.5 rounded-full bg-accent-coral hover:bg-red-600 text-white font-caption-code text-[12px] font-bold flex items-center gap-1 shadow-xs transition-colors" href="tel:112">
+<span class="material-symbols-outlined text-[15px]">call</span>直拨 112
+      </a>
+</div>
+<!-- 自救分流 2x2 网格 (彩色扁平图标与清爽卡片) -->
+<div class="grid grid-cols-2 gap-2.5">
+<!-- 手机丢失 -->
+<div class="bg-sky-50/60 hover:bg-sky-50 p-3.5 rounded-2xl flex flex-col gap-1 cursor-pointer transition-colors border border-sky-100" onclick="showRescueModal('phone')">
+<div class="w-8 h-8 rounded-xl bg-sky-100 text-accent-blue flex items-center justify-center mb-1">
+<span class="material-symbols-outlined text-[18px]">phone_iphone</span>
+</div>
+<span class="font-body-md text-[13px] text-slate-ink font-bold">手机被偷了</span>
+<span class="font-body-sm text-[11px] text-text-muted">远程抹除 · 微信支付宝紧急冻结</span>
+</div>
+<!-- 护照被盗 -->
+<div class="bg-amber-50/60 hover:bg-amber-50 p-3.5 rounded-2xl flex flex-col gap-1 cursor-pointer transition-colors border border-amber-100" onclick="showRescueModal('passport')">
+<div class="w-8 h-8 rounded-xl bg-amber-100 text-amber-700 flex items-center justify-center mb-1">
+<span class="material-symbols-outlined text-[18px]">badge</span>
+</div>
+<span class="font-body-md text-[13px] text-slate-ink font-bold">护照全丢了</span>
+<span class="font-body-sm text-[11px] text-text-muted">中国领事APP加急办旅行证</span>
+</div>
+<!-- 银行卡被盗刷 -->
+<div class="bg-rose-50/60 hover:bg-rose-50 p-3.5 rounded-2xl flex flex-col gap-1 cursor-pointer transition-colors border border-rose-100" onclick="showRescueModal('card')">
+<div class="w-8 h-8 rounded-xl bg-rose-100 text-accent-coral flex items-center justify-center mb-1">
+<span class="material-symbols-outlined text-[18px]">credit_card_off</span>
+</div>
+<span class="font-body-md text-[13px] text-slate-ink font-bold">银行卡被盗刷</span>
+<span class="font-body-sm text-[11px] text-text-muted">四大行海外紧急锁卡专线</span>
+</div>
+<!-- 警方失物证明 -->
+<div class="bg-emerald-50/60 hover:bg-emerald-50 p-3.5 rounded-2xl flex flex-col gap-1 cursor-pointer transition-colors border border-emerald-100" onclick="showRescueModal('police')">
+<div class="w-8 h-8 rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center mb-1">
+<span class="material-symbols-outlined text-[18px]">local_police</span>
+</div>
+<span class="font-body-md text-[13px] text-slate-ink font-bold">警察局报案 (Denuncia)</span>
+<span class="font-body-sm text-[11px] text-text-muted">保司理赔必备单据获取流程</span>
+</div>
+</div>
+<div class="bg-slate-50 border border-slate-200/80 rounded-2xl p-2.5 flex items-center gap-2">
+<span class="material-symbols-outlined text-amber-500 text-[18px] shrink-0">sentiment_very_satisfied</span>
+<span class="font-caption-code text-[11px] text-text-muted leading-tight">
+        友情提示：人在旅途安全第一，财物是小安全最大！被偷后优先确保人身安全与情绪稳定哦。
+      </span>
+</div>
+</div>
+<!-- 5. 核心模块四：战术防窃黑话 (风趣文案折叠卡片) -->
+<div class="w-full bg-white rounded-3xl p-5 shadow-sm border border-slate-200/80 flex flex-col gap-3.5">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="w-8 h-8 rounded-xl bg-lime-100 text-lime-800 flex items-center justify-center">
+<span class="material-symbols-outlined text-[20px]">emoji_objects</span>
+</span>
+<h2 class="font-headline-sm text-[17px] font-bold text-slate-ink">战术防窃黑话与秘籍</h2>
+</div>
+<span class="font-caption-code text-[11px] text-lime-800 bg-lime-100 px-2 py-0.5 rounded-full font-bold">经验干货</span>
+</div>
+<!-- 折叠秘籍卡片 (清爽大方、浅色风琴) -->
+<div class="flex flex-col gap-2">
+<!-- 秘籍 1 -->
+<div class="bg-slate-50 border border-slate-200/70 rounded-2xl p-3 flex flex-col gap-1 cursor-pointer transition-all hover:bg-slate-100/70" onclick="toggleFaq(this)">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="text-base">🕶️</span>
+<span class="font-body-md text-[13px] font-bold text-slate-ink">如何伪装成不好惹的本地狠人？</span>
+</div>
+<span class="material-symbols-outlined text-slate-400 text-[18px] transition-transform duration-200">expand_more</span>
+</div>
+<p class="faq-content hidden font-body-sm text-[12px] text-text-muted pt-2 leading-relaxed border-t border-slate-200/60 mt-1">
+          1. 绝不在十字路口掏出大张纸质地图或茫然打转；<br/>
+          2. 走路眼神坚定带风，戴副墨镜气场全开；<br/>
+          3. 任何路人搭讪问时间、签名、求助一律用冷漠手势配合“No, grazie / Non merci”，脚步绝不停顿！
+        </p>
+</div>
+<!-- 秘籍 2 -->
+<div class="bg-slate-50 border border-slate-200/70 rounded-2xl p-3 flex flex-col gap-1 cursor-pointer transition-all hover:bg-slate-100/70" onclick="toggleFaq(this)">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="text-base">🪢</span>
+<span class="font-body-md text-[13px] font-bold text-slate-ink">年轻人的“玄学级”防盗武装三件套</span>
+</div>
+<span class="material-symbols-outlined text-slate-400 text-[18px] transition-transform duration-200">expand_more</span>
+</div>
+<p class="faq-content hidden font-body-sm text-[12px] text-text-muted pt-2 leading-relaxed border-t border-slate-200/60 mt-1">
+          1. <b class="text-lime-700">粗尼龙手机斜挎绳</b>：挂在胸前或绕手腕两圈，拍照绝不单手伸出栏杆；<br/>
+          2. <b class="text-lime-700">拉链别针物理封印</b>：包包双拉链用金属小别针锁死，小偷手速再快也解不开；<br/>
+          3. <b class="text-lime-700">烟雾弹旧钱包</b>：外袋塞废旧会员卡与10欧零钱，真证件全放贴身隐形腰包。
+        </p>
+</div>
+<!-- 秘籍 3 -->
+<div class="bg-slate-50 border border-slate-200/70 rounded-2xl p-3 flex flex-col gap-1 cursor-pointer transition-all hover:bg-slate-100/70" onclick="toggleFaq(this)">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="text-base">🥐</span>
+<span class="font-body-md text-[13px] font-bold text-slate-ink">露天咖啡馆与拍照防顺走原则</span>
+</div>
+<span class="material-symbols-outlined text-slate-400 text-[18px] transition-transform duration-200">expand_more</span>
+</div>
+<p class="faq-content hidden font-body-sm text-[12px] text-text-muted pt-2 leading-relaxed border-t border-slate-200/60 mt-1">
+          1. 手机绝不随意搁在靠近街道的桌角，一秒就会被宣传单或假报纸盖住顺走；<br/>
+          2. 托特包带子一定要绕在椅子腿上或直接踩在脚底下；<br/>
+          3. 拍打卡照时，同行伙伴必须背靠背形成360度视野守护阵！
+        </p>
+</div>
+</div>
+<!-- 底部打卡/护身符模块 -->
+<div class="mt-1 bg-lime-50/70 border border-lime-200 rounded-2xl p-3.5 flex items-center justify-between">
+<div class="flex items-center gap-2.5">
+<div class="w-10 h-10 rounded-2xl bg-[#E2F736] flex items-center justify-center text-slate-900 border border-lime-300 shadow-xs">
+<span class="material-symbols-outlined text-[20px]">shield</span>
+</div>
+<div>
+<span class="font-body-md text-[13px] text-slate-900 font-bold block">带上「欧洲防扒电子护身符」</span>
+<span class="font-caption-code text-[10px] text-text-muted">祝你在欧洲毫发无损开心出游！</span>
+</div>
+</div>
+<button class="px-3.5 py-1.5 bg-[#E2F736] hover:bg-lime-300 text-slate-900 border border-lime-400 rounded-full font-caption-code text-[11px] font-bold shadow-xs transition-all active:scale-95" onclick="copyShareLink()">
+        复制链接
+      </button>
+</div>
+</div>
+<!-- 底部官方声明与规范 -->
+<div class="w-full py-4 text-center flex flex-col items-center gap-2">
+<p class="font-caption-code text-[10px] text-slate-400 max-w-xs leading-normal">
+      数据整理自：欧洲警务公开提示、中国驻欧使领馆安全提醒及游客核验自述。<br/>
+      遇紧急危险请直接拨打欧盟通用求助电话 112。
+    </p>
+<div class="flex items-center gap-3 font-caption-code text-[11px] text-slate-500">
+<a class="hover:text-slate-800" href="#">使用说明</a>
+<span>·</span>
+<a class="hover:text-slate-800" href="#">隐私免责</a>
+<span>·</span>
+<a class="hover:text-slate-800" href="#">热点核验</a>
+</div>
+</div>
+<!-- MODAL: 生成的战报预览卡 (明亮轻潮风格) -->
+<div class="fixed inset-0 z-50 bg-slate-900/40 backdrop-blur-sm hidden items-center justify-center p-4" id="report-modal">
+<div class="bg-white max-w-sm w-full rounded-3xl p-5 flex flex-col gap-4 shadow-xl border border-slate-200 relative">
+<button class="absolute top-4 right-4 text-slate-400 hover:text-slate-700" onclick="closeReportModal()">
+<span class="material-symbols-outlined">close</span>
+</button>
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-accent-coral animate-ping"></span>
+<span class="font-caption-code text-xs text-accent-coral font-bold uppercase tracking-wider">THIEF EXPOSED · 避雷报告</span>
+</div>
+<!-- 卡片主体 -->
+<div class="bg-slate-50 rounded-2xl p-4 flex flex-col gap-3 relative overflow-hidden border border-slate-200/80" id="viral-card">
+<div class="flex justify-between items-start">
+<div>
+<span class="font-caption-code text-[10px] text-lime-800 font-semibold">小偷在哪里 · 欧洲防扒雷达</span>
+<h3 class="font-headline-sm text-slate-ink text-[16px] font-bold" id="modal-title">罗马 · 避雷档案</h3>
+</div>
+<span class="px-2 py-0.5 rounded-full bg-red-100 text-accent-coral font-caption-code text-[10px] font-bold">未公开 · 个人草稿</span>
+</div>
+<div class="space-y-1.5 py-1">
+<div class="flex items-center gap-2 text-xs">
+<span class="text-text-muted font-caption-code">📍 事发位置:</span>
+<span class="text-slate-800 font-semibold" id="modal-loc">尚未选择地点</span>
+</div>
+<div class="flex items-center gap-2 text-xs">
+<span class="text-text-muted font-caption-code">💔 痛失爱物:</span>
+<span class="text-accent-coral font-bold" id="modal-item">按实际选择</span>
+</div>
+<div class="flex items-center gap-2 text-xs">
+<span class="text-text-muted font-caption-code">🎭 作案流派:</span>
+<span class="text-amber-700 font-semibold" id="modal-tactic">个人经历</span>
+</div>
+</div>
+<div class="bg-white border border-slate-200/70 p-3 rounded-xl text-[12px] text-slate-600 leading-relaxed italic" id="modal-detail">填写真实经历后生成个人草稿</div>
+<div class="flex items-center justify-between pt-2 border-t border-slate-200/60">
+<div class="flex flex-col">
+<span class="font-caption-code text-[9px] text-slate-400">扫码查看欧洲全境避雷雷达</span>
+<span class="font-caption-code text-[11px] text-slate-800 font-bold tracking-wider">find-thief.vercel.app</span>
+</div>
+<div class="w-8 h-8 rounded-lg bg-white border border-slate-200 p-1 flex items-center justify-center text-slate-800">
+<span class="material-symbols-outlined text-[20px]">qr_code_2</span>
+</div>
+</div>
+</div>
+<div class="flex gap-2">
+<button class="flex-1 py-3 bg-[#E2F736] hover:bg-lime-300 text-slate-900 border border-lime-300 rounded-2xl font-caption-code text-xs font-bold flex items-center justify-center gap-1 shadow-xs" onclick="saveCard()">
+<span class="material-symbols-outlined text-[16px]">download</span>长按保存发小红书
+        </button>
+<button class="px-4 py-3 bg-slate-100 hover:bg-slate-200 rounded-2xl text-slate-700 font-caption-code text-xs font-bold" onclick="closeReportModal()">
+          关闭
+        </button>
+</div>
+</div>
+</div>
+<!-- MODAL: 急救指引弹窗 (明亮风) -->
+<div class="fixed inset-0 z-50 bg-slate-900/40 backdrop-blur-sm hidden items-center justify-center p-4" id="rescue-modal">
+<div class="bg-white max-w-sm w-full rounded-3xl p-5 flex flex-col gap-3.5 shadow-xl border border-slate-200 relative">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-accent-coral text-[22px]">medical_services</span>
+<h3 class="font-headline-sm text-[16px] font-bold text-slate-ink" id="rescue-title">手机紧急处置</h3>
+</div>
+<button class="text-slate-400 hover:text-slate-700" onclick="closeRescueModal()">
+<span class="material-symbols-outlined">close</span>
+</button>
+</div>
+<div class="text-xs text-slate-600 space-y-2.5 font-body-sm leading-relaxed" id="rescue-content">
+<!-- 动态注入 -->
+</div>
+<div class="flex gap-2 pt-2">
+<a class="flex-1 py-3 bg-accent-coral hover:bg-red-600 text-white rounded-2xl font-caption-code text-xs font-bold text-center flex items-center justify-center gap-1 shadow-xs" href="tel:112">
+<span class="material-symbols-outlined text-[16px]">call</span>拨打 112 报警
+        </a>
+<button class="px-4 py-3 bg-slate-100 hover:bg-slate-200 rounded-2xl text-slate-700 font-caption-code text-xs font-bold" onclick="closeRescueModal()">
+          我知道了
+        </button>
+</div>
+</div>
+</div>
+<!-- 提示轻提示 (Toast) -->
+<div class="fixed top-20 left-1/2 -translate-x-1/2 z-50 bg-slate-900 text-white px-4 py-2 rounded-full font-caption-code text-xs font-bold shadow-lg transition-opacity duration-300 opacity-0 pointer-events-none flex items-center gap-1.5" id="toast">
+<span class="material-symbols-outlined text-[16px] text-lime-300">check_circle</span>
+<span id="toast-msg">已复制！快发给同行的怨种朋友</span>
+</div>
+</div>
+<script>
+  // 1. Ticker 自动轮播
+  let tickerIndex = 0;
+  const tickerSlider = document.getElementById('ticker-slider');
+  setInterval(() => {
+    tickerIndex = (tickerIndex + 1) % 3;
+    if(tickerSlider) {
+      tickerSlider.style.transform = `translateY(-${tickerIndex * 20}px)`;
+    }
+  }, 3500);
+
+  // 2. 城市切换逻辑
+  function switchCity(city, btn) {
+    document.querySelectorAll('.city-btn').forEach(el => {
+      el.className = 'city-btn shrink-0 px-3.5 py-1.5 rounded-full bg-slate-100 text-slate-600 hover:text-slate-900 border border-slate-200 font-caption-code text-[12px] transition-all';
+    });
+    btn.className = 'city-btn shrink-0 px-3.5 py-1.5 rounded-full bg-[#E2F736] text-slate-ink border border-lime-300 font-caption-code text-[12px] font-bold shadow-xs transition-all';
+    showToast(`已切换至: ${btn.innerText} 防扒雷达`);
+  }
+
+  // 3. 地图拖拽开关
+  let mapDraggable = true;
+  function toggleMapDrag() {
+    mapDraggable = !mapDraggable;
+    const btn = document.getElementById('map-drag-toggle');
+    if (mapDraggable) {
+      btn.innerHTML = '<span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span><span>拖动: 开</span>';
+      btn.className = 'flex items-center gap-1 text-[11px] font-caption-code font-bold text-emerald-700';
+      showToast('地图单指拖动已启用');
+    } else {
+      btn.innerHTML = '<span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span><span>拖动: 锁</span>';
+      btn.className = 'flex items-center gap-1 text-[11px] font-caption-code font-bold text-amber-700';
+      showToast('地图手势已锁定，便于浏览页面');
+    }
+  }
+
+  // 4. 热点筛选逻辑
+  function filterIncidents(type, btn) {
+    document.querySelectorAll('.tier-filter').forEach(b => {
+      b.className = 'tier-filter px-3 py-1.5 rounded-full bg-slate-100 text-slate-600 border border-slate-200 text-[11px] font-caption-code hover:bg-slate-200 transition-colors';
+    });
+    btn.className = 'tier-filter px-3 py-1.5 rounded-full bg-[#E2F736] text-slate-ink border border-lime-300 font-bold shadow-xs text-[11px] font-caption-code';
+
+    const cards = document.querySelectorAll('.incident-card');
+    cards.forEach(card => {
+      if (type === 'all' || card.getAttribute('data-type') === type) {
+        card.style.display = 'flex';
+      } else {
+        card.style.display = 'none';
+      }
+    });
+  }
+
+  // 5. 点击地图热点
+  function showHotspot(name) {
+    const names = {
+      'termini': '罗马特米尼地下通道：小偷密度极高，背包请务必紧抱胸前！',
+      'vatican': '梵蒂冈安检队伍：警惕主动帮拍照或热心兜售假门票的人。',
+      'colosseo': '斗兽场外围草坪：绝不要伸手触碰任何彩绳与鸽子食！'
+    };
+    showToast(names[name] || '高发热点已锚定');
+  }
+
+  // 6. 避雷表单小标签交互
+  let selectedItems = ['iPhone 16 Pro'];
+  let selectedTactics = [];
+
+  function toggleItemChip(btn, val) {
+    if (btn.classList.contains('bg-lime-100')) {
+      btn.className = 'item-chip px-2 py-2 rounded-xl bg-slate-50 text-slate-600 border border-slate-200 text-[11px] font-caption-code text-center';
+      selectedItems = selectedItems.filter(i => i !== val);
+    } else {
+      btn.className = 'item-chip px-2 py-2 rounded-xl bg-lime-100 text-slate-900 border border-lime-300 text-[11px] font-caption-code text-center font-bold';
+      selectedItems.push(val);
+    }
+  }
+
+  function toggleTacticChip(span) {
+    if (span.classList.contains('bg-amber-100')) {
+      span.className = 'tactic-chip cursor-pointer px-3 py-1.5 rounded-full bg-slate-50 border border-slate-200 text-[11px] font-caption-code text-slate-600 hover:bg-slate-100 transition-colors';
+      selectedTactics = selectedTactics.filter(t => t !== span.innerText);
+    } else {
+      span.className = 'tactic-chip cursor-pointer px-3 py-1.5 rounded-full bg-amber-100 text-amber-900 border border-amber-300 font-bold text-[11px] font-caption-code';
+      selectedTactics.push(span.innerText);
+    }
+  }
+
+  // 7. 生成战报卡
+  function generateWarReport(e) {
+    e.preventDefault();
+    const scene = document.getElementById('scene-select').value;
+    const desc = document.getElementById('incident-desc').value || '未留下详细经过，请路过该地姐妹保持戒备！';
+    
+    document.getElementById('modal-loc').innerText = `罗马 · ${scene}`;
+    document.getElementById('modal-item').innerText = selectedItems.length > 0 ? selectedItems.join(', ') : '个人随身随行贵重资产';
+    document.getElementById('modal-tactic').innerText = selectedTactics.length > 0 ? selectedTactics.join(' / ') : '抱团死角掏兜';
+    document.getElementById('modal-detail').innerText = `“${desc}”`;
+
+    const modal = document.getElementById('report-modal');
+    modal.classList.remove('hidden');
+    modal.classList.add('flex');
+  }
+
+  function closeReportModal() {
+    const modal = document.getElementById('report-modal');
+    modal.classList.add('hidden');
+    modal.classList.remove('flex');
+  }
+
+  function saveCard() {
+    showToast('战报已就绪，立即发小红书/群聊提醒同伴！');
+    closeReportModal();
+  }
+
+  // 8. 急救弹窗数据与呼出
+  const rescueDB = {
+    'phone': {
+      title: '📱 手机被盗极速抢救',
+      content: `
+        <div class="p-2.5 bg-sky-50 border border-sky-100 rounded-xl text-slate-800 font-bold">1. 借同行人手机启动 Apple ID 锁机</div>
+        <p class="mt-1">登录 icloud.com/find 开启“丢失模式”锁定，切勿轻信伪装成官方的解除短信或邮件！</p>
+        <div class="p-2.5 bg-sky-50 border border-sky-100 rounded-xl text-slate-800 font-bold mt-2">2. 微信/支付宝海外应急冻结</div>
+        <p class="mt-1">通过同伴微信搜索“微信安全中心”冻结账号；或拨打支付宝境外客服专线紧急锁号。</p>
+      `
+    },
+    'passport': {
+      title: '📘 护照丢失补办指引',
+      content: `
+        <div class="p-2.5 bg-amber-50 border border-amber-100 rounded-xl text-slate-800 font-bold">1. 立即前往附近警局开具 Denuncia 报案单</div>
+        <p class="mt-1">报案单是后续补办证件、登机以及回国入关的凭据，务必复印留存备用。</p>
+        <div class="p-2.5 bg-amber-50 border border-amber-100 rounded-xl text-slate-800 font-bold mt-2">2. 登录「中国领事」APP 申办旅行证</div>
+        <p class="mt-1">领事部加急通常仅需1-3个工作日，出示紧急回程机票可申请绿色加急通道。</p>
+      `
+    },
+    'card': {
+      title: '💳 银行卡盗刷海外阻断',
+      content: `
+        <div class="p-2.5 bg-rose-50 border border-rose-100 rounded-xl text-slate-800 font-bold">1. 手机银行 APP 一键锁卡</div>
+        <p class="mt-1">国内招行、工行、中行等APP均支持“境外交易限额清零/一键锁卡”，即时切断盗刷风险。</p>
+        <div class="p-2.5 bg-rose-50 border border-rose-100 rounded-xl text-slate-800 font-bold mt-2">2. 及时声明非本人交易</div>
+        <p class="mt-1">记下盗刷短信时间，致电银行要求拒付 Chargeback，凭警方报案单申请赔付。</p>
+      `
+    },
+    'police': {
+      title: '👮 警察局报案 (Denuncia) 话术',
+      content: `
+        <div class="p-2.5 bg-emerald-50 border border-emerald-100 rounded-xl text-slate-800 font-bold">1. 寻找最近的 Polizia / Carabinieri</div>
+        <p class="mt-1">礼貌说明：“I need to report a pickpocket case for travel insurance and embassy.”</p>
+        <div class="p-2.5 bg-emerald-50 border border-emerald-100 rounded-xl text-slate-800 font-bold mt-2">2. 清单与设备 IMEI 码申报</div>
+        <p class="mt-1">如实列出失窃手机型号、相机序列号或包袋价值，拿取带公章的报案单用于保险理赔。</p>
+      `
+    }
+  };
+
+  function showRescueModal(key) {
+    const data = rescueDB[key];
+    if(!data) return;
+    document.getElementById('rescue-title').innerText = data.title;
+    document.getElementById('rescue-content').innerHTML = data.content;
+    const modal = document.getElementById('rescue-modal');
+    modal.classList.remove('hidden');
+    modal.classList.add('flex');
+  }
+
+  function closeRescueModal() {
+    const modal = document.getElementById('rescue-modal');
+    modal.classList.add('hidden');
+    modal.classList.remove('flex');
+  }
+
+  // 9. FAQ 折叠手风琴
+  function toggleFaq(card) {
+    const content = card.querySelector('.faq-content');
+    const icon = card.querySelector('.material-symbols-outlined');
+    if (content.classList.contains('hidden')) {
+      content.classList.remove('hidden');
+      icon.style.transform = 'rotate(180deg)';
+    } else {
+      content.classList.add('hidden');
+      icon.style.transform = 'rotate(0deg)';
+    }
+  }
+
+  // 10. 通用复制与Toast
+  function showToast(msg) {
+    const toast = document.getElementById('toast');
+    document.getElementById('toast-msg').innerText = msg;
+    toast.classList.remove('opacity-0', 'pointer-events-none');
+    toast.classList.add('opacity-100');
+    setTimeout(() => {
+      toast.classList.remove('opacity-100');
+      toast.classList.add('opacity-0', 'pointer-events-none');
+    }, 2800);
+  }
+
+  function copyShareLink() {
+    navigator.clipboard?.writeText(window.location.href);
+    showToast('防扒护身符链接已复制，速转旅行群！');
+  }
+
+  function openShareModal() {
+    showToast('已唤起分享：快去通知群里的欧洲怨种伙伴！');
+  }
+</script></main><nav class="fixed bottom-0 max-w-md w-full z-50 pb-safe px-4 pointer-events-none"><div class="pointer-events-auto mb-3 mx-auto w-full max-w-[calc(100%-0.5rem)] rounded-full bg-white/90 backdrop-blur-2xl shadow-[0_8px_30px_rgba(0,0,0,0.08)] border border-slate-200/80 px-2 py-1 flex justify-around items-center"><a aria-current="page" class="flex flex-col items-center justify-center min-w-[58px] min-h-[44px] py-1 transition-all active:scale-95 text-slate-900 font-bold" data-path="radar" href="#"><span class="material-symbols-outlined text-[20px] text-lime-700">radar</span><span class="font-caption-code text-[11px] leading-tight mt-0.5 text-lime-800 font-bold">避雷雷达</span></a><a class="flex flex-col items-center justify-center min-w-[58px] min-h-[44px] py-1 text-slate-500 hover:text-slate-800 transition-all active:scale-95" data-path="expose" href="#"><span class="material-symbols-outlined text-[20px]">edit_note</span><span class="font-caption-code text-[11px] leading-tight mt-0.5">匿名吐槽</span></a><a class="flex flex-col items-center justify-center min-w-[58px] min-h-[44px] py-1 text-slate-500 hover:text-slate-800 transition-all active:scale-95" data-path="panic" href="#"><span class="material-symbols-outlined text-[20px] text-accent-coral">medical_services</span><span class="font-caption-code text-[11px] leading-tight mt-0.5 text-accent-coral font-medium">丢了别慌</span></a><a class="flex flex-col items-center justify-center min-w-[58px] min-h-[44px] py-1 text-slate-500 hover:text-slate-800 transition-all active:scale-95" data-path="survival" href="#"><span class="material-symbols-outlined text-[20px]">emoji_objects</span><span class="font-caption-code text-[11px] leading-tight mt-0.5">防窃黑话</span></a></div></nav></div><div aria-labelledby="share-sheet-title" aria-modal="true" hidden="" id="stitch-share-sheet" role="dialog"><div class="share-sheet-card"><div class="share-top"><h3 id="share-sheet-title">分享给同行搭子</h3><button aria-label="关闭分享" id="stitch-share-close" type="button">✕</button></div><p>把当前城市与防扒提醒发给微信好友、旅行群或小红书。</p><div class="share-actions"><button id="stitch-native-share" type="button">↗ 系统分享 / 微信</button><button id="stitch-copy-link" type="button">复制链接</button><button id="stitch-copy-text" type="button">复制防扒护身符</button></div><p id="stitch-share-message" role="status"></p></div></div><script defer="" src="https://cdn.bootcdn.net/ajax/libs/leaflet/1.9.4/leaflet.js"></script><script defer="" src="/stitch-integrate.js"></script></body></html>
