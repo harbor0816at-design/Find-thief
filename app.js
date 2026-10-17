@@ -145,31 +145,28 @@ function initMap(){if(typeof L==='undefined'){$('map').innerHTML='<div class="em
 function showGuide(risk=false){$('modalTitle').textContent=risk?'危险程度如何判断？':'3步使用小偷在哪里';$('modalBody').innerHTML=risk?`<p>只有可核查的警方公开数据、允许复用的来源或人工审核的游客报告，才进入地图的事件层。</p><div class="guide-step"><b>记录较集中</b><p>同一官方采样网格平均每月至少20条相关记录，显示为「较集中」。这不是警方危险等级，也未按客流归一化。</p></div><div class="guide-step"><b>多条记录 / 有核验记录</b><p>公开记录月均6—19条显示「较多」，3条以上显示「有警方公开记录」；未确认社交帖子不进入评级。</p></div><div class="guide-step"><b>数据不足</b><p>缺乏足够且可核查的记录时不评级；0条记录绝不意味着“安全”。不同城市的原始计数不可直接比较危险程度。</p></div>`:`<div class="guide-step"><b>01 搜索地点</b><p>输入中国游客常用的中文城市、国家或景点名称，地图会定位。左侧信息区独立上下滚动，地图始终保持原位，可独立拖动。</p></div><div class="guide-step"><b>02 判断证据</b><p>点开区域，先看事件数、时间、数据类型与原始来源；没有证据就显示数据不足。</p></div><div class="guide-step"><b>03 匿名报失</b><p>不需账户，不填姓名或电话，只填具体地址、时间、类型与经过。审核后仅公开大致范围，不能作为正式报警。</p></div><p class="muted">使用方向：为中国游客服务；中国的小红书、微博、携程、马蜂窝、穷游、中文媒体及海外公开资料均可成为待核验线索；只有许可清楚、具备证据且经过审核的记录才形成地图区域。</p>`;$('guideModal').showModal()}
 function showSources(){$('modalTitle').textContent='当前公开证据来源';$('modalBody').innerHTML=`<div class="guide-step"><b>英国警方公开犯罪记录（开放CSV）</b><p><a target="_blank" rel="noopener" href="https://data.police.uk/data/">data.police.uk/data</a> · OGL v3，包含匿名化街道级犯罪事件，可按时间聚合。</p></div><div class="guide-step"><b>法国政府SSMSI统计</b><p><a target="_blank" rel="noopener" href="https://www.data.gouv.fr/datasets/bases-statistiques-communale-departementale-et-regionale-de-la-delinquance-enregistree-par-la-police-et-la-gendarmerie-nationales">市镇/省级统计</a> · 不当成具体街道事件。</p></div><div class="guide-step"><b>加泰罗尼亚ICGC犯罪统计地图</b><p><a href="https://www.icgc.cat/en/Tools-and-viewers/Viewers/Crime-map" target="_blank" rel="noopener">警方分区数据</a> · 仅能映射相应分区，不能伪造精确发生点。</p></div><div class="guide-step"><b>国内中文来源（线索发现）</b><p>小红书、微博、微信公众号、携程、马蜂窝、穷游以及中国公开新闻报道；优先识别中国游客常用地名和中文失窃描述。未获授权的帖文不抓取全文、不直接作为风险等级。</p></div><div class="guide-step"><b>海外来源（事实核验）</b><p>当地警方开放数据、政府统计、当地公开新闻与允许复用的旅游安全公告。提供日期、案件类别、区划或模糊位置及原始链接。</p></div><p class="muted">海外与国内均属于信息来源；地图只展示经核验且有合法复用依据的区域。</p>`;$('guideModal').showModal()}
 async function loadEvidence(){
-  try{
-    const r=await fetch('/api/hotspots',{cache:'no-store'});
-    if(r.ok){const j=await r.json();hotspots=Array.isArray(j.areas)?j.areas:[]}
-  }catch(e){}
-  if(!hotspots.length){
-    try{
-      const r=await fetch('/data/verified-uk-police-areas.json',{cache:'no-store'});
-      if(r.ok){
-        const d=await r.json();
-        hotspots=Array.isArray(d.areas)?d.areas:[];
-        officialLatestMonth=String(d.data_latest_month||'');
-        $('evidenceInfo').innerHTML='<b>英国警方公开记录 · 伦敦2026年6—8月</b><p>74片约1公里官方记录网格，仅包含伦敦9个样本查询中心。颜色表示记录数量的相对集中程度，不代表被盗概率或警方危险等级。<a target="_blank" rel="noopener noreferrer" href="https://data.police.uk/data/">查看官方来源 ↗</a></p>';
-      }
-    }catch(e){}
-  }
-  try{
-    const r=await fetch('/api/reports',{cache:'no-store'});
-    if(r.ok){const j=await r.json();publicReports=Array.isArray(j.items)?j.items:[]}
-  }catch(e){}
-  try{const r=await fetch('/data/multicountry-advisories.json',{cache:'no-store'});if(r.ok){const j=await r.json();advisories=Array.isArray(j.items)?j.items:[]}}catch{}
-  try{const r=await fetch('/api/lost-items',{cache:'no-store'});if(r.ok){const j=await r.json();lostItems=Array.isArray(j.items)?j.items:[]}}catch{}
-  let approvedEventsApiAvailable=false;
-  try{const r=await fetch('/api/events-v2',{cache:'no-store'});if(r.ok){const j=await r.json();if(j.available===true){approvedEventsApiAvailable=true;verifiedEvents=Array.isArray(j.items)?j.items:[];v2Areas=Array.isArray(j.areas)?j.areas:[]}}}catch{}
-  if(!approvedEventsApiAvailable){try{const r=await fetch('/data/verified-events-v21.json',{cache:'no-store'});if(r.ok){const j=await r.json();if(j.verified_public_snapshot===true&&Array.isArray(j.items)){verifiedEvents=j.items;v2Areas=Array.isArray(j.areas)?j.areas:[];}}}catch{}}
-  drawEvidence();renderCards();
+ const read=async path=>{try{const r=await fetch(path);return r.ok?await r.json():null}catch{return null}};
+ const [h,reports,advice,items,events]=await Promise.all([
+  read('/api/hotspots'),read('/api/reports'),read('/data/multicountry-advisories.json'),
+  read('/api/lost-items'),read('/api/events-v2')
+ ]);
+ hotspots=Array.isArray(h?.areas)?h.areas:[];
+ publicReports=Array.isArray(reports?.items)?reports.items:[];
+ advisories=Array.isArray(advice?.items)?advice.items:[];
+ lostItems=Array.isArray(items?.items)?items.items:[];
+ const approvedEventsApiAvailable=events?.available===true;
+ if(approvedEventsApiAvailable){verifiedEvents=Array.isArray(events.items)?events.items:[];v2Areas=Array.isArray(events.areas)?events.areas:[]}
+ const fallback=[];
+ if(!hotspots.length)fallback.push(read('/data/verified-uk-police-areas.json').then(d=>{
+  if(!Array.isArray(d?.areas))return;
+  hotspots=d.areas;officialLatestMonth=String(d.data_latest_month||'');
+  $('evidenceInfo').innerHTML='<b>英国警方公开记录 · 伦敦2026年6—8月</b><p>74片约1公里官方记录网格，仅包含伦敦9个样本查询中心。颜色表示记录数量的相对集中程度，不代表被盗概率或警方危险等级。<a target="_blank" rel="noopener noreferrer" href="https://data.police.uk/data/">查看官方来源 ↗</a></p>';
+ }));
+ if(!approvedEventsApiAvailable)fallback.push(read('/data/verified-events-v21.json').then(d=>{
+  if(d?.verified_public_snapshot===true&&Array.isArray(d.items)){verifiedEvents=d.items;v2Areas=Array.isArray(d.areas)?d.areas:[]}
+ }));
+ if(fallback.length)await Promise.all(fallback);
+ drawEvidence();renderCards();
 }
 async function loadConfig(){try{const r=await fetch('/api/config',{cache:'no-store'});if(!r.ok)throw Error('接口不可用');const o=await r.json();reportEnabled=o.reportSubmissionsEnabled===true;$('reportState').classList.toggle('warning',!reportEnabled);$('reportState').textContent=reportEnabled?'在线提交已开启：报告只进入待审核队列，不会直接公开；无需注册。':'线上数据库投稿暂未开放：你可以在本机保存草稿，但尚不能上传服务器。请勿误认为保存成功即已送交审核。';$('sendReport').disabled=!reportEnabled;$('sendReport').textContent=reportEnabled?'提交待审核':'线上提交暂不可用'}catch{$('reportState').textContent='无法确认服务状态；只允许本机保存草稿。';$('reportState').classList.add('warning');$('sendReport').disabled=true}}
 function setReportCities(){fillCities('reportCity',$('reportCountry').value)}
