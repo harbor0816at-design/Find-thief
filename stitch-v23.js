@@ -65,6 +65,7 @@ function init(){
  if(ready)return;ready=true;
  const heading=[...document.querySelectorAll('h2')].find(x=>/实况避雷雷达/.test(x.textContent));
  if(heading){const el=document.createElement('div');el.id='stitch-selected-area';el.className='stitch-selected-area';heading.parentElement.parentElement.insertAdjacentElement('afterend',el)}
+ const requested=decodeURIComponent((location.hash||'').replace(/^#city=/,''));const key=Object.keys(cities).find(k=>cities[k]===requested);if(key)chosen=key;
  makePictures();recommendations();shareSetup();updateHead(chosen);
  document.addEventListener('click',e=>{
   const b=e.target.closest('.city-btn');if(b){const key=b.dataset.city||Object.keys(cities).find(k=>b.textContent.includes(cities[k]));if(cities[key]){setTimeout(()=>updateHead(key),0);metric('city_select',cities[key])}}
