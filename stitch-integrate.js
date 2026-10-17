@@ -71,6 +71,7 @@ function activate(){// Existing Stitch visual and its text remain in place; wire
  document.querySelectorAll('.like-btn,.alert-btn').forEach(el=>el.disabled=true);
  for(const [selector,key] of [['a[href="#"]','radar']]){document.querySelectorAll(selector).forEach(a=>{if(a.dataset.path)return;const t=a.textContent;if(/紧急/.test(t))return;a.addEventListener('click',e=>{e.preventDefault();enterView(/匿名|吐槽/.test(t)?'report':/秘籍|黑话|套路/.test(t)?'prevention':/急救|丢了/.test(t)?'rescue':'radar')})})}
  document.querySelectorAll('button[onclick^="showHotspot"], [onclick^="selectHotspot"]').forEach(x=>x.addEventListener('click',()=>enterView('radar')));
+ $('report-city')?.addEventListener('change',e=>{const name=e.target.value;const key=Object.keys(cities).find(k=>name.includes(cities[k].name));if(key)chooseCity(key)});
  const df=$('radar-report-form'),mf=$('expose-form');if(df)df.onsubmit=e=>{e.preventDefault();generateDraft()};if(mf)mf.onsubmit=e=>{e.preventDefault();generateDraft()};
  document.querySelectorAll('button').forEach(b=>{const tx=b.textContent;if(/生成小红书|战报卡/.test(tx))b.addEventListener('click',e=>{e.preventDefault();generateDraft()});if(/加载更多欧洲避雷情报/.test(tx))b.onclick=()=>openReport();if(/分享|转发|护身符/.test(tx)&&!b.closest('#stitch-share-sheet')&&!b.closest('form')&&!b.getAttribute('onclick'))b.addEventListener('click',shareOpen)});
  // Interactive text in the source design: navigation, rescues, poster and survival card.
@@ -92,6 +93,7 @@ function activate(){// Existing Stitch visual and its text remain in place; wire
  const header=document.querySelector('header');if(header){const b=document.createElement('button');b.className='stitch-header-share';b.type='button';b.textContent='↗ 分享微信好友';b.onclick=shareOpen;header.append(b)}
  window.openShareModal=shareOpen;window.copyShareLink=async()=>{let ok=await copy(shareUrl());toast(ok?'已复制网页地址，可发送到微信。':'请使用浏览器右上角分享。')};window.generateWarReport=e=>{e?.preventDefault?.();generateDraft()};window.generateCard=generateDraft;
  window.saveCard=exportCard;window.showRescueModal=rescue;window.selectHotspot=()=>enterView('radar');window.showHotspot=()=>enterView('radar');window.switchCity=(key,btn)=>chooseCity(key);
+ window.stitchFocusIncident=(spot)=>{const e=data.events.find(x=>x.city===cities[city].name&&x.spot_name===spot);if(e&&map&&Number.isFinite(Number(e.lat))&&Number.isFinite(Number(e.lon)))map.flyTo([Number(e.lat),Number(e.lon)],15,{animate:true})};
  window.toggleMapDrag=()=>{mapEnabled=!mapEnabled;if(map){mapEnabled?map.dragging.enable():map.dragging.disable()}const b=$('map-drag-toggle');if(b)b.textContent='拖动: '+(mapEnabled?'开':'锁');toast(mapEnabled?'已启用地图拖动':'地图拖动已锁定')};
  window.filterIncidents=(t,btn)=>chooseType(t,btn);
  // Add original mobile navbar actions to real sections using unchanged icons/copy.

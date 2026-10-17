@@ -70,7 +70,7 @@ function init(){
  document.addEventListener('click',e=>{
   const b=e.target.closest('.city-btn');if(b){const key=b.dataset.city||Object.keys(cities).find(k=>b.textContent.includes(cities[k]));if(cities[key]){setTimeout(()=>updateHead(key),0);metric('city_select',cities[key])}}
   const f=e.target.closest('.tier-filter,.filter-chip');if(f){metric('item_filter',f.textContent.replace(/\\([^)]*\\)/g,'').slice(0,35));setTimeout(()=>updateHead(chosen),0)}
-  const a=e.target.closest('.stitch-real-incident a');if(a){const title=a.closest('.stitch-real-incident')?.querySelector('h3,b')?.textContent?.replace(/^[0-9]+\\.\\s*/,'')||'事件';updateHead(chosen,title);metric('case_open',cities[chosen])}
+  const card=e.target.closest('.stitch-real-incident');if(card){const title=card.querySelector('h3,b')?.textContent?.replace(/^[0-9]+\\.\\s*/,'')||'事件';updateHead(chosen,title);window.stitchFocusIncident?.(title);metric('case_open',cities[chosen])}
   if(e.target.closest('#stitch-live-map .leaflet-interactive'))metric('map_area_open',cities[chosen]);
   if(e.target.closest('#stitch-real-report,#stitch-open-real-report'))metric('report_open',cities[chosen]);
   if(e.target.closest('#survival-codex summary'))metric('prevention_open',cities[chosen]);
