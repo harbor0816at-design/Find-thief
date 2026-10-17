@@ -1,0 +1,33 @@
+name: Stitch real browser smoke
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'stitch-v23.js'
+      - 'stitch-v23.css'
+      - 'stitch-integrate.js'
+      - 'stitch-mobile.html'
+      - 'index.html'
+      - 'tests/stitch-browser-smoke.cjs'
+      - '.github/workflows/stitch-browser-smoke.yml'
+permissions:
+  contents: read
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 18
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '22'
+      - name: Install Chromium browser
+        run: |
+          npm install --no-save playwright@1.56.1
+          npx playwright install --with-deps chromium
+      - name: Serve and exercise both Stitch layouts
+        run: |
+          python3 -m http.server 8765 --bind 127.0.0.1 >/tmp/stitch-smoke.log 2>&1 &
+          sleep 2
+          node tests/stitch-browser-smoke.cjs
