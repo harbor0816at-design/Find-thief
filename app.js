@@ -10,7 +10,7 @@ function button(which){
  for(const [key,id] of Object.entries(views)){if($(id))$(id).hidden=key!==which}
  for(const [key,id] of Object.entries({explore:'btnExplore',report:'btnReport',recovery:'btnRecovery',prevention:'btnPrevention',blackout:'btnBlackout'})){if($(id))$(id).classList.toggle('active',which===key)}
  const intro=document.querySelector('.intro');if(intro)intro.hidden=which==='recovery'||which==='prevention'||which==='blackout';
- if(which==='report'){track('report_open');loadConfig()}else if(which==='explore')setTimeout(()=>map?.invalidateSize(),90);
+ if(which==='report'){track('report_open');loadConfig()}else if(which==='explore'){startMap();setTimeout(()=>map?.invalidateSize(),90)}
  $('resultScroll')?.scrollTo({top:0,behavior:'instant'});
 }
 
@@ -174,8 +174,18 @@ function payload(){const city=cities.find(c=>String(c.id)===$('reportCity').valu
 function localSave(){if(!$('reportForm').reportValidity())return;const d=payload();try{const a=JSON.parse(localStorage.getItem('find_thief_local_reports')||'[]');a.push({country:d.country,city:d.city,address:d.address,date:d.date,type:d.type,item_category:d.item_category,spot_name:d.spot_name,description:d.description,createdAt:new Date().toISOString()});localStorage.setItem('find_thief_local_reports',JSON.stringify(a.slice(-30)));$('reportFeedback').className='muted success';$('reportFeedback').textContent='仅保存在本设备浏览器中（未上传，不会出现在地图或后台）。清理本网站浏览器存储即可删除。';track('report_saved',d.city)}catch{$('reportFeedback').className='muted error';$('reportFeedback').textContent='浏览器禁止本机存储；请检查隐私模式或浏览器存储权限。'}}
 
 async function submit(e){e.preventDefault();if(!reportEnabled){$('reportFeedback').textContent='服务器未启用在线接收；你可以先保存本机草稿。';return}const d=payload();if(!d.city||!d.address||!d.date||!d.description)return;$('sendReport').disabled=true;$('reportFeedback').textContent='正在发送…';track('report_attempt',d.city);try{const r=await fetch('/api/reports',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(d)});const j=await r.json();if(!r.ok)throw Error(j.error||'提交失败');$('reportFeedback').className='muted success';$('reportFeedback').textContent='已进入待审核队列，回执：'+(j.receipt||'待生成')+'。不会立即公开到地图。';$('reportForm').reset();}catch(err){$('reportFeedback').className='muted error';$('reportFeedback').textContent=err.message||'上传失败'}finally{$('sendReport').disabled=!reportEnabled}}
+let mapStartPromise=null;
+function startMap(){
+ if(mapStartPromise)return mapStartPromise;
+ mapStartPromise=window.loadLeaflet().then(()=>{
+  initMap();
+  if(selected)focus(selected);
+  else {const london=cities.find(c=>c.name==='伦敦');if(london){$('countrySelect').value=london.country;fillCities('citySelect',london.country);$('citySelect').value=String(london.id);focus(london)}else renderCards()}
+ }).catch(()=>{if($('map'))$('map').innerHTML='<div class="empty">地图资源加载失败，请使用地点列表或稍后重试。</div>';});
+ return mapStartPromise;
+}
 async function boot(){try{const r=await fetch('/cities.json');const data=await r.json();cities=Array.isArray(data)?data:(Array.isArray(data.cities)?data.cities:[]);fillCountries();fillCities('citySelect');setReportCities();setReportSpots();const hash=decodeURIComponent(location.hash.slice(1));if(hash.startsWith('city=')){const name=hash.slice(5);const c=cities.find(x=>x.name===name);if(c){$('countrySelect').value=c.country;fillCities('citySelect',c.country);$('citySelect').value=String(c.id);selected=c}}}catch(err){$('zoneCards').innerHTML='<div class="empty">城市目录暂时加载失败，请稍后重试。</div>'}
-initMap();if(selected)focus(selected);else {const london=cities.find(c=>c.name==='伦敦');if(london){$('countrySelect').value=london.country;fillCities('citySelect',london.country);$('citySelect').value=String(london.id);focus(london)}else renderCards()}loadEvidence();loadConfig();track('page_view');
+if(location.hash!=='#report')startMap();loadEvidence();loadConfig();track('page_view');
 $('btnExplore').onclick=()=>button('explore');$('btnReport').onclick=()=>button('report');$('guideTrigger').onclick=()=>showGuide();$('guideBottom').onclick=()=>showGuide();$('howRisk').onclick=()=>showGuide(true);$('guideOK').onclick=$('closeGuide').onclick=()=>$('guideModal').close();$('guideModal').addEventListener('click',e=>{if(e.target===$('guideModal'))$('guideModal').close()});
 $('citySearch').addEventListener('input',()=>{clearTimeout(searchTimeout);searchTimeout=setTimeout(()=>{
  const term=$('citySearch').value.trim().toLowerCase();
