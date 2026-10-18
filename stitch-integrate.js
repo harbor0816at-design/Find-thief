@@ -48,7 +48,7 @@ const shareCopy={
  comment:name=>'准备去'+name+'的可以看看防扒雷达，有来源案例和防范建议：'+shareUrl(),
  group:name=>'【'+name+'旅行防扒提醒】整理公开来源的失窃案例和防范建议，出门前可以先了解：'+shareUrl()
 };
-function shareText(mode='chat'){return shareCopy[mode]?.(cities[city].name)||shareCopy.chat(cities[city].name)}
+function shareText(mode='chat'){return (shareCopy[mode]?.(cities[city].name)||shareCopy.chat(cities[city].name)).replace(/\\\\n/g,'\n')}
 function refreshShare(){const name=cities[city].name,area=$('stitch-share-content');if(!area)return;const mode=$('stitch-share-mode')?.value||'chat';area.value=shareText(mode);const cityEl=$('stitch-share-city');if(cityEl)cityEl.textContent=name+' · 防扒雷达';}
 function shareOpen(){const box=$('stitch-share-sheet');if(!box)return;box.hidden=false;refreshShare();$('stitch-share-message').textContent=/MicroMessenger/i.test(navigator.userAgent)?'微信内可复制文案、保存海报，并通过右上角菜单发送给朋友或朋友圈。':'可使用系统分享、复制文案，或保存海报。';}
 async function nativeShare(){const t=shareText($('stitch-share-mode')?.value);if(/MicroMessenger/i.test(navigator.userAgent)){const ok=await copy(t);$('stitch-share-message').textContent=ok?'文案已复制；请通过微信右上角菜单分享链接，或在聊天中粘贴。':'请通过微信右上角菜单分享当前页面。';return}
@@ -115,7 +115,9 @@ function activate(){// Existing Stitch visual and its text remain in place; wire
  $('stitch-share-close')?.addEventListener('click',()=>$('stitch-share-sheet').hidden=true);
  $('stitch-native-share')?.addEventListener('click',nativeShare);
  $('stitch-copy-link')?.addEventListener('click',async()=>{let yes=await copy(shareUrl());$('stitch-share-message').textContent=yes?'链接已复制，可发送微信好友。':'复制失败，请打开浏览器分享菜单。'});
- $('stitch-copy-text')?.addEventListener('click',async()=>{let yes=await copy(textToShare());$('stitch-share-message').textContent=yes?'防扒护身符已复制，请到微信粘贴发送。':'请使用浏览器分享菜单。'});
+ $('stitch-share-mode')?.addEventListener('change',refreshShare);
+ $('stitch-save-poster')?.addEventListener('click',sharePoster);
+ $('stitch-copy-text')?.addEventListener('click',async()=>{let yes=await copy(shareText($('stitch-share-mode')?.value));$('stitch-share-message').textContent=yes?'分享文案已复制，可直接粘贴到微信对话框或评论区。':'复制失败，请手动复制输入框中的文案。'});
  $('stitch-share-sheet')?.addEventListener('click',e=>{if(e.target===$('stitch-share-sheet'))$('stitch-share-sheet').hidden=true});
  document.addEventListener('keydown',e=>{if(e.key==='Escape'&&$('stitch-share-sheet'))$('stitch-share-sheet').hidden=true});
  const svg=document.querySelector('[data-location]');if(svg)svg.addEventListener('click',e=>{if(e.target.matches('button[onclick]'))return});
