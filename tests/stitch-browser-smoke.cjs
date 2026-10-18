@@ -16,6 +16,15 @@ async function check(condition,why){if(!condition)throw Error(why)}
   await pc.locator('.city-btn[data-city="milan"]').first().click();
   const headline=await pc.locator('h2').filter({hasText:'实况避雷雷达'}).first().innerText();
   assert.match(headline,/米兰/);
+  // Release gate: the emergency bank and police cards open usable guides, not inert alerts.
+  await pc.getByText('银行卡被盗刷',{exact:true}).first().click();
+  assert.equal(await pc.locator('#stitch-emergency-dialog').isVisible(),true,'bank emergency guide opens');
+  assert.match(await pc.locator('#stitch-emergency-dialog').innerText(),/冻结|挂失/);
+  await pc.locator('.stitch-emergency-close').click();
+  await pc.getByText('警察局报案 (Denuncia)',{exact:false}).first().click();
+  assert.equal(await pc.locator('#stitch-emergency-dialog').isVisible(),true,'police emergency guide opens');
+  await pc.locator('.stitch-emergency-close').click();
+  assert.equal(await pc.locator('a[href="tel:112"]').count()>0,true,'native emergency telephone link');
   await pc.locator('[data-good="zip"]').first().click();
   assert.match(await pc.locator('[data-good="zip"]').first().innerText(),/已加入清单/);
   const art=pc.locator('img[src*="anti-theft-gear.webp"]').first();
