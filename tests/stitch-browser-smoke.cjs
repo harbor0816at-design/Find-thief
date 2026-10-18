@@ -21,7 +21,7 @@ async function check(condition,why){if(!condition)throw Error(why)}
   assert.equal(await pc.locator('#stitch-emergency-dialog').isVisible(),true,'bank emergency guide opens');
   assert.match(await pc.locator('#stitch-emergency-dialog').innerText(),/冻结|挂失/);
   await pc.locator('.stitch-emergency-close').click();
-  await pc.getByRole('button',{name:/警察局报案/}).first().click();
+  await pc.getByRole('button',{name:/警察局立案证明/}).first().click();
   assert.equal(await pc.locator('#stitch-emergency-dialog').isVisible(),true,'police emergency guide opens');
   await pc.locator('.stitch-emergency-close').click();
   assert.equal(await pc.locator('a[href="tel:112"]').count()>0,true,'native emergency telephone link');
