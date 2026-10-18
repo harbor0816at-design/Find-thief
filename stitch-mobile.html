@@ -62,40 +62,7 @@
 </div>
 <!-- 清新插画风矢量地图卡片 -->
 <div class="relative w-full h-56 rounded-2xl overflow-hidden bg-[#EFF4FA] border border-sky-100 shadow-inner" data-location="Rome, Italy">
-<!-- 简约清新街道网格纹理 -->
-<div class="absolute inset-0 bg-[linear-gradient(to_right,#e2e8f0_1px,transparent_1px),linear-gradient(to_bottom,#e2e8f0_1px,transparent_1px)] bg-[size:28px_28px] opacity-40"></div>
-<div class="absolute top-1/4 left-0 right-0 h-6 bg-sky-200/30 -rotate-6 transform scale-110"></div>
-<div class="absolute -top-10 left-1/3 bottom-0 w-8 bg-sky-200/40 rotate-12"></div>
-<!-- 模拟雷达扫描波纹 (清新绿蓝轻感) -->
-<div class="absolute inset-0 pointer-events-none flex items-center justify-center">
-<div class="w-44 h-44 rounded-full border-2 border-emerald-400/40 radar-wave"></div>
-<div class="w-32 h-32 rounded-full border border-sky-300/60 bg-sky-100/20"></div>
-</div>
-<!-- 动态高危点位气泡 (清新配色+幽默标签) -->
-<div class="absolute top-6 left-8 z-10 flex flex-col items-center group cursor-pointer" onclick="showHotspot('termini')">
-<span class="px-2.5 py-1 rounded-xl bg-accent-coral text-white font-caption-code text-[10px] font-bold shadow-md flex items-center gap-1 border border-white">
-<span class="w-1.5 h-1.5 rounded-full bg-white animate-ping"></span>特米尼站地下黑洞
-        </span>
-<span class="material-symbols-outlined text-accent-coral text-[22px] -mt-1 drop-shadow-sm">location_on</span>
-</div>
-<div class="absolute top-16 right-10 z-10 flex flex-col items-center group cursor-pointer" onclick="showHotspot('vatican')">
-<span class="px-2.5 py-1 rounded-xl bg-accent-orange text-white font-caption-code text-[10px] font-bold shadow-md border border-white">
-          梵蒂冈排队伪装秀
-        </span>
-<span class="material-symbols-outlined text-accent-orange text-[22px] -mt-1 drop-shadow-sm">location_on</span>
-</div>
-<div class="absolute bottom-8 left-24 z-10 flex flex-col items-center group cursor-pointer" onclick="showHotspot('colosseo')">
-<span class="px-2.5 py-1 rounded-xl bg-[#E2F736] text-slate-ink font-caption-code text-[10px] font-bold shadow-md border border-slate-800/10">
-          手绳侠物理热情区
-        </span>
-<span class="material-symbols-outlined text-amber-500 text-[22px] -mt-1 drop-shadow-sm">location_on</span>
-</div>
-<!-- 地图浮层图例 -->
-<div class="absolute bottom-2 left-2 right-2 bg-white/90 backdrop-blur-md rounded-xl p-1.5 px-3 flex justify-between items-center text-[10px] font-caption-code text-slate-600 border border-slate-200/60 shadow-xs">
-<span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-accent-coral"></span>高危警报区</span>
-<span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-accent-orange"></span>游客易中招</span>
-<span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-emerald-500"></span>便衣安全巡逻</span>
-</div>
+<!-- Only live Leaflet layers display verified markers for the selected city. -->
 </div>
 <!-- 筛选标签 (马卡龙清潮撞色药丸) -->
 <div class="flex items-center gap-1.5 overflow-x-auto pb-0.5 scrollbar-none text-[11px] font-caption-code">
