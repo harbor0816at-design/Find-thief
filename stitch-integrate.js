@@ -107,7 +107,22 @@ function fallbackIcons(){
 async function retrieve(){const attempts=[fetch('/api/events-v2',{cache:'no-store'}).then(r=>r.ok?r.json():null).catch(()=>null),fetch('/api/hotspots',{cache:'no-store'}).then(r=>r.ok?r.json():null).catch(()=>null),fetch('/api/reports',{cache:'no-store'}).then(r=>r.ok?r.json():null).catch(()=>null)];let [events,areas,reports]=await Promise.all(attempts);
  if(events&&events.available===true&&Array.isArray(events.items)){data.events=events.items;data.areas=Array.isArray(events.areas)?events.areas:[]}else{try{let r=await fetch('/data/verified-events-v21.json',{cache:'no-store'}),s=await r.json();if(r.ok&&s.verified_public_snapshot===true){data.events=s.items||[];data.areas=s.areas||[]}}catch{}}
  data.grids=Array.isArray(areas?.areas)?areas.areas:[];data.reports=Array.isArray(reports?.items)?reports.items:[];
- renderCases();}
-function init(){activate();fallbackIcons();const hash=decodeURIComponent(location.hash||'');let hit=hash.match(/#city=([^&]+)/);if(hit)city=whichCity(hit[1]);initLeaflet();retrieve();}
+ renderCases();
+ const count=document.getElementById('stitch-header-count');
+ if(count)count.textContent=String(data.events.length);
+}
+function init(){
+ activate();fallbackIcons();
+ const hash=decodeURIComponent(location.hash||'');let hit=hash.match(/#city=([^&]+)/);if(hit)city=whichCity(hit[1]);
+ // Render immediately; third-party mapping must never block cases, reporting or navigation.
+ retrieve();
+ const startMap=()=>{if(window.L){initLeaflet();drawMap();return}
+  const src=document.createElement('script');src.src='https://cdn.bootcdn.net/ajax/libs/leaflet/1.9.4/leaflet.js';src.async=true;
+  src.onload=()=>{initLeaflet();drawMap()};
+  src.onerror=()=>{const fallback=document.createElement('script');fallback.src='https://unpkg.com/leaflet@1.9.4/dist/leaflet.js';fallback.async=true;fallback.onload=()=>{initLeaflet();drawMap()};document.head.append(fallback)};
+  document.head.append(src);
+ };
+ setTimeout(startMap,0);
+}
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init();
 })();
