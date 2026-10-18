@@ -31,6 +31,10 @@ async function check(condition,why){if(!condition)throw Error(why)}
   await art.scrollIntoViewIfNeeded();
   assert.equal(await art.evaluate(el=>el.complete&&el.naturalWidth>0),true,'desktop artwork loaded');
   await pc.evaluate(()=>window.openShareModal());
+  assert.equal(await pc.locator('#stitch-share-mode').isVisible(),true,'share copy selector visible');
+  await pc.locator('#stitch-share-mode').selectOption('comment');
+  assert.match(await pc.locator('#stitch-share-content').inputValue(),/fangbaleida.com/);
+  assert.equal(await pc.locator('#stitch-save-poster').isVisible(),true,'city share PNG button exists');
   assert.equal(await pc.locator('#stitch-wechat-one-tap').isVisible(),true,'WeChat share control');
   await pc.locator('#stitch-wechat-one-tap').click();
   assert.match(await pc.locator('#stitch-share-message').innerText(),/微信|分享|复制/);
