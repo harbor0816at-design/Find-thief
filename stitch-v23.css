@@ -66,3 +66,8 @@ img[src*="safety-illustration.webp"],img[src*="anti-theft-gear.webp"]{display:bl
  #stitch-live-map{inset:0!important;width:100%!important;height:100%!important}
  .tier-filter,.filter-chip{white-space:nowrap!important}
 }
+
+/* Prominent mobile sharing entry: no unlabeled mystery icon. */
+.stitch-visible-share-btn{display:inline-flex;flex-shrink:0;align-items:center;justify-content:center;gap:5px;min-height:43px;padding:9px 12px;border:1px solid #9bac21;border-radius:13px;background:#E2F736;color:#172a24;font:800 12px/1.25 system-ui,"PingFang SC",sans-serif;white-space:nowrap;box-shadow:0 3px 12px #627f1833;cursor:pointer}
+.stitch-visible-share-btn:focus-visible{outline:3px solid #1258b2;outline-offset:2px}
+@media(max-width:400px){.stitch-visible-share-btn{padding:8px;font-size:11px;flex-direction:column;gap:1px;min-width:69px;white-space:normal;text-align:center}}
