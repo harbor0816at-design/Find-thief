@@ -342,7 +342,7 @@
 </div>
 </a>
 <!-- Item 3: Bank Cards -->
-<div class="p-space-sm rounded-xl bg-surface-container-low hover:bg-surface-container transition-all flex items-start gap-space-sm group cursor-pointer" onclick="alert('四大行海外紧急挂失热线：\n中国银行：+86 10 95566\n工商银行：+86 10 95588\n招商银行：+86 755 84391000\n建行：+86 10 95533')">
+<div class="p-space-sm rounded-xl bg-surface-container-low hover:bg-surface-container transition-all flex items-start gap-space-sm group cursor-pointer" role="button" tabindex="0" onclick="showRescueModal('card')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();showRescueModal('card')}">
 <span class="w-9 h-9 rounded-lg bg-surface-container-lowest flex items-center justify-center text-secondary-container text-on-secondary-container shrink-0 shadow-sm">
 <span class="material-symbols-outlined text-[20px]">credit_card</span>
 </span>
@@ -355,7 +355,7 @@
 </div>
 </div>
 <!-- Item 4: Police Denuncia -->
-<div class="p-space-sm rounded-xl bg-surface-container-low hover:bg-surface-container transition-all flex items-start gap-space-sm group cursor-pointer" onclick="alert('报案指南 (Denuncia)：\n1. 务必索要盖章的报案纸(Verbale di Denuncia / Déclaration de vol)。\n2. 保险理赔、领事馆补办旅行证必须以此为证！\n3. 意大利警察局 Polizia di Stato / 宪兵 Carabinieri 均可受理。')">
+<div class="p-space-sm rounded-xl bg-surface-container-low hover:bg-surface-container transition-all flex items-start gap-space-sm group cursor-pointer" role="button" tabindex="0" onclick="showRescueModal('police')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();showRescueModal('police')}">
 <span class="w-9 h-9 rounded-lg bg-surface-container-lowest flex items-center justify-center text-primary-fixed-dim text-on-primary-fixed shrink-0 shadow-sm">
 <span class="material-symbols-outlined text-[20px]">local_police</span>
 </span>
