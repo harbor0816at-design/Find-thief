@@ -453,4 +453,16 @@
     });
   </script>
 </div></main><footer class="w-full bg-surface-container-lowest shadow-[0_1px_8px_rgba(0,0,0,0.04)]"><div class="max-w-[1280px] mx-auto px-margin-desktop py-space-xl"><div class="flex flex-col md:flex-row items-center justify-between gap-space-lg"><div class="flex items-center gap-space-md"><div class="w-8 h-8 rounded-lg bg-surface-container flex items-center justify-center"><span class="material-symbols-outlined text-primary text-[20px]">security</span></div><div><p class="font-headline-sm text-headline-sm text-on-surface">ThiefRadar Europe 防扒雷达</p><p class="font-body-sm text-body-sm text-on-surface-variant">欧洲出行者都能使用的防扒信息工具 · 来源按发布周期更新</p></div></div><div class="flex items-center gap-space-lg text-on-surface-variant font-body-sm text-body-sm"><a href="https://www.mfa.gov.cn/" target="_blank" rel="noopener noreferrer">领事服务与安全提醒 ↗</a><a href="/legacy.html#report">匿名报失与审核 ↗</a><a href="/privacy.html">隐私说明 ↗</a></div></div><div class="mt-space-lg pt-space-lg flex flex-col sm:flex-row items-center justify-between gap-space-sm font-label-sm text-label-sm text-on-surface-variant"><span class="">© 2026 防扒雷达 · 公开信息来源可核</span><div class="flex items-center gap-space-md"><span class="flex items-center gap-space-xs"><span class="w-2 h-2 rounded-full bg-tertiary"></span>有来源可查</span><span class="">欧盟紧急情况：112</span></div></div></div></footer>
-<div aria-labelledby="share-sheet-title" aria-modal="true" hidden="" id="stitch-share-sheet" role="dialog"><div class="share-sheet-card"><div class="share-top"><h3 id="share-sheet-title">分享给同行搭子</h3><button aria-label="关闭分享" id="stitch-share-close" type="button">✕</button></div><p>把当前城市与防扒提醒发给微信好友、旅行群或小红书。</p><div class="share-actions"><button id="stitch-native-share" type="button">↗ 系统分享 / 微信</button><button id="stitch-copy-link" type="button">复制链接</button><button id="stitch-copy-text" type="button">复制防扒护身符</button></div><p id="stitch-share-message" role="status"></p></div></div><script defer="" src="/stitch-integrate.js"></script><script defer="" src="/stitch-v23.js"></script><script defer="" src="/wechat-bridge.js"></script></body></html>
+<div aria-labelledby="share-sheet-title" aria-modal="true" hidden id="stitch-share-sheet" role="dialog"><div class="share-sheet-card">
+<div class="share-top"><h3 id="share-sheet-title">分享给朋友 · 防扒雷达</h3><button aria-label="关闭分享" id="stitch-share-close" type="button">✕</button></div>
+<p id="stitch-share-city">当前城市 · 防扒雷达</p><p>转发给微信好友、旅行群、朋友圈或评论区。公开来源案例不等于实时风险评级。</p>
+<label class="share-field-label" for="stitch-share-mode">选择分享话术</label>
+<select id="stitch-share-mode"><option value="chat">微信私聊</option><option value="group">微信群 / 旅游群</option><option value="moments">朋友圈</option><option value="comment">评论区短文案</option></select>
+<textarea id="stitch-share-content" readonly rows="5" aria-label="可复制的分享文案"></textarea>
+<div class="share-actions">
+<button id="stitch-native-share" type="button">↗ 系统分享 / 微信分享引导</button>
+<button id="stitch-copy-text" type="button">复制当前图文话术</button>
+<button id="stitch-save-poster" type="button">保存城市分享图 PNG</button>
+<button id="stitch-copy-link" type="button">复制当前城市链接</button>
+</div>
+<p id="stitch-share-message" role="status" aria-live="polite"></p></div></div><script defer="" src="/stitch-integrate.js"></script><script defer="" src="/stitch-v23.js"></script><script defer="" src="/wechat-bridge.js"></script></body></html>
