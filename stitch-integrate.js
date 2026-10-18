@@ -42,9 +42,34 @@ function generateDraft(){const raw=draftData();if(raw.story.length<12){toast('�
 function textToShare(){const c=cities[city];return draft?`【小偷在哪里 · 个人避雷草稿】\n${draft.city} · ${draft.scene}\n涉及物品：${draft.items.join(' / ')}\n${draft.story}\n（本人整理的待审核个人经历，不是警方证实案件）\n${shareUrl()}`:`【欧洲防扒护身符】${c.flag}${c.name}：背包贴身、手机不放后袋、护照与备用卡分开。了解公开来源和出行提醒：${shareUrl()}`}
 function shareUrl(){const cityForShare=Object.values(cities).find(x=>x.name===(draft?.city||''))||cities[city];return 'https://fangbaleida.com/#city='+encodeURIComponent(cityForShare.name)}
 async function copy(text){try{if(navigator.clipboard&&isSecureContext){await navigator.clipboard.writeText(text);return true}}catch{}const el=document.createElement('textarea');el.value=text;el.style.position='fixed';el.style.opacity='0';document.body.append(el);el.select();let result=false;try{result=document.execCommand('copy')}catch{}el.remove();return result}
-function shareOpen(){const box=$('stitch-share-sheet');if(!box)return;box.hidden=false;$('stitch-share-message').textContent=/MicroMessenger/i.test(navigator.userAgent)?'微信内点击右上角「···」→「发送给朋友」，也可复制链接发到群聊。':'使用系统分享可选择微信；或复制链接发送给同行人。';}
-async function nativeShare(){try{if(typeof navigator.share==='function'){await navigator.share({title:'小偷在哪里 · 欧洲防扒雷达',text:draft?'我的个人避雷草稿（未审核）':'给旅行搭子的防扒提醒',url:shareUrl()});return}}catch(e){if(e?.name==='AbortError')return}
- const ok=await copy(shareUrl());toast(ok?'已复制链接，请在微信聊天里粘贴发送。':'请选择浏览器分享菜单发送。')}
+const shareCopy={
+ chat:name=>'去'+name+'旅行前可以收藏这个：防扒雷达整理有出处的失窃案例、常见套路和防范指南。出门前查一眼，少踩坑。\\n'+shareUrl(),
+ moments:name=>'去'+name+'前别只看攻略，也看看防扒提醒。\\n有来源的案例、出行避坑指南，一站了解。\\n'+shareUrl()+'\\n#旅行避坑 #出行安全',
+ comment:name=>'准备去'+name+'的可以看看防扒雷达，有来源案例和防范建议：'+shareUrl(),
+ group:name=>'【'+name+'旅行防扒提醒】整理公开来源的失窃案例和防范建议，出门前可以先了解：'+shareUrl()
+};
+function shareText(mode='chat'){return shareCopy[mode]?.(cities[city].name)||shareCopy.chat(cities[city].name)}
+function refreshShare(){const name=cities[city].name,area=$('stitch-share-content');if(!area)return;const mode=$('stitch-share-mode')?.value||'chat';area.value=shareText(mode);const cityEl=$('stitch-share-city');if(cityEl)cityEl.textContent=name+' · 防扒雷达';}
+function shareOpen(){const box=$('stitch-share-sheet');if(!box)return;box.hidden=false;refreshShare();$('stitch-share-message').textContent=/MicroMessenger/i.test(navigator.userAgent)?'微信内可复制文案、保存海报，并通过右上角菜单发送给朋友或朋友圈。':'可使用系统分享、复制文案，或保存海报。';}
+async function nativeShare(){const t=shareText($('stitch-share-mode')?.value);if(/MicroMessenger/i.test(navigator.userAgent)){const ok=await copy(t);$('stitch-share-message').textContent=ok?'文案已复制；请通过微信右上角菜单分享链接，或在聊天中粘贴。':'请通过微信右上角菜单分享当前页面。';return}
+ try{if(typeof navigator.share==='function'){await navigator.share({title:'防扒雷达 · '+cities[city].name+'出行避坑',text:t,url:shareUrl()});return}}catch(e){if(e?.name==='AbortError')return}
+ const ok=await copy(t);$('stitch-share-message').textContent=ok?'已复制图文话术，可粘贴到微信或评论区。':'请使用浏览器分享菜单。';
+}
+function sharePoster(){
+ const name=cities[city].name,cv=document.createElement('canvas');cv.width=900;cv.height=1200;
+ const ctx=cv.getContext('2d');if(!ctx){toast('浏览器不支持生成图片');return}
+ ctx.fillStyle='#FAF7F2';ctx.fillRect(0,0,900,1200);
+ ctx.fillStyle='#E2F736';ctx.fillRect(0,0,900,320);
+ ctx.fillStyle='#1251bd';ctx.font='bold 44px "PingFang SC","Microsoft YaHei",sans-serif';ctx.fillText('防扒雷达 · THIEF RADAR',65,105);
+ ctx.fillStyle='#142536';ctx.font='bold 76px "PingFang SC","Microsoft YaHei",sans-serif';ctx.fillText(name+'出行防扒指南',65,235);
+ ctx.fillStyle='#fff';ctx.fillRect(50,355,800,660);
+ ctx.fillStyle='#15356e';ctx.font='bold 48px "PingFang SC","Microsoft YaHei",sans-serif';posterText(ctx,'查哪里被偷过，反手一个匿名避雷',95,470,710,72);
+ ctx.fillStyle='#2d4050';ctx.font='32px "PingFang SC","Microsoft YaHei",sans-serif';posterText(ctx,'有出处的真实案例 · 常见套路 · 防范建议',95,665,705,52);
+ ctx.fillStyle='#586a78';ctx.font='28px "PingFang SC","Microsoft YaHei",sans-serif';posterText(ctx,'公开资料仅供参考，不代表实时警情或个人遇袭概率。',95,825,705,47);
+ ctx.fillStyle='#1251bd';ctx.font='bold 40px sans-serif';ctx.fillText('fangbaleida.com',65,1092);
+ ctx.font='24px "PingFang SC","Microsoft YaHei",sans-serif';ctx.fillText('扫码无需注册 · 直接访问网站',65,1144);
+ cv.toBlob(blob=>{if(!blob){toast('生成图片失败');return}const url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='防扒雷达-'+name+'-分享海报.png';document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),6000);$('stitch-share-message').textContent='分享图已生成，可在微信聊天或朋友圈中发送。'},'image/png');
+}
 function posterText(ctx,text,x,y,maxWidth,step){const chars=Array.from(String(text));let line='',cnt=0;for(const c of chars){if(ctx.measureText(line+c).width>maxWidth&&line){ctx.fillText(line,x,y);y+=step;line=c;if(++cnt>=9)break}else line+=c;}if(cnt<9)ctx.fillText(line,x,y);return y+step}
 async function exportCard(){if(!draft&&!generateDraft())return;
  const d=draft;const cv=document.createElement('canvas');cv.width=900;cv.height=1180;const c=cv.getContext('2d');c.fillStyle='#FAF7F2';c.fillRect(0,0,900,1180);c.fillStyle='#E2F736';c.fillRect(50,54,800,150);c.fillStyle='#1E232A';c.font='bold 47px "PingFang SC",sans-serif';c.fillText('小偷在哪里 · 匿名避雷',80,130);c.font='28px sans-serif';c.fillText('THIEF RADAR EUROPE',80,177);c.fillStyle='#fff';c.fillRect(50,226,800,840);c.fillStyle='#2454c6';c.font='bold 40px "PingFang SC",sans-serif';c.fillText(d.city+' · '+d.scene,88,312);c.fillStyle='#505c6d';c.font='30px "PingFang SC",sans-serif';c.fillText('👜 物品：'+d.items.join(' / ').slice(0,24),88,375);c.font='29px "PingFang SC",sans-serif';posterText(c,'我的亲历：'+d.story,88,460,700,53);c.fillStyle='#b74b3a';c.font='bold 26px "PingFang SC",sans-serif';c.fillText('个人草稿 · 未经过平台审核',88,930);c.fillStyle='#222';c.font='28px sans-serif';c.fillText('fangbaleida.com',88,999);c.fillStyle='#555';c.font='22px "PingFang SC",sans-serif';c.fillText('防扒旅行，从互相提醒开始',88,1097);
@@ -98,7 +123,7 @@ function activate(){// Existing Stitch visual and its text remain in place; wire
  let form=df||mf;if(form){const box=document.createElement('div');box.className='stitch-report-bridge';box.innerHTML='<p>战报生成的是<strong>本机个人草稿</strong>，不会自动发布或伪称已核验。真实匿名报失需要填写时间与地点并经过审核。</p><button type="button" id="stitch-real-report">⚡ 实况避雷 · 正式匿名上报</button><button type="button" id="stitch-share-draft">↗ 分享我的草稿</button>';
  form.append(box);$('stitch-real-report').onclick=openReport;$('stitch-share-draft').onclick=()=>{if(draft||generateDraft())shareOpen()};}
  const header=document.querySelector('header');if(header){const b=document.createElement('button');b.className='stitch-header-share';b.type='button';b.textContent='↗ 分享微信好友';b.onclick=shareOpen;header.append(b)}
- window.openShareModal=shareOpen;window.copyShareLink=async()=>{let ok=await copy(shareUrl());toast(ok?'已复制网页地址，可发送到微信。':'请使用浏览器右上角分享。')};window.generateWarReport=e=>{e?.preventDefault?.();generateDraft()};window.generateCard=generateDraft;
+ window.openShareModal=shareOpen;window.stitchSharePoster=sharePoster;window.stitchShareText=shareText;window.copyShareLink=async()=>{let ok=await copy(shareUrl());toast(ok?'已复制网页地址，可发送到微信。':'请使用浏览器右上角分享。')};window.generateWarReport=e=>{e?.preventDefault?.();generateDraft()};window.generateCard=generateDraft;
  window.saveCard=exportCard;window.showRescueModal=rescue;window.selectHotspot=()=>enterView('radar');window.showHotspot=()=>enterView('radar');window.switchCity=(key,btn)=>chooseCity(key);
  window.stitchFocusIncident=(spot)=>{const e=data.events.find(x=>x.city===cities[city].name&&x.spot_name===spot);if(e&&map&&Number.isFinite(Number(e.lat))&&Number.isFinite(Number(e.lon)))map.flyTo([Number(e.lat),Number(e.lon)],15,{animate:true})};
  window.toggleMapDrag=()=>{mapEnabled=!mapEnabled;if(map){mapEnabled?map.dragging.enable():map.dragging.disable()}const b=$('map-drag-toggle');if(b)b.textContent='拖动: '+(mapEnabled?'开':'锁');toast(mapEnabled?'已启用地图拖动':'地图拖动已锁定')};
