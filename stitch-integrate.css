@@ -45,3 +45,12 @@
 .stitch-emergency-content>a{display:inline-flex;border-radius:12px;background:#e2f736;color:#172d36;padding:10px 14px;margin-top:12px;font-weight:800;text-decoration:none}
 .stitch-emergency-close{position:absolute;top:14px;right:14px;background:#edf1f7;border:0;border-radius:50%;width:34px;height:34px;cursor:pointer;font-size:24px}
 [role="button"][tabindex="0"]:focus-visible{outline:3px solid #1258b2;outline-offset:3px}
+
+/* Full production sharing sheet */
+#stitch-share-mode,#stitch-share-content{display:block;width:100%;box-sizing:border-box;border:1px solid #cbd5e1;border-radius:11px;background:#fff;color:#233348;font:500 13px/1.6 system-ui,"PingFang SC",sans-serif;padding:10px 12px;margin:8px 0}
+#stitch-share-content{resize:vertical;min-height:105px;white-space:pre-wrap}
+.share-field-label{font-weight:800;font-size:12px;display:block;margin-top:12px}
+#stitch-share-city{font-weight:800;color:#0053db!important}
+#stitch-share-sheet{overflow-y:auto}
+.share-sheet-card{max-height:calc(100dvh - 32px);overflow:auto}
+#stitch-share-message{min-height:1.5em}
