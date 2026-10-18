@@ -104,12 +104,22 @@ function fallbackIcons(){
  const replace=()=>{let ready=false;try{ready=Array.from(document.fonts||[]).some(face=>/Material Symbols Outlined/i.test(face.family)&&face.status==='loaded')}catch{}if(ready)return;document.querySelectorAll('.material-symbols-outlined').forEach(x=>{const n=x.textContent.trim();if(iconMap[n]){x.textContent=iconMap[n];x.classList.add('stitch-fallback-icon');x.setAttribute('aria-label',n)}})};
  if(document.fonts?.ready)document.fonts.ready.then(replace).catch(replace);setTimeout(replace,1400);
 }
-async function retrieve(){const attempts=[fetch('/api/events-v2',{cache:'no-store'}).then(r=>r.ok?r.json():null).catch(()=>null),fetch('/api/hotspots',{cache:'no-store'}).then(r=>r.ok?r.json():null).catch(()=>null),fetch('/api/reports',{cache:'no-store'}).then(r=>r.ok?r.json():null).catch(()=>null)];let [events,areas,reports]=await Promise.all(attempts);
- if(events&&events.available===true&&Array.isArray(events.items)){data.events=events.items;data.areas=Array.isArray(events.areas)?events.areas:[]}else{try{let r=await fetch('/data/verified-events-v21.json',{cache:'no-store'}),s=await r.json();if(r.ok&&s.verified_public_snapshot===true){data.events=s.items||[];data.areas=s.areas||[]}}catch{}}
- data.grids=Array.isArray(areas?.areas)?areas.areas:[];data.reports=Array.isArray(reports?.items)?reports.items:[];
- renderCases();
- const count=document.getElementById('stitch-header-count');
- if(count)count.textContent=String(data.events.length);
+async function retrieve(){
+ // Every source has its own timeout. One slow API cannot freeze the whole radar.
+ const read=async (path,ms=5500)=>{const controller=new AbortController();const timeout=setTimeout(()=>controller.abort(),ms);try{const r=await fetch(path,{signal:controller.signal,cache:'no-store'});return r.ok?await r.json():null}catch{return null}finally{clearTimeout(timeout)}};
+ try {
+ const [events,areas,reports]=await Promise.all([read('/api/events-v2'),read('/api/hotspots'),read('/api/reports')]);
+ if(events?.available===true&&Array.isArray(events.items)){data.events=events.items;data.areas=Array.isArray(events.areas)?events.areas:[]}
+ else {const snapshot=await read('/data/verified-events-v21.json',2500);if(snapshot?.verified_public_snapshot===true){data.events=Array.isArray(snapshot.items)?snapshot.items:[];data.areas=Array.isArray(snapshot.areas)?snapshot.areas:[]}}
+ data.grids=Array.isArray(areas?.areas)?areas.areas:[];
+ data.reports=Array.isArray(reports?.items)?reports.items:[];
+ }catch(err){console.warn('Radar data unavailable',err)}
+ finally{
+  try{renderCases()}catch(e){console.error('Radar render error',e);
+   for(const id of ['hotspot-cards-grid','incident-container','stitch-verified-feed']){const el=$(id);if(el)el.innerHTML='<p class="stitch-empty">数据暂时无法显示，请刷新重试或查看官方来源。</p>';}
+  }
+  const count=$('stitch-header-count');if(count)count.textContent=String(data.events.length);
+ }
 }
 function init(){
  activate();fallbackIcons();
