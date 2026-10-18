@@ -48,7 +48,7 @@ const shareCopy={
  comment:name=>'准备去'+name+'的可以看看防扒雷达，有来源案例和防范建议：'+shareUrl(),
  group:name=>'【'+name+'旅行防扒提醒】整理公开来源的失窃案例和防范建议，出门前可以先了解：'+shareUrl()
 };
-function shareText(mode='chat'){return (shareCopy[mode]?.(cities[city].name)||shareCopy.chat(cities[city].name)).replace(/\\\\n/g,'\n')}
+function shareText(mode='chat'){return (shareCopy[mode]?.(cities[city].name)||shareCopy.chat(cities[city].name)).split(String.fromCharCode(92)+'n').join(String.fromCharCode(10))}
 function refreshShare(){const name=cities[city].name,area=$('stitch-share-content');if(!area)return;const mode=$('stitch-share-mode')?.value||'chat';area.value=shareText(mode);const cityEl=$('stitch-share-city');if(cityEl)cityEl.textContent=name+' · 防扒雷达';}
 function shareOpen(){const box=$('stitch-share-sheet');if(!box)return;box.hidden=false;refreshShare();$('stitch-share-message').textContent=/MicroMessenger/i.test(navigator.userAgent)?'微信内可复制文案、保存海报，并通过右上角菜单发送给朋友或朋友圈。':'可使用系统分享、复制文案，或保存海报。';}
 async function nativeShare(){const t=shareText($('stitch-share-mode')?.value);if(/MicroMessenger/i.test(navigator.userAgent)){const ok=await copy(t);$('stitch-share-message').textContent=ok?'文案已复制；请通过微信右上角菜单分享链接，或在聊天中粘贴。':'请通过微信右上角菜单分享当前页面。';return}
