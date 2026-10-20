@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-16T12:29:33.878388+00:00",
+  "generated_at": "2026-10-20T12:47:42.924539+00:00",
   "query_count": 12,
   "successful_queries": 0,
   "failed_queries": [
@@ -61,7 +61,7 @@
     {
       "country": "英国",
       "city": "伦敦",
-      "reason": "HTTP Error 429: Too Many Requests"
+      "reason": "invalid_articles"
     }
   ],
   "candidate_count": 0,
