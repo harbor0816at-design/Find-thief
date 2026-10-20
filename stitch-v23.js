@@ -12,7 +12,7 @@ function updateHead(city,area=''){
  if(!cities[city])return;chosen=city;spot=area;
  for(const h of document.querySelectorAll('h2'))if(/实况避雷雷达/.test(h.textContent)){h.textContent=cities[city]+(area?' · '+area:'')+'实况避雷雷达';h.title='按所选城市、区域与物品类别显示公开来源'}
  const box=$('stitch-selected-area');if(box)box.textContent=area?'当前区域：'+cities[city]+' · '+area+'。2公里圈只是地图展示缓冲区，并非案发影响范围。':'当前查询：'+cities[city]+'；切换城市或点击案例来源即可查看该地区信息。';
- document.title=cities[city]+'实况避雷雷达 · 小偷在哪里';
+ document.title=cities[city]+'实况避雷雷达 · 防扒雷达';
 }
 function makePictures(){
  if(!location.pathname.includes('stitch-mobile'))return;
@@ -48,7 +48,7 @@ function recommendations(){
 function link(){return 'https://fangbaleida.com/#city='+encodeURIComponent(cities[chosen]||'罗马')}
 async function share(){
  metric('share_native_attempt',cities[chosen]);
- if(typeof navigator.share==='function'){try{await navigator.share({title:'小偷在哪里 · '+cities[chosen]+'避雷雷达',text:'公开信息可追溯，2公里仅为查询圈；出行前查一查。',url:link()});metric('share_native_success',cities[chosen]);notice('系统分享已唤起；是否发给微信好友以微信界面为准。');return}catch(e){if(e?.name==='AbortError')return}}
+ if(typeof navigator.share==='function'){try{await navigator.share({title:'防扒雷达 · '+cities[chosen]+'避雷雷达',text:'公开信息可追溯，2公里仅为查询圈；出行前查一查。',url:link()});metric('share_native_success',cities[chosen]);notice('系统分享已唤起；是否发给微信好友以微信界面为准。');return}catch(e){if(e?.name==='AbortError')return}}
  const success=await copy('【'+cities[chosen]+'防扒雷达】'+link());metric('share_copy_link',cities[chosen]);notice(success?'链接已复制，请在微信发送给朋友。':'请通过手机浏览器分享菜单选择微信。');
 }
 function notice(text){const el=$('stitch-share-message');if(el)el.textContent=text;else if(typeof window.showToast==='function')window.showToast(text)}

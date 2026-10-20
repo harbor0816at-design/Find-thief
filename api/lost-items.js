@@ -7,7 +7,7 @@ module.exports=async function handler(req,res){
  if(!u||!k)return res.status(200).json({available:false,items:[],message:'在线已审核丢失物品统计待启用'});
  try{
   const path='/rest/v1/loss_reports?status=eq.approved&spot_name_public=not.is.null&select=city,spot_name_public,item_category&limit=5000';
-  const r=await fetch(u+path,{headers:{apikey:k,...(k.startsWith('sb_secret_')?{}:{Authorization:'Bearer '+k})},signal:AbortSignal.timeout(6000)});
+  const r=await fetch(u.replace(/\/$/,'')+path,{headers:{apikey:k,...(k.startsWith('sb_secret_')?{}:{Authorization:'Bearer '+k})},signal:AbortSignal.timeout(6000)});
   if(!r.ok)throw Error('DB_'+r.status);
   const rows=await r.json();
   if(!Array.isArray(rows))throw Error('Bad response');

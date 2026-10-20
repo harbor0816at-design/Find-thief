@@ -12,6 +12,6 @@ module.exports=async function handler(req,res){
  if(!events.has(d.event)||typeof d.city!=='string'||d.city.length>80||/[<>\x00-\x1f]/.test(d.city))return res.status(204).end();
  const u=process.env.SUPABASE_URL,k=process.env.SUPABASE_SECRET_KEY||process.env.SUPABASE_SERVICE_ROLE_KEY;
  if(!u||!k)return res.status(204).end();
- try{await fetch(u+'/rest/v1/rpc/count_site_metric',{method:'POST',headers:{apikey:k,...(k.startsWith('sb_secret_')?{}:{Authorization:'Bearer '+k}),'Content-Type':'application/json'},body:JSON.stringify({event_name:d.event,event_city:d.city}),signal:AbortSignal.timeout(2500)})}catch{}
+ try{await fetch(u.replace(/\/$/,'')+'/rest/v1/rpc/count_site_metric',{method:'POST',headers:{apikey:k,...(k.startsWith('sb_secret_')?{}:{Authorization:'Bearer '+k}),'Content-Type':'application/json'},body:JSON.stringify({event_name:d.event,event_city:d.city}),signal:AbortSignal.timeout(2500)})}catch{}
  return res.status(204).end();
 };

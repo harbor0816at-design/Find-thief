@@ -1,6 +1,6 @@
 /* Official WeChat Share: activates only after verified Official Account credentials. */
 (()=>{'use strict';let ready=false,initialized=false;const inWx=/MicroMessenger/i.test(navigator.userAgent||'');
-const title=()=> '小偷在哪里 · 欧洲防扒实况避雷雷达';
+const title=()=> '防扒雷达 · 欧洲防扒实况避雷';
 const destination=()=>window.StitchEnhanceV23?.shareLink?.()||'https://fangbaleida.com/';
 const description='查看有出处的欧洲失窃案例，分享防扒避雷提醒。2公里仅为地图展示圈，非犯罪影响范围。';
 const image=()=> 'https://fangbaleida.com/stitch-assets/safety-illustration.webp';

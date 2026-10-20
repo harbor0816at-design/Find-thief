@@ -82,7 +82,7 @@
  }
  async function nativeShare(){
   if(typeof navigator.share==='function'){
-   try{await navigator.share({title:'小偷在哪里',text:description(),url:targetLink()});$('shareFeedback').textContent='已调出系统分享';return}
+   try{await navigator.share({title:'防扒雷达',text:description(),url:targetLink()});$('shareFeedback').textContent='已调出系统分享';return}
    catch(e){if(e?.name==='AbortError')return}
   }
   const copied=await copyLink();$('shareFeedback').textContent=copied?'已复制链接，请在微信聊天中粘贴并发送。':'当前浏览器无法自动分享，请使用右上角菜单分享本网页。';
