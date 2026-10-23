@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-20T12:47:42.924539+00:00",
+  "generated_at": "2026-10-23T12:42:05.118642+00:00",
   "query_count": 12,
   "successful_queries": 0,
   "failed_queries": [
@@ -11,12 +11,12 @@
     {
       "country": "法国",
       "city": "巴黎",
-      "reason": "HTTP Error 429: Too Many Requests"
+      "reason": "invalid_articles"
     },
     {
       "country": "法国",
       "city": "巴黎",
-      "reason": "non_json_response"
+      "reason": "HTTP Error 429: Too Many Requests"
     },
     {
       "country": "西班牙",
@@ -61,7 +61,7 @@
     {
       "country": "英国",
       "city": "伦敦",
-      "reason": "invalid_articles"
+      "reason": "HTTP Error 429: Too Many Requests"
     }
   ],
   "candidate_count": 0,
