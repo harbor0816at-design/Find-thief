@@ -1,7 +1,7 @@
 const test=require('node:test'),assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path');
 const read=n=>fs.readFileSync(path.join(__dirname,'..',n),'utf8');
 test('desktop and mobile use direct source UI and local compiled styles',()=>{
- const pc=read('index.html'),mobile=read('stitch-mobile.html');
+ const pc=read('classic.html'),mobile=read('stitch-mobile.html');
  for(const html of [pc,mobile]){
   assert.match(html,/stitch-integrate\.js/);
   assert.match(html,/小偷雷达|防扒|失物|被偷|避雷/);

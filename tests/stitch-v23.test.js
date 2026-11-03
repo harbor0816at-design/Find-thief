@@ -1,7 +1,7 @@
 const test=require('node:test'),assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path');
 const read=p=>fs.readFileSync(path.join(__dirname,'..',p),'utf8');
 test('Stitch original art remains responsive on desktop and mobile',()=>{
- const css=read('stitch-v23.css'),pc=read('index.html'),mobile=read('stitch-mobile.html');
+ const css=read('stitch-v23.css'),pc=read('classic.html'),mobile=read('stitch-mobile.html');
  for(const text of ['safety-illustration.webp','anti-theft-gear.webp'])assert.match(css,new RegExp(text.replace('.','\\.')));
  assert.match(css,/object-fit:contain/);
  assert.match(css,/max-width:700px/);

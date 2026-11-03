@@ -9,6 +9,9 @@ on:
       - 'stitch-integrate.js'
       - 'stitch-mobile.html'
       - 'index.html'
+      - 'classic.html'
+      - 'map.js'
+      - 'map.css'
       - 'tests/stitch-browser-smoke.cjs'
       - '.github/workflows/stitch-browser-smoke.yml'
 permissions:

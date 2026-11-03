@@ -35,7 +35,7 @@ module.exports=async function handler(req,res){
    if(req.method==='GET'){
      const rows=await db(c,'loss_reports?select=id,country,city,address_private,lat_private,lon_private,occurred_on,category,item_category,spot_name_private,spot_name_public,description_private,status,created_at,public_summary,reviewed_at,reviewed_by&order=created_at.desc&limit=100');
      const since=new Date(Date.now()-30*86400000).toISOString().slice(0,10);
-     let metrics=[],areas=[],leads=[],advice=[],stagedEvents=[];try{metrics=await db(c,'site_metrics_daily?select=day,metric,city,total&day=gte.'+since+'&limit=5000');areas=await db(c,'evidence_areas?status=eq.published&select=id&limit=500');leads=await db(c,'source_leads?status=eq.needs_review&select=id&limit=500');advice=await db(c,'travel_advisories?status=eq.published&select=id&limit=300');stagedEvents=await db(c,'evidence_events_v2?review_status=eq.staging&select=id,country,city,spot_name,event_kind,source_type,source_title,source_url,source_published_on,occurred_on,occurred_precision,item_category,short_summary,confidence,location_precision&order=created_at.desc&limit=60');}catch{/* fails closed for metrics; still permit reviewing reports */}
+     let metrics=[],areas=[],leads=[],advice=[],stagedEvents=[],appeals=[];try{appeals=await db(c,'place_appeals?select=id,place_key,city,place_name,reason,detail_private,contact_email_private,status,decision_public,created_at,decided_at&order=created_at.desc&limit=100')}catch{}try{metrics=await db(c,'site_metrics_daily?select=day,metric,city,total&day=gte.'+since+'&limit=5000');areas=await db(c,'evidence_areas?status=eq.published&select=id&limit=500');leads=await db(c,'source_leads?status=eq.needs_review&select=id&limit=500');advice=await db(c,'travel_advisories?status=eq.published&select=id&limit=300');stagedEvents=await db(c,'evidence_events_v2?review_status=eq.staging&select=id,country,city,spot_name,event_kind,source_type,source_title,source_url,source_published_on,occurred_on,occurred_precision,item_category,short_summary,confidence,location_precision&order=created_at.desc&limit=60');}catch{/* fails closed for metrics; still permit reviewing reports */}
      const totals={};const cities={};
      for(const x of metrics){totals[x.metric]=(totals[x.metric]||0)+Number(x.total||0);if(x.metric==='area_open'&&x.city)cities[x.city]=(cities[x.city]||0)+Number(x.total||0)}
      const top=Object.entries(cities).sort((a,b)=>b[1]-a[1]).slice(0,10).map(([city,count])=>({city,count}));
@@ -50,7 +50,7 @@ module.exports=async function handler(req,res){
      }
      const daily=[...byDay.values()].sort((a,b)=>a.day.localeCompare(b.day));
      const funnel=['page_view','city_select','case_open','report_draft_generate','share_open','share_native_success'].map(key=>({key,count:Number(totals[key]||0)}));
-     return res.status(200).json({rows,stagedEvents,counts:{pending:rows.filter(x=>x.status==='pending').length,approved:rows.filter(x=>x.status==='approved').length,rejected:rows.filter(x=>x.status==='rejected').length},analytics:{totals,cities:top,publishedAreas:areas.length,waitingLeads:leads.length,publishedAdvisories:advice.length,pendingEvidence:stagedEvents.length,daily,funnel,dimensions,periodDays:30,timezone:'UTC'},note:'报告最近100条，网站指标近30天为匿名聚合次数、可受机器人影响'});
+     return res.status(200).json({rows,stagedEvents,appeals,counts:{pending:rows.filter(x=>x.status==='pending').length,approved:rows.filter(x=>x.status==='approved').length,rejected:rows.filter(x=>x.status==='rejected').length},analytics:{totals,cities:top,publishedAreas:areas.length,waitingLeads:leads.length,publishedAdvisories:advice.length,pendingEvidence:stagedEvents.length,daily,funnel,dimensions,periodDays:30,timezone:'UTC'},note:'报告最近100条，网站指标近30天为匿名聚合次数、可受机器人影响'});
    }
    const p=req.body&&typeof req.body==='object'&&!Array.isArray(req.body)?req.body:{};
    if(req.method==='POST'){
@@ -82,6 +82,15 @@ module.exports=async function handler(req,res){
      };
      const data=await db(c,'evidence_events_v2?select=id',{method:'POST',headers:{Prefer:'return=representation'},body:JSON.stringify(record)});
      return res.status(201).json({id:data[0]?.id,status:'staging',message:'仅进入待审核事件库，未对公众发布'});
+   }
+   if(p.kind==='appeal'){
+     if(!UUID.test(String(p.id||''))||!['upheld','downgraded','removed'].includes(p.status))return res.status(400).json({error:'申诉处理参数无效'});
+     const note=String(p.decision_public||'').trim().slice(0,240);
+     if(note.length<4)return res.status(400).json({error:'请填写公开的处理说明（4–240字）'});
+     if(/[\w.+-]+@[\w-]+\.[\w.-]+|(?:\+?\d[\d\s-]{9,}\d)/.test(note))return res.status(400).json({error:'处理说明含疑似个人联系信息'});
+     const done=await db(c,'place_appeals?id=eq.'+p.id+'&status=eq.pending&select=id',{method:'PATCH',headers:{Prefer:'return=representation'},body:JSON.stringify({status:p.status,decision_public:note,decided_at:new Date().toISOString(),decided_by:identity.user.email})});
+     if(!done.length)return res.status(409).json({error:'申诉已处理，请刷新'});
+     return res.status(200).json({ok:true,id:p.id,status:p.status});
    }
    if(p.kind==='event_v2'){
      if(!UUID.test(String(p.id||''))||!['approved','rejected'].includes(p.status))return res.status(400).json({error:'事件审核参数无效'});

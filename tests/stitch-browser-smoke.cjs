@@ -8,7 +8,7 @@ async function check(condition,why){if(!condition)throw Error(why)}
  try{
   const pc=await browser.newPage({viewport:{width:1440,height:900},acceptDownloads:true});
   await blockExternal(pc);
-  await pc.goto(BASE+'/',{waitUntil:'domcontentloaded',timeout:25000});
+  await pc.goto(BASE+'/classic.html',{waitUntil:'domcontentloaded',timeout:25000});
   await pc.locator('#stitch-gear').waitFor({timeout:15000});
   assert.match(await pc.locator('h2').filter({hasText:'实况避雷雷达'}).first().innerText(),/罗马/);
   await pc.locator('.city-btn[data-city="paris"]').first().click();

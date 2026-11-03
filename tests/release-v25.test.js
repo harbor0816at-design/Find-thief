@@ -1,6 +1,6 @@
 const test=require('node:test'),assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path');
 const read=n=>fs.readFileSync(path.join(__dirname,'..',n),'utf8');
-const pages=['index.html','stitch-mobile.html','legacy.html','admin.html','privacy.html','terms.html'];
+const pages=['index.html','classic.html','stitch-mobile.html','legacy.html','admin.html','privacy.html','terms.html'];
 test('map library never blocks page scripts and avoids the China-only CDN',()=>{
  assert.match(read('stitch-integrate.js'),/cdn\.jsdelivr\.net\/npm\/leaflet@1\.9\.4/);
  for(const f of [...pages,'stitch-integrate.js'])assert.doesNotMatch(read(f),/bootcdn/,f);
