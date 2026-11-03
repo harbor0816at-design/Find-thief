@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>防扒地图 · 防扒雷达</title>
+<meta name="description" content="防扒雷达地图版：选城市、搜地点，在地图上查看有出处的欧洲失窃标记，按扒窃、抢夺、诈骗套路筛选。">
+<meta name="theme-color" content="#f3f8f5">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/vendor/leaflet-1.9.4/leaflet.css">
+<link rel="stylesheet" href="/map.css">
+</head>
+<body>
+<div class="app" id="app">
+  <section class="view" id="view-map" aria-label="地图">
+    <header class="top">
+      <h1 class="brand">防扒地图 <span class="slogan">共建无扒之旅</span></h1>
+      <button class="pill-btn" id="fontBtn" type="button" aria-label="字号设置">字号设置</button>
+    </header>
+    <a class="sos" href="tel:112"><span class="sos-dot"></span>欧洲紧急电话 <b>112</b><span class="sos-hint">点击呼出</span></a>
+
+    <form class="search" id="searchForm" role="search">
+      <label class="city-pick">
+        <span class="sr">选择城市</span>
+        <select id="citySelect"></select>
+      </label>
+      <input id="searchInput" type="search" placeholder="输入景点、车站、街道或酒店名称" autocomplete="off" enterkeyhint="search">
+      <button class="search-btn" type="submit">搜索</button>
+    </form>
+    <div class="search-results" id="searchResults" hidden></div>
+
+    <div class="map-card">
+      <div class="toggles" role="group" aria-label="类别筛选">
+        <label class="tg"><span class="tg-pin" data-type="扒窃"></span>扒窃<input type="checkbox" data-type="扒窃" checked><i></i></label>
+        <label class="tg"><span class="tg-pin" data-type="抢夺"></span>抢夺<input type="checkbox" data-type="抢夺" checked><i></i></label>
+        <label class="tg"><span class="tg-pin" data-type="诈骗套路"></span>诈骗套路<input type="checkbox" data-type="诈骗套路" checked><i></i></label>
+      </div>
+      <div class="map-wrap"><div id="map" class="map"></div>
+      <div class="map-tip"><span></span>可拖动缩放；搜不到时直接点地图上的位置</div></div>
+      <div class="legend" aria-label="图钉颜色说明">
+        <span><i class="lg admin"></i>官方/管理员判定</span>
+        <span><i class="lg traveler"></i>媒体报道/游客自述</span>
+      </div>
+    </div>
+
+    <section class="list-card">
+      <div class="list-head">
+        <h2 id="listTitle">当前区域已标记地点</h2>
+        <span class="count" id="listCount">—</span>
+      </div>
+      <p class="list-status" id="listStatus" role="status">正在读取有出处的记录…</p>
+      <ul class="plist" id="placeList"></ul>
+    </section>
+
+    <aside class="guide-float" id="guideFloat">
+      <button type="button" class="guide-open" id="guideOpen"><span class="q">?</span><span><b>使用说明</b><small>怎么用 &amp; 被偷后怎么办</small></span></button>
+      <button type="button" class="guide-close" id="guideClose" aria-label="关闭使用说明">×</button>
+    </aside>
+  </section>
+
+  <section class="view" id="view-appeal" aria-label="申诉" hidden>
+    <header class="top"><h1 class="brand">申诉</h1></header>
+    <div class="panel">
+      <h2>地点或商家被标记有误？</h2>
+      <p>地图上的每个标记都对应一条可追溯的来源（警方通报、官方开放数据、媒体报道）或经审核的游客自述。如果你是被标记场所的管理方，认为信息错误、已过时或已整改，可以申请复核。</p>
+      <ol class="steps">
+        <li>在地图上点开该地点，记下地点名称</li>
+        <li>准备证明材料（营业资质、整改记录或对来源的更正）</li>
+        <li>提交后管理员会复核来源，结论在详情页公开</li>
+      </ol>
+      <p class="note">在线申诉表单正在开发中（改版计划 P2）。上线前，请通过「我的 → 用户协议」中的联系方式提交复核请求。</p>
+    </div>
+  </section>
+
+  <section class="view" id="view-me" aria-label="我的" hidden>
+    <header class="top"><h1 class="brand">我的</h1></header>
+    <div class="panel menu">
+      <a href="/legacy.html#report">匿名举报失窃地点<small>无需登录，审核通过后才会上图</small></a>
+      <button type="button" data-open="guide">使用说明 / 被偷后怎么办</button>
+      <button type="button" data-open="font">字号设置</button>
+      <a href="/index.html">防扒好物 · 套路图鉴（原首页）</a>
+      <a href="/privacy.html">隐私政策</a>
+      <a href="/terms.html">用户协议</a>
+    </div>
+  </section>
+
+  <nav class="tabbar" aria-label="主导航">
+    <button type="button" class="tab active" data-view="map"><svg viewBox="0 0 24 24"><path d="M12 2a7 7 0 0 0-7 7c0 5 7 13 7 13s7-8 7-13a7 7 0 0 0-7-7zm0 9.5A2.5 2.5 0 1 1 12 6.5a2.5 2.5 0 0 1 0 5z"/></svg>地图</button>
+    <button type="button" class="tab" data-view="appeal"><svg viewBox="0 0 24 24"><path d="M4 4h16v12H7l-3 3zM7 8h10v1.6H7zm0 3.4h7V13H7z"/></svg>申诉</button>
+    <button type="button" class="tab" data-view="me"><svg viewBox="0 0 24 24"><path d="M12 12a4.5 4.5 0 1 0 0-9 4.5 4.5 0 0 0 0 9zm0 2c-4.4 0-8 2.3-8 5.2V21h16v-1.8c0-2.9-3.6-5.2-8-5.2z"/></svg>我的</button>
+  </nav>
+</div>
+
+<div class="sheet-back" id="sheetBack" hidden></div>
+<div class="sheet" id="sheet" role="dialog" aria-modal="true" aria-labelledby="sheetTitle" hidden>
+  <div class="sheet-grip"></div>
+  <button type="button" class="sheet-x" id="sheetClose" aria-label="关闭">×</button>
+  <div id="sheetBody"></div>
+</div>
+
+<script src="/vendor/leaflet-1.9.4/leaflet.js"></script>
+<script src="/map.js"></script>
+</body>
+</html>
