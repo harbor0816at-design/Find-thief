@@ -1,0 +1,11 @@
+<page-meta root-font-size="{{rootFs}}"></page-meta>
+<view class="wrap">
+  <view class="doc soft">
+    <view class="d-title">{{doc.title}}</view>
+    <view class="d-date">更新日期：{{doc.date}}</view>
+    <view wx:for="{{doc.sections}}" wx:key="h" class="d-sec">
+      <view class="d-h">{{item.h}}</view>
+      <view wx:for="{{item.p}}" wx:for-item="p" wx:key="*this" class="d-p">{{p}}</view>
+    </view>
+  </view>
+</view>

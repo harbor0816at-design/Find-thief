@@ -1,0 +1,12 @@
+@import "../report/report.wxss";
+.picked { display: flex; align-items: center; justify-content: space-between; gap: 20rpx; background: var(--sun-soft); border: 3rpx solid var(--ink); border-radius: 26rpx; padding: 22rpx 26rpx; }
+.pk-name { font-weight: 900; }
+.pk-city { color: var(--muted); font-size: 0.8rem; }
+.pk-change { color: var(--brand); font-weight: 900; font-size: 0.85rem; flex: none; }
+.find { display: flex; align-items: center; gap: 12rpx; background: #fff; border: 3rpx solid var(--line); border-radius: 24rpx; padding: 10rpx 10rpx 10rpx 22rpx; }
+.f-city { font-weight: 900; font-size: 0.9rem; padding-right: 14rpx; border-right: 2rpx solid var(--line); }
+.f-kw { flex: 1; min-width: 0; font-size: 0.9rem; height: 64rpx; }
+.f-btn { flex: none; background: var(--sun); border: 3rpx solid var(--ink); border-radius: 18rpx; padding: 10rpx 24rpx; font-weight: 900; font-size: 0.85rem; }
+.opt { display: flex; flex-direction: column; padding: 20rpx 24rpx; margin-top: 14rpx; background: #fff; border-radius: 22rpx; border: 2rpx solid var(--line); }
+.o-name { font-weight: 800; }
+.o-city { color: var(--muted); font-size: 0.75rem; }

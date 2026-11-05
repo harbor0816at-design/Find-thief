@@ -1,0 +1,60 @@
+<page-meta root-font-size="{{rootFs}}"></page-meta>
+<view class="wrap">
+  <view wx:if="{{loading}}" class="loading">正在读取…</view>
+  <view wx:elif="{{err}}" class="empty"><view class="em-title">{{err}}</view><view class="btn btn-sun" bindtap="back">返回地图</view></view>
+  <block wx:else>
+    <view class="hero card">
+      <view class="hero-top">
+        <image class="hero-pin" src="{{icon}}" mode="aspectFit"></image>
+        <view class="hero-main">
+          <view class="name">{{place.name}}</view>
+          <view class="addr">{{place.country}} · {{place.city}}</view>
+        </view>
+      </view>
+      <view class="badges">
+        <text class="badge {{place.status}}">{{statusText}}</text>
+        <text wx:for="{{place.types}}" wx:key="*this" class="badge">{{item}}</text>
+        <text class="badge sun">{{place.count}} 条记录</text>
+      </view>
+      <view wx:if="{{place.names.length > 1}}" class="note">此处合并了同一位置附近的多个地名：{{namesText}}</view>
+      <view wx:if="{{place.appealState === 'pending'}}" class="note blue">该地点已有申诉，管理员正在核对来源。</view>
+      <view wx:if="{{appeal && appeal.decision}}" class="note">申诉结果（{{appeal.label}}）：{{appeal.decision}}</view>
+    </view>
+
+    <view class="review card">
+      <view class="rv-hd">
+        <view>
+          <view class="rv-title">参与审查</view>
+          <view class="rv-sub">去过这里？帮其他人判断一下</view>
+        </view>
+        <view class="ring-dot" style="background:{{ringColor}}"></view>
+      </view>
+      <view class="rv-btns">
+        <view class="vote {{myVote === 'agree' ? 'on' : ''}}" data-v="agree" bindtap="vote"><text class="v-n">{{place.agree}}</text><text>我也遇到过</text></view>
+        <view class="vote no {{myVote === 'disagree' ? 'on' : ''}}" data-v="disagree" bindtap="vote"><text class="v-n">{{place.disagree}}</text><text>不认同</text></view>
+      </view>
+      <view class="rv-foot">已有 {{place.reviews}} 人参与审查 · 外圈颜色随人数变化</view>
+    </view>
+
+    <view class="recs card">
+      <view class="sec-title">记录与出处</view>
+      <view wx:for="{{records}}" wx:key="index" class="rec">
+        <view class="rec-meta">
+          <text class="rec-date">{{item.date || '日期未披露'}}</text>
+          <text class="badge {{item.adminVerdict ? 'admin' : 'traveler'}}">{{item.adminVerdict ? '管理员判定' : '未经警方确认'}}</text>
+        </view>
+        <view class="rec-tags">{{item.type}}<block wx:if="{{item.item}}"> · {{item.item}}</block><block wx:if="{{item.evText}}"> · {{item.evText}}</block><block wx:if="{{item.count > 1}}"> · 共 {{item.count}} 条</block></view>
+        <view class="rec-sum">{{item.summary}}</view>
+        <view wx:if="{{item.sourceName}}" class="rec-src">来源：{{item.sourceName}}<text wx:if="{{item.sourceUrl}}" class="copy" data-u="{{item.sourceUrl}}" bindtap="copy">复制链接</text></view>
+        <view wx:if="{{item.caveat}}" class="rec-cav">{{item.caveat}}</view>
+      </view>
+    </view>
+    <view class="safe-space"></view>
+  </block>
+</view>
+
+<view wx:if="{{place}}" class="bar">
+  <view class="b-small" bindtap="navigate"><text class="b-ic">➤</text><text>导航</text></view>
+  <view class="b-small" bindtap="appealIt"><text class="b-ic">✎</text><text>申诉</text></view>
+  <view class="btn btn-sun b-main" hover-class="btn-hover" bindtap="report">我也在这被偷过</view>
+</view>

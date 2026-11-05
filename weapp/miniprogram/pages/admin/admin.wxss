@@ -1,0 +1,19 @@
+.wrap { padding-top: 24rpx; }
+.tabs { display: flex; gap: 12rpx; background: #fff; border: 3rpx solid var(--ink); border-radius: 26rpx; padding: 8rpx; margin-bottom: 30rpx; }
+.tb { flex: 1; text-align: center; padding: 14rpx 0; border-radius: 18rpx; font-weight: 800; font-size: 0.82rem; color: #4A4E6B; }
+.tb.on { background: var(--sun); color: var(--ink); font-weight: 900; }
+.it { padding: 28rpx 30rpx; margin-bottom: 34rpx; }
+.it-hd { display: flex; justify-content: space-between; align-items: flex-start; gap: 16rpx; }
+.it-name { font-weight: 900; font-size: 1rem; }
+.it-meta { color: var(--brand); font-weight: 700; font-size: 0.75rem; margin-top: 8rpx; }
+.it-detail { font-size: 0.88rem; line-height: 1.7; margin-top: 12rpx; color: #33365A; }
+.it-imgs { display: flex; gap: 14rpx; margin-top: 14rpx; }
+.it-imgs image { width: 150rpx; height: 150rpx; border-radius: 18rpx; }
+.label { margin-top: 26rpx; margin-bottom: 12rpx; font-size: 0.85rem; }
+.textarea.sm { height: 170rpx; }
+.mt { margin-top: 20rpx; }
+.chk { display: flex; align-items: center; gap: 14rpx; margin-top: 22rpx; font-size: 0.85rem; font-weight: 700; }
+.chk .box { width: 36rpx; height: 36rpx; border-radius: 10rpx; border: 3rpx solid var(--ink); display: flex; align-items: center; justify-content: center; font-size: 0.7rem; font-weight: 900; }
+.chk .box.on { background: var(--sun); }
+.acts { display: flex; gap: 20rpx; margin-top: 26rpx; }
+.acts .btn { flex: 1; }

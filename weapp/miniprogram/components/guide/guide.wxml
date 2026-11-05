@@ -1,0 +1,109 @@
+<view wx:if="{{show}}" class="g-mask" catchtouchmove="noop" bindtap="close"></view>
+<view wx:if="{{show}}" class="g-box">
+  <view class="g-hd">
+    <view>
+      <view class="g-title">使用说明</view>
+      <view class="g-sub">地图标记、颜色与完整操作指南</view>
+    </view>
+    <view class="g-min" bindtap="close"><view class="bar"></view></view>
+  </view>
+
+  <scroll-view scroll-y class="g-body" enhanced show-scrollbar="{{false}}">
+    <view class="notice">
+      <view class="n-title">使用前须知</view>
+      <view class="n-text">小偷地图汇集欧洲各地有出处的失窃记录：警方通报、官方开放数据、媒体报道，以及经管理员审核的游客上报，帮你出发前了解哪里需要多留心。</view>
+      <view class="n-li">游客上报只代表上报人的经历，不代表警方或平台作出的事实认定。</view>
+      <view class="n-li">审查人数表示参与判断的用户数量，不代表专业鉴定人数。</view>
+      <view class="n-li">记录多少不等于遇窃概率，人多的景点记录自然更多。</view>
+      <view class="n-li">信息仅供参考，无法保证绝对真实；遇到危险请先拨打 112。</view>
+    </view>
+
+    <!-- 1 -->
+    <view class="sec">
+      <view class="sec-hd"><view class="num">1</view><text>地图标记与颜色说明</text></view>
+      <view class="key">先看图钉中心判断「是什么事」，再看图钉颜色判断「谁认定的」，最后看外圈颜色了解「多少人参与了审查」。</view>
+
+      <view class="h4">图钉中心表示什么</view>
+      <view class="leg"><image src="/images/pins/pick-admin-0.png"></image><view><view class="lt">扒窃</view><view class="ld">没察觉就被掏走：口袋、包、桌上的手机、行李</view></view></view>
+      <view class="leg"><image src="/images/pins/snatch-admin-0.png"></image><view><view class="lt">抢夺</view><view class="ld">当面抢：飞车抢包、抢手机、扯项链</view></view></view>
+      <view class="leg"><image src="/images/pins/scam-admin-0.png"></image><view><view class="lt">诈骗套路</view><view class="ld">签名请愿、送手环、假警察查证件、帮你买票等</view></view></view>
+
+      <view class="h4">图钉颜色表示什么</view>
+      <view class="leg"><image src="/images/pins/pick-admin-0.png"></image><view><view class="lt">红色 · 管理员判定</view><view class="ld">警方通报、警方开放数据，或管理员核实过证据的上报</view></view></view>
+      <view class="leg"><image src="/images/pins/pick-traveler-0.png"></image><view><view class="lt">珊瑚色 · 未经警方确认</view><view class="ld">媒体报道或游客自述，已审核脱敏但没有硬证据</view></view></view>
+      <view class="leg"><image src="/images/pins/pick-doubt-0.png"></image><view><view class="lt">橙色 · 存疑</view><view class="ld">被标记方申诉后，管理员认为信息需要打折看待</view></view></view>
+      <view class="leg"><image src="/images/pins/pick-appeal-0.png"></image><view><view class="lt">半蓝 · 申诉处理中</view><view class="ld">被标记方已申诉，管理员正在核对来源</view></view></view>
+
+      <view class="h4">图钉外圈颜色表示什么</view>
+      <view class="rings">
+        <view wx:for="{{rings}}" wx:key="range" class="ring"><image src="/images/pins/pick-admin-{{index}}.png"></image><text>{{item.range}}</text></view>
+      </view>
+      <view class="small">外圈颜色代表在地点详情里点过「我也遇到过 / 不认同」的人数。人数越多，说明关注的人越多，不代表越危险。</view>
+    </view>
+
+    <!-- 2 -->
+    <view class="sec">
+      <view class="sec-hd"><view class="num">2</view><text>小程序使用指南</text></view>
+      <view class="step"><view class="sn">1</view><view><view class="st">选城市、看附近</view><view class="sd">顶部选择城市，地图会跳到市中心。拖动和缩放地图，下方列表只显示当前地图范围内的地点。</view></view></view>
+      <view class="step"><view class="sn">2</view><view><view class="st">搜索景点或车站</view><view class="sd">输入景点、车站、酒店名称后点「搜索」。搜不到时，直接点击地图上的地点名称。</view></view></view>
+      <view class="step"><view class="sn">3</view><view><view class="st">按类别筛选</view><view class="sd">地图顶部的「扒窃 / 抢夺 / 诈骗套路」开关可以单独关闭，地图和列表同时更新。</view></view></view>
+      <view class="step"><view class="sn">4</view><view><view class="st">查看详情和出处</view><view class="sd">点图钉或列表进入详情，每条记录都写明日期、被偷物品、证据和来源，可以复制来源链接自行核对。</view></view></view>
+      <view class="step"><view class="sn">5</view><view><view class="st">参与审查</view><view class="sd">去过这个地方？在详情里点「我也遇到过」或「不认同」，帮助其他人判断。每人每个地点算一票，可以改。</view></view></view>
+      <view class="step"><view class="sn">6</view><view><view class="st">上报你的遭遇</view><view class="sd">点击地图上的位置或详情里的「我也被偷过」，填写类型、物品、日期和经过，可附 3 张证据图。提交后需要管理员审核才会上图。</view></view></view>
+      <view class="step"><view class="sn">7</view><view><view class="st">查看审核结果</view><view class="sd">「我的 → 我提交的证据」可以看到审核状态。证据图片只有你和管理员能看到。</view></view></view>
+      <view class="step"><view class="sn">8</view><view><view class="st">商家与场所申诉</view><view class="sd">被标记的酒店、餐厅、商铺认为信息有误，可以在「申诉」里提交材料，处理期间图钉显示半蓝。</view></view></view>
+    </view>
+
+    <view class="sec">
+      <view class="h4 mt0">上报审核规则</view>
+      <view class="li">只接受亲身经历或亲眼所见，转述他人经历请注明。</view>
+      <view class="li">不要填写任何人的姓名、电话、车牌或照片中的人脸，公开内容由管理员改写脱敏后发布。</view>
+      <view class="li">有报警回执、监控视频的上报，管理员核实后可标为「管理员判定」。</view>
+      <view class="li">恶意标记、广告、与失窃无关的内容会被驳回；多次违规将限制提交。</view>
+    </view>
+
+    <!-- 3 -->
+    <view class="sec">
+      <view class="sec-hd"><view class="num">3</view><text>常见扒窃手法</text></view>
+      <view class="trick"><view class="tt">地铁门口挤人</view><view class="td">车门快关时几个人突然挤上来又下车，钱包和手机就在这几秒被拿走。罗马、巴黎、巴塞罗那地铁最常见。</view></view>
+      <view class="trick"><view class="tt">桌上手机</view><view class="td">露天咖啡座把手机放桌上，有人拿着地图或传单盖住手机「问路」，拿开时手机一起被带走。</view></view>
+      <view class="trick"><view class="tt">签名请愿</view><view class="td">自称为聋哑人或慈善机构募捐，让你签名，同伴趁机掏包，或签完后强要捐款。</view></view>
+      <view class="trick"><view class="tt">送手环、送玫瑰</view><view class="td">先把手环系到你手腕上或塞一枝花，再索要高价，围住你的人顺手掏包。</view></view>
+      <view class="trick"><view class="tt">假警察查证件</view><view class="td">便衣自称警察要检查钱包和护照，「检查」后现金和卡已经少了。真警察不会要求查看你的钱包现金。</view></view>
+      <view class="trick"><view class="tt">飞车抢夺</view><view class="td">摩托车或电动车从身后经过，抢走挎在外侧的包或拿在手里的手机，那不勒斯、巴塞罗那较多见。</view></view>
+    </view>
+
+    <!-- 4 -->
+    <view class="sec">
+      <view class="sec-hd"><view class="num">4</view><text>怎么防</text></view>
+      <view class="li">手机不放桌上、不放后裤袋；拍照时手机挂绳绕手腕。</view>
+      <view class="li">包背在身前，拉链朝内；人多时用手按住包口。</view>
+      <view class="li">护照原件放酒店保险箱，随身带复印件或电子照片。</view>
+      <view class="li">现金和银行卡分开放，备一张不常用的卡。</view>
+      <view class="li">陌生人主动搭讪、问路、要签名时，礼貌拒绝并离开。</view>
+      <view class="li">靠近地铁门、闸机、扶梯口时提高警惕，这些是下手最多的位置。</view>
+    </view>
+
+    <!-- 5 -->
+    <view class="sec">
+      <view class="sec-hd"><view class="num">5</view><text>被偷后怎么处理</text></view>
+      <view class="step"><view class="sn">!</view><view><view class="st">有危险先报警</view><view class="sd">欧盟各国及英国通用紧急电话 112，可接通警察、急救和消防。</view></view></view>
+      <view class="step"><view class="sn">1</view><view><view class="st">手机</view><view class="sd">用另一台设备远程锁定和定位（「查找」功能），联系国内运营商挂失停机，修改微信、支付宝等支付密码。</view></view></view>
+      <view class="step"><view class="sn">2</view><view><view class="st">银行卡</view><view class="sd">立即在银行 App 冻结，或拨打卡背面的境外挂失电话。</view></view></view>
+      <view class="step"><view class="sn">3</view><view><view class="st">报案取证明</view><view class="sd">到当地警局报案，拿到报案证明（意大利 Denuncia、法国 Récépissé de plainte、西班牙 Denuncia）。这是补证件和保险理赔的关键材料，尽量当天办理。</view></view></view>
+      <view class="step"><view class="sn">4</view><view><view class="st">护照</view><view class="sd">带上报案证明、照片和护照复印件，联系中国驻当地使领馆补办旅行证件。外交部全球领事保护与服务应急热线：+86-10-12308。</view></view></view>
+      <view class="step"><view class="sn">5</view><view><view class="st">保险理赔</view><view class="sd">保留报案证明、购物凭证和机票行程单，回国后按保险公司要求提交。</view></view></view>
+      <view class="call" bindtap="call112">一键拨打 112</view>
+    </view>
+
+    <!-- 6 -->
+    <view class="sec">
+      <view class="sec-hd"><view class="num">6</view><text>资料来源与免责声明</text></view>
+      <view class="li">英国警方开放数据 data.police.uk（Open Government Licence v3.0）</view>
+      <view class="li">各国警方通报与公开报道（每条记录在详情中附出处）</view>
+      <view class="li">经管理员审核、脱敏后的游客上报</view>
+      <view class="small">本小程序不提供执法服务，不对任何商家或场所作出违法认定。标记内容如有错误，被标记方可通过「申诉」申请复核。</view>
+    </view>
+    <view class="g-end"></view>
+  </scroll-view>
+</view>

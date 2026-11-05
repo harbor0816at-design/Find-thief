@@ -1,0 +1,81 @@
+/* 小偷地图 · 全局样式
+   视觉：贴纸感（墨蓝描边 + 实心投影）、电光紫主色、阳光黄强调，比床虱地图更年轻。
+   文字一律用 rem，配合 page-meta 实现「字号设置」。 */
+page {
+  --bg: #F7F6FF;
+  --card: #FFFFFF;
+  --ink: #1B1D3A;
+  --muted: #8B8FA8;
+  --line: #ECEAF6;
+  --brand: #6C5CE7;
+  --brand-2: #8E7CFF;
+  --brand-soft: #EFECFF;
+  --sun: #FFD43B;
+  --sun-soft: #FFF6CC;
+  --admin: #E8384F;
+  --traveler: #FF7A59;
+  --doubt: #FFAA00;
+  --appeal: #3BA3FF;
+  --mint: #19B394;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: -apple-system, "PingFang SC", "Helvetica Neue", "Microsoft YaHei", sans-serif;
+  font-size: 1rem;
+  line-height: 1.5;
+}
+view, text, input, textarea, button { box-sizing: border-box; }
+
+.wrap { padding: 0 32rpx 48rpx; }
+.card { background: var(--card); border: 3rpx solid var(--ink); border-radius: 36rpx; box-shadow: 0 8rpx 0 var(--ink); }
+.soft { background: var(--card); border-radius: 32rpx; box-shadow: 0 6rpx 24rpx rgba(60, 50, 140, 0.08); }
+
+/* 页面大标题（自定义导航页） */
+.page-hd { display: flex; align-items: center; justify-content: space-between; padding: 0 0 28rpx; }
+.page-title { font-size: 2rem; font-weight: 900; letter-spacing: 0.08em; color: var(--ink); }
+
+/* 按钮 */
+.btn { display: flex; align-items: center; justify-content: center; height: 92rpx; border-radius: 999rpx; font-weight: 900; font-size: 1rem; border: 3rpx solid var(--ink); box-shadow: 0 6rpx 0 var(--ink); background: var(--card); color: var(--ink); padding: 0 32rpx; }
+.btn::after { border: none; }
+.btn-brand { background: var(--brand); color: #fff; }
+.btn-sun { background: var(--sun); color: var(--ink); }
+.btn-ghost { background: var(--brand-soft); color: var(--brand); border-color: var(--brand); box-shadow: none; }
+.btn[disabled] { opacity: 0.55; }
+.btn-hover { transform: translateY(4rpx); box-shadow: 0 2rpx 0 var(--ink); }
+
+/* 选择小块 */
+.chips { display: flex; flex-wrap: wrap; gap: 16rpx; }
+.chip { padding: 12rpx 26rpx; border-radius: 999rpx; border: 3rpx solid var(--line); background: #fff; font-size: 0.875rem; font-weight: 700; color: #4A4E6B; }
+.chip.on { border-color: var(--ink); background: var(--sun); color: var(--ink); box-shadow: 0 4rpx 0 var(--ink); }
+
+/* 状态徽章 */
+.badge { display: inline-flex; align-items: center; padding: 4rpx 18rpx; border-radius: 999rpx; font-size: 0.75rem; font-weight: 800; background: #F1F1F7; color: #4A4E6B; }
+.badge.admin { background: #FFE5E9; color: var(--admin); }
+.badge.traveler { background: #FFEDE6; color: #D9562F; }
+.badge.doubt { background: #FFF2D6; color: #B07400; }
+.badge.appeal { background: #E2F0FF; color: #1F7AD6; }
+.badge.ok { background: #DDF7EF; color: #0E8C72; }
+.badge.sun { background: var(--sun); color: var(--ink); }
+
+/* 表单 */
+.field { margin-top: 32rpx; }
+.label { font-weight: 900; font-size: 0.95rem; margin-bottom: 14rpx; display: flex; align-items: center; justify-content: space-between; }
+.label .hint { font-weight: 500; font-size: 0.75rem; color: var(--muted); }
+.input, .textarea, .picker { width: 100%; background: #FBFAFF; border: 3rpx solid var(--line); border-radius: 24rpx; padding: 22rpx 24rpx; font-size: 0.95rem; color: var(--ink); }
+.textarea { height: 240rpx; line-height: 1.6; }
+.ph { color: #B4B6C8; }
+.tip { font-size: 0.75rem; color: var(--muted); margin-top: 10rpx; line-height: 1.6; }
+.consent { display: flex; align-items: flex-start; gap: 14rpx; margin-top: 32rpx; font-size: 0.8rem; color: #5B5F7A; line-height: 1.6; }
+.consent .box { flex: none; width: 36rpx; height: 36rpx; border-radius: 10rpx; border: 3rpx solid var(--ink); margin-top: 4rpx; display: flex; align-items: center; justify-content: center; font-size: 0.7rem; font-weight: 900; }
+.consent .box.on { background: var(--sun); }
+.link { color: var(--brand); font-weight: 800; }
+
+/* 底部弹层 */
+.mask { position: fixed; left: 0; right: 0; top: 0; bottom: 0; background: rgba(27, 29, 58, 0.45); z-index: 900; }
+.sheet { position: fixed; left: 0; right: 0; bottom: 0; z-index: 901; background: #fff; border-radius: 44rpx 44rpx 0 0; border-top: 3rpx solid var(--ink); padding: 20rpx 36rpx calc(36rpx + env(safe-area-inset-bottom)); }
+.grip { width: 80rpx; height: 10rpx; border-radius: 6rpx; background: #DCDCEA; margin: 0 auto 20rpx; }
+.sheet-title { font-size: 1.25rem; font-weight: 900; margin-bottom: 8rpx; }
+
+/* 空状态 */
+.empty { padding: 60rpx 0 40rpx; text-align: center; color: var(--muted); font-size: 0.875rem; }
+.empty .em-title { color: var(--ink); font-size: 1.15rem; font-weight: 900; margin: 20rpx 0 28rpx; }
+.loading { text-align: center; color: var(--muted); font-size: 0.85rem; padding: 40rpx 0; }

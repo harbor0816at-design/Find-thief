@@ -1,0 +1,76 @@
+<page-meta root-font-size="{{rootFs}}"></page-meta>
+<view class="wrap">
+  <view class="tabs">
+    <view class="tb {{tab === 'r' ? 'on' : ''}}" data-t="r" bindtap="setTab">待审上报 {{reports.length}}</view>
+    <view class="tb {{tab === 'a' ? 'on' : ''}}" data-t="a" bindtap="setTab">待处理申诉 {{appeals.length}}</view>
+    <view class="tb {{tab === 'd' ? 'on' : ''}}" data-t="d" bindtap="setTab">数据</view>
+  </view>
+  <view wx:if="{{loading}}" class="loading">正在读取…</view>
+
+  <!-- 上报 -->
+  <block wx:if="{{tab === 'r' && !loading}}">
+    <view wx:if="{{!reports.length}}" class="empty">没有待审核的上报</view>
+    <view wx:for="{{reports}}" wx:key="id" class="it card">
+      <view class="it-hd"><text class="it-name">{{item.city}} · {{item.placeName}}</text><text class="badge {{item.secCheck === 'pass' ? 'ok' : 'doubt'}}">内容安全：{{item.secCheck}}</text></view>
+      <view class="it-meta">{{item.type}} · {{item.item}} · {{item.date}} {{item.slot}} · {{item.evText}}</view>
+      <view class="it-meta">坐标 {{item.lat}}, {{item.lon}}<text wx:if="{{item.placeId}}"> · 合并到已有地点</text></view>
+      <view class="it-detail">{{item.detail}}</view>
+      <view wx:if="{{item.imageUrls.length}}" class="it-imgs"><image wx:for="{{item.imageUrls}}" wx:for-item="u" wx:key="*this" src="{{u}}" mode="aspectFill" data-src="{{u}}" data-all="{{item.imageUrls}}" bindtap="preview"></image></view>
+
+      <view class="label">公开描述（10–200 字，不含姓名电话）</view>
+      <textarea class="textarea sm" value="{{edit[item.id].summary}}" maxlength="200" data-id="{{item.id}}" data-f="summary" bindinput="onEdit" placeholder="用第三人称改写，如：游客在地铁 A 线上车时被多人挤到门边，外套口袋里的手机被偷。" placeholder-class="ph"></textarea>
+      <view class="chips mt">
+        <view wx:for="{{types}}" wx:for-item="t" wx:key="*this" class="chip {{edit[item.id].type === t ? 'on' : ''}}" data-id="{{item.id}}" data-f="type" data-v="{{t}}" bindtap="setEdit">{{t}}</view>
+      </view>
+      <view class="chk" data-id="{{item.id}}" bindtap="toggleVerdict"><view class="box {{edit[item.id].verdict ? 'on' : ''}}">{{edit[item.id].verdict ? '✓' : ''}}</view>证据已核实，标为「管理员判定」</view>
+      <input class="input mt" value="{{edit[item.id].reason}}" data-id="{{item.id}}" data-f="reason" bindinput="onEdit" placeholder="驳回原因（驳回时填写，会告知提交人）" placeholder-class="ph" />
+      <view class="acts">
+        <view class="btn btn-brand" data-id="{{item.id}}" bindtap="approve">通过并上图</view>
+        <view class="btn" data-id="{{item.id}}" bindtap="reject">驳回</view>
+      </view>
+    </view>
+  </block>
+
+  <!-- 申诉 -->
+  <block wx:if="{{tab === 'a' && !loading}}">
+    <view wx:if="{{!appeals.length}}" class="empty">没有待处理的申诉</view>
+    <view wx:for="{{appeals}}" wx:key="id" class="it card">
+      <view class="it-hd"><text class="it-name">{{item.city}} · {{item.placeName}}</text><text class="badge appeal">{{item.reason}}</text></view>
+      <view class="it-detail">{{item.detail}}</view>
+      <view wx:if="{{item.contact}}" class="it-meta">联系：{{item.contact}}</view>
+      <view wx:if="{{item.imageUrls.length}}" class="it-imgs"><image wx:for="{{item.imageUrls}}" wx:for-item="u" wx:key="*this" src="{{u}}" mode="aspectFill" data-src="{{u}}" data-all="{{item.imageUrls}}" bindtap="preview"></image></view>
+      <view class="link mt" data-id="{{item.placeId}}" bindtap="openPlace">查看该地点的记录 ›</view>
+      <view class="label">处理结果</view>
+      <view class="chips">
+        <view wx:for="{{results}}" wx:for-item="r" wx:key="k" class="chip {{edit[item.id].result === r.k ? 'on' : ''}}" data-id="{{item.id}}" data-f="result" data-v="{{r.k}}" bindtap="setEdit">{{r.n}}</view>
+      </view>
+      <view class="label">管理员确认信息（公开，可多选）</view>
+      <view class="chips">
+        <view wx:for="{{tags}}" wx:for-item="t" wx:key="*this" class="chip {{edit[item.id].tagMap[t] ? 'on' : ''}}" data-id="{{item.id}}" data-v="{{t}}" bindtap="toggleTag">{{t}}</view>
+      </view>
+      <view class="label">公开处理说明（4–160 字）</view>
+      <textarea class="textarea sm" value="{{edit[item.id].decision}}" maxlength="160" data-id="{{item.id}}" data-f="decision" bindinput="onEdit" placeholder="例如：已核对原报道，事发地点为相邻街区，撤下该标记。" placeholder-class="ph"></textarea>
+      <view class="btn btn-brand mt" data-id="{{item.id}}" bindtap="decide">提交处理结果</view>
+    </view>
+  </block>
+
+  <!-- 数据 -->
+  <block wx:if="{{tab === 'd' && !loading}}">
+    <view class="it card">
+      <view class="it-name">首次部署</view>
+      <view class="it-detail">创建数据库集合（places、reports、votes、appeals、likes、admins）。已存在的集合不会受影响。</view>
+      <view class="btn mt" bindtap="init">初始化数据库</view>
+    </view>
+    <view class="it card">
+      <view class="it-name">同步官方数据</view>
+      <view class="it-detail">把云函数里打包的已核验数据（警方通报、媒体报道、英国警方开放数据）写入地图。游客上报的记录会保留。数据更新后重新部署云函数再点一次。</view>
+      <view class="btn btn-sun mt" bindtap="sync">{{syncing ? '正在同步…' : '同步官方数据'}}</view>
+      <view wx:if="{{syncResult}}" class="tip">{{syncResult}}</view>
+    </view>
+    <view class="it card">
+      <view class="it-name">隐私清理</view>
+      <view class="it-detail">删除处理完成满 180 天的原始描述、证据图片和申诉联系方式（隐私政策承诺）。建议每月点一次。</view>
+      <view class="btn mt" bindtap="cleanup">清理过期材料</view>
+    </view>
+  </block>
+</view>

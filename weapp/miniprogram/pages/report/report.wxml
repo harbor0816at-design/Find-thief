@@ -1,0 +1,73 @@
+<page-meta root-font-size="{{rootFs}}"></page-meta>
+<view class="wrap">
+  <view wx:if="{{done}}" class="done card">
+    <view class="done-ic">✓</view>
+    <view class="done-title">已提交，谢谢你！</view>
+    <view class="done-text">管理员审核通过后，这条记录会以脱敏后的文字出现在地图上。证据图片只有你和管理员能看到。</view>
+    <view class="btn btn-sun" hover-class="btn-hover" bindtap="toMine">查看审核进度</view>
+    <view class="btn" hover-class="btn-hover" style="margin-top:24rpx" bindtap="back">回到地图</view>
+  </view>
+
+  <block wx:else>
+    <view class="intro">把你遇到的情况告诉大家。审核通过后才会上图，你的身份不会公开。</view>
+
+    <view class="field">
+      <view class="label">在哪里<text class="hint">{{city}}</text></view>
+      <input class="input" value="{{placeName}}" maxlength="60" placeholder="地点名称，如：Termini 火车站 B 线站台" placeholder-class="ph" bindinput="onName" />
+      <view class="loc" bindtap="chooseLoc">
+        <text class="loc-ic">◎</text>
+        <text class="loc-t">{{lat ? '已选位置 ' + latText + ', ' + lonText : '在地图上选择位置'}}</text>
+        <text class="loc-a">{{lat ? '重新选择' : '去选择'}}</text>
+      </view>
+    </view>
+
+    <view class="field">
+      <view class="label">遇到了什么</view>
+      <view class="types">
+        <view wx:for="{{types}}" wx:key="key" class="type {{type === item.key ? 'on' : ''}}" data-v="{{item.key}}" bindtap="pickType">
+          <image src="{{item.icon}}" mode="aspectFit"></image>
+          <view><view class="t-name">{{item.key}}</view><view class="t-desc">{{item.desc}}</view></view>
+        </view>
+      </view>
+    </view>
+
+    <view class="field">
+      <view class="label">被偷了什么</view>
+      <view class="chips"><view wx:for="{{items}}" wx:key="*this" class="chip {{item === itemSel ? 'on' : ''}}" data-v="{{item}}" bindtap="pickItem">{{item}}</view></view>
+    </view>
+
+    <view class="field">
+      <view class="label">什么时候<text class="hint">公开时只显示到月份</text></view>
+      <picker mode="date" value="{{date}}" end="{{today}}" start="{{minDate}}" bindchange="onDate">
+        <view class="picker {{date ? '' : 'ph'}}">{{date || '选择日期'}}</view>
+      </picker>
+      <view class="chips" style="margin-top:18rpx"><view wx:for="{{slots}}" wx:key="*this" class="chip {{item === slot ? 'on' : ''}}" data-v="{{item}}" bindtap="pickSlot">{{item}}</view></view>
+    </view>
+
+    <view class="field">
+      <view class="label">有什么证据<text class="hint">可多选</text></view>
+      <view class="chips"><view wx:for="{{evOpts}}" wx:key="key" class="chip {{item.on ? 'on' : ''}}" data-i="{{index}}" bindtap="pickEv">{{item.key}}</view></view>
+    </view>
+
+    <view class="field">
+      <view class="label">经过<text class="hint">{{detail.length}}/500</text></view>
+      <textarea class="textarea" value="{{detail}}" maxlength="500" placeholder="例如：上地铁时三四个人在门口挤，下车后发现外套口袋里的手机没了。请不要写任何人的姓名、电话或长相。" placeholder-class="ph" bindinput="onDetail"></textarea>
+    </view>
+
+    <view class="field">
+      <view class="label">证据图片<text class="hint">最多 3 张 · 仅你和管理员可见</text></view>
+      <view class="imgs">
+        <view wx:for="{{images}}" wx:key="*this" class="img"><image src="{{item}}" mode="aspectFill"></image><view class="img-x" data-i="{{index}}" catchtap="delImg">×</view></view>
+        <view wx:if="{{images.length < 3}}" class="img add" bindtap="addImg">+</view>
+      </view>
+      <view class="tip">可以上传报警回执、聊天记录截图等。请先遮住证件号、人脸等个人信息。</view>
+    </view>
+
+    <view class="consent" bindtap="toggleConsent">
+      <view class="box {{consent ? 'on' : ''}}">{{consent ? '✓' : ''}}</view>
+      <view>我确认内容是亲身经历或亲眼所见，并同意<text class="link" catchtap="openTerms">《用户协议》</text>和<text class="link" catchtap="openPrivacy">《隐私政策》</text></view>
+    </view>
+
+    <button class="btn btn-brand submit" hover-class="btn-hover" disabled="{{sending}}" bindtap="submit">{{sending ? '正在提交…' : '提交审核'}}</button>
+  </block>
+</view>

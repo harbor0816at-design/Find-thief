@@ -1,0 +1,63 @@
+<page-meta root-font-size="{{rootFs}}"></page-meta>
+<view class="wrap">
+  <view wx:if="{{done}}" class="done card">
+    <view class="done-ic">✓</view>
+    <view class="done-title">申诉已提交</view>
+    <view class="done-text">处理期间该地点的图钉会显示为「申诉处理中」。管理员核对来源后给出结论，结论会在「申诉」页公示。</view>
+    <view class="btn btn-sun" hover-class="btn-hover" bindtap="toList">查看申诉公示</view>
+  </view>
+
+  <block wx:else>
+    <view class="intro">适用于被标记的酒店、餐厅、商铺、景区等场所的管理方。申诉说明和联系方式只有管理员能看到。</view>
+
+    <view class="field">
+      <view class="label">被标记地点</view>
+      <view wx:if="{{placeId}}" class="picked">
+        <view><view class="pk-name">{{placeName}}</view><view class="pk-city">{{city}}</view></view>
+        <text class="pk-change" bindtap="clearPlace">更换</text>
+      </view>
+      <block wx:else>
+        <view class="find">
+          <picker mode="selector" range="{{cityNames}}" value="{{cityIdx}}" bindchange="onCity"><view class="f-city">{{city}} ▾</view></picker>
+          <input class="f-kw" value="{{kw}}" placeholder="输入地点名称搜索" placeholder-class="ph" confirm-type="search" bindinput="onKw" bindconfirm="find" />
+          <view class="f-btn" bindtap="find">搜索</view>
+        </view>
+        <view wx:if="{{finding}}" class="tip">正在搜索…</view>
+        <view wx:elif="{{searched && !found.length}}" class="tip">没有找到。请确认地点在地图上已被标记，或换个关键词。</view>
+        <view wx:for="{{found}}" wx:key="id" class="opt" data-i="{{index}}" bindtap="pick">
+          <text class="o-name">{{item.name}}</text><text class="o-city">{{item.city}} · {{item.count}} 条记录</text>
+        </view>
+      </block>
+    </view>
+
+    <view class="field">
+      <view class="label">申诉理由</view>
+      <view class="chips"><view wx:for="{{reasons}}" wx:key="*this" class="chip {{item === reason ? 'on' : ''}}" data-v="{{item}}" bindtap="pickReason">{{item}}</view></view>
+    </view>
+
+    <view class="field">
+      <view class="label">情况说明<text class="hint">{{detail.length}}/1000</text></view>
+      <textarea class="textarea" value="{{detail}}" maxlength="1000" placeholder="请说明哪条记录有误、依据是什么。可附可公开核实的链接（如更正报道、官方说明）。" placeholder-class="ph" bindinput="onDetail"></textarea>
+    </view>
+
+    <view class="field">
+      <view class="label">证明材料<text class="hint">最多 3 张 · 仅管理员可见</text></view>
+      <view class="imgs">
+        <view wx:for="{{images}}" wx:key="*this" class="img"><image src="{{item}}" mode="aspectFill"></image><view class="img-x" data-i="{{index}}" catchtap="delImg">×</view></view>
+        <view wx:if="{{images.length < 3}}" class="img add" bindtap="addImg">+</view>
+      </view>
+      <view class="tip">如营业执照、整改记录、警方说明等，请遮住无关的个人信息。</view>
+    </view>
+
+    <view class="field">
+      <view class="label">联系方式<text class="hint">选填 · 仅管理员可见</text></view>
+      <input class="input" value="{{contact}}" maxlength="100" placeholder="邮箱或电话，便于管理员核实" placeholder-class="ph" bindinput="onContact" />
+    </view>
+
+    <view class="consent" bindtap="toggleConsent">
+      <view class="box {{consent ? 'on' : ''}}">{{consent ? '✓' : ''}}</view>
+      <view>我是该场所的经营者或授权人员，并同意<text class="link" catchtap="openPrivacy">《隐私政策》</text>中关于申诉信息的处理方式</view>
+    </view>
+    <button class="btn btn-brand submit" hover-class="btn-hover" disabled="{{sending}}" bindtap="submit">{{sending ? '正在提交…' : '提交申诉'}}</button>
+  </block>
+</view>

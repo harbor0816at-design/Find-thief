@@ -1,0 +1,73 @@
+/* 标题栏 */
+.hd { display: flex; align-items: center; justify-content: space-between; gap: 16rpx; padding-bottom: 30rpx; }
+.brand { display: flex; align-items: baseline; flex-wrap: wrap; gap: 14rpx; min-width: 0; }
+.brand-name { font-size: 1.8rem; font-weight: 900; letter-spacing: 0.08em; color: var(--ink); white-space: nowrap; }
+.slogan { font-size: 0.82rem; font-weight: 900; letter-spacing: 0.1em; color: var(--brand); white-space: nowrap; background: linear-gradient(transparent 58%, var(--sun) 58%); padding: 0 4rpx; }
+.pill { flex: none; padding: 12rpx 22rpx; border-radius: 999rpx; border: 3rpx solid var(--ink); background: #fff; font-weight: 900; font-size: 0.85rem; box-shadow: 0 6rpx 0 var(--ink); }
+
+/* 搜索条 */
+.search { display: flex; align-items: center; gap: 12rpx; padding: 14rpx 14rpx 14rpx 26rpx; }
+.city { flex: none; }
+.city-in { display: flex; align-items: center; gap: 10rpx; padding-right: 18rpx; border-right: 3rpx solid var(--line); }
+.city-name { font-weight: 900; font-size: 1rem; max-width: 150rpx; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.caret { width: 0; height: 0; border: 10rpx solid transparent; border-top-color: var(--brand); margin-top: 10rpx; }
+.kw { flex: 1; min-width: 0; height: 72rpx; font-size: 0.92rem; }
+.sbtn { flex: none; padding: 16rpx 34rpx; border-radius: 999rpx; background: var(--sun); border: 3rpx solid var(--ink); font-weight: 900; font-size: 0.95rem; box-shadow: 0 5rpx 0 var(--ink); }
+.results { margin-top: 16rpx; overflow: hidden; }
+.res { padding: 22rpx 28rpx; border-bottom: 2rpx solid var(--line); display: flex; flex-direction: column; }
+.res-name { font-weight: 800; font-size: 0.95rem; }
+.res-sub { color: var(--muted); font-size: 0.75rem; margin-top: 4rpx; }
+.res-empty { padding: 24rpx 28rpx; color: var(--muted); font-size: 0.85rem; }
+
+/* 地图卡片 */
+.map-card { position: relative; margin-top: 34rpx; padding: 10rpx; border-radius: 44rpx; }
+.map { width: 100%; height: 900rpx; border-radius: 34rpx; display: block; }
+.toggles { position: absolute; top: 26rpx; left: 26rpx; right: 26rpx; display: flex; justify-content: space-around; align-items: center; background: rgba(255, 255, 255, 0.96); border-radius: 26rpx; padding: 14rpx 8rpx; border: 3rpx solid var(--ink); box-shadow: 0 5rpx 0 var(--ink); }
+.tg { display: flex; align-items: center; gap: 6rpx; }
+.tg-pin { width: 34rpx; height: 41rpx; }
+.tg-name { font-weight: 900; font-size: 0.82rem; white-space: nowrap; }
+.sw { width: 64rpx; height: 38rpx; border-radius: 999rpx; background: #D5D7E3; position: relative; margin-left: 4rpx; transition: background 0.15s; }
+.sw.on { background: var(--brand); }
+.knob { position: absolute; top: 5rpx; left: 5rpx; width: 28rpx; height: 28rpx; border-radius: 50%; background: #fff; transition: transform 0.15s; }
+.sw.on .knob { transform: translateX(26rpx); }
+.locate { position: absolute; right: 26rpx; bottom: 96rpx; width: 76rpx; height: 76rpx; border-radius: 24rpx; background: #fff; border: 3rpx solid var(--ink); box-shadow: 0 5rpx 0 var(--ink); display: flex; align-items: center; justify-content: center; font-size: 1.3rem; font-weight: 900; color: var(--brand); }
+.map-tip { position: absolute; left: 26rpx; bottom: 26rpx; max-width: calc(100% - 52rpx); display: flex; align-items: center; gap: 12rpx; background: rgba(255, 255, 255, 0.96); border-radius: 999rpx; padding: 10rpx 22rpx; font-size: 0.68rem; color: #4A4E6B; white-space: nowrap; overflow: hidden; }
+.map-tip .dot { flex: none; width: 14rpx; height: 14rpx; border-radius: 50%; background: var(--admin); }
+
+/* 列表 */
+.list { margin-top: 40rpx; padding: 34rpx 32rpx 12rpx; }
+.list-hd { display: flex; align-items: center; justify-content: space-between; gap: 16rpx; }
+.list-title { font-size: 1.22rem; font-weight: 900; }
+.count { flex: none; background: var(--sun); border: 3rpx solid var(--ink); border-radius: 999rpx; padding: 4rpx 22rpx; font-weight: 900; font-size: 0.9rem; }
+.list-status { color: var(--muted); font-size: 0.85rem; line-height: 1.7; padding: 22rpx 0 20rpx; }
+.row { display: flex; align-items: center; gap: 22rpx; padding: 28rpx 0; border-bottom: 2rpx solid var(--line); }
+.row:last-of-type { border-bottom: none; }
+.row-hover { opacity: 0.7; }
+.row-pin { flex: none; width: 66rpx; height: 79rpx; }
+.row-main { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 6rpx; }
+.row-name { font-weight: 900; font-size: 1.05rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.row-addr { color: var(--muted); font-size: 0.82rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.row-ev { color: var(--brand); font-weight: 800; font-size: 0.78rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.row-st { flex: none; display: flex; align-items: center; gap: 8rpx; font-weight: 900; font-size: 0.82rem; color: var(--admin); }
+.row-st.traveler { color: #D9562F; }
+.row-st.doubt { color: #B07400; }
+.row-st.appeal { color: #1F7AD6; }
+.arrow { width: 14rpx; height: 14rpx; border-top: 4rpx solid #B4B6C8; border-right: 4rpx solid #B4B6C8; transform: rotate(45deg); }
+.list-foot { text-align: center; color: #B4B6C8; font-size: 0.7rem; padding: 18rpx 0 12rpx; }
+
+/* 使用说明浮窗 */
+.guide-float { position: fixed; right: 28rpx; bottom: calc(28rpx + env(safe-area-inset-bottom)); z-index: 800; display: flex; align-items: center; gap: 20rpx; padding: 18rpx 18rpx 18rpx 22rpx; border-radius: 40rpx; }
+.gf-open { display: flex; align-items: center; gap: 20rpx; }
+.gf-q { width: 80rpx; height: 80rpx; border-radius: 50%; background: var(--brand); color: #fff; font-weight: 900; font-size: 1.5rem; display: flex; align-items: center; justify-content: center; border: 3rpx solid var(--ink); }
+.gf-title { font-weight: 900; font-size: 1.05rem; letter-spacing: 0.06em; }
+.gf-sub { color: var(--muted); font-size: 0.75rem; }
+.gf-x { width: 60rpx; height: 60rpx; border-radius: 50%; background: #F1F1F7; color: #8B8FA8; font-size: 1.2rem; display: flex; align-items: center; justify-content: center; }
+
+/* 点地图弹层 */
+.poi-sub { color: var(--muted); font-size: 0.85rem; margin-bottom: 28rpx; }
+.poi-acts { display: flex; flex-direction: column; gap: 22rpx; }
+
+/* 字号 */
+.fs-opts { display: flex; gap: 20rpx; margin-top: 24rpx; }
+.fs { flex: 1; height: 120rpx; border-radius: 28rpx; border: 3rpx solid var(--line); display: flex; align-items: center; justify-content: center; font-weight: 900; }
+.fs.on { border-color: var(--ink); background: var(--sun); box-shadow: 0 6rpx 0 var(--ink); }

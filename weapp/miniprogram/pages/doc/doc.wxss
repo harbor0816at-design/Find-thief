@@ -1,0 +1,7 @@
+.wrap { padding-top: 24rpx; }
+.doc { padding: 36rpx 34rpx; }
+.d-title { font-size: 1.4rem; font-weight: 900; }
+.d-date { color: var(--muted); font-size: 0.75rem; margin-top: 6rpx; }
+.d-sec { margin-top: 34rpx; }
+.d-h { font-weight: 900; font-size: 1rem; margin-bottom: 10rpx; }
+.d-p { font-size: 0.86rem; line-height: 1.8; color: #33365A; margin-top: 8rpx; }

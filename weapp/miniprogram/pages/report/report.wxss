@@ -1,0 +1,22 @@
+.wrap { padding-top: 24rpx; padding-bottom: calc(60rpx + env(safe-area-inset-bottom)); }
+.intro { background: var(--brand-soft); color: #3A2FA8; border-radius: 26rpx; padding: 22rpx 26rpx; font-size: 0.85rem; line-height: 1.6; font-weight: 700; }
+.loc { display: flex; align-items: center; gap: 14rpx; margin-top: 16rpx; padding: 20rpx 24rpx; border-radius: 24rpx; border: 3rpx dashed var(--brand); background: #fff; }
+.loc-ic { color: var(--brand); font-weight: 900; font-size: 1.1rem; }
+.loc-t { flex: 1; font-size: 0.85rem; color: #4A4E6B; }
+.loc-a { color: var(--brand); font-weight: 900; font-size: 0.85rem; }
+.types { display: flex; flex-direction: column; gap: 16rpx; }
+.type { display: flex; align-items: center; gap: 20rpx; padding: 18rpx 22rpx; border-radius: 26rpx; border: 3rpx solid var(--line); background: #fff; }
+.type image { flex: none; width: 52rpx; height: 62rpx; }
+.type.on { border-color: var(--ink); background: var(--sun-soft); box-shadow: 0 6rpx 0 var(--ink); }
+.t-name { font-weight: 900; }
+.t-desc { font-size: 0.75rem; color: var(--muted); }
+.imgs { display: flex; gap: 18rpx; }
+.img { position: relative; width: 190rpx; height: 190rpx; border-radius: 24rpx; overflow: hidden; border: 3rpx solid var(--ink); }
+.img image { width: 100%; height: 100%; }
+.img.add { display: flex; align-items: center; justify-content: center; font-size: 2.4rem; color: var(--brand); border-style: dashed; border-color: var(--brand); background: #fff; }
+.img-x { position: absolute; top: 6rpx; right: 6rpx; width: 44rpx; height: 44rpx; border-radius: 50%; background: rgba(27, 29, 58, 0.75); color: #fff; display: flex; align-items: center; justify-content: center; }
+.submit { margin-top: 44rpx; width: 100%; }
+.done { padding: 60rpx 40rpx 44rpx; margin-top: 40rpx; text-align: center; }
+.done-ic { width: 120rpx; height: 120rpx; border-radius: 50%; background: var(--mint); color: #fff; font-size: 3rem; font-weight: 900; display: flex; align-items: center; justify-content: center; margin: 0 auto; border: 3rpx solid var(--ink); }
+.done-title { font-size: 1.4rem; font-weight: 900; margin-top: 28rpx; }
+.done-text { color: #5B5F7A; font-size: 0.88rem; line-height: 1.7; margin: 16rpx 0 40rpx; }

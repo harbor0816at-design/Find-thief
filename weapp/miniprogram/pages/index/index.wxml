@@ -1,0 +1,103 @@
+<page-meta root-font-size="{{rootFs}}"></page-meta>
+<view class="wrap" style="padding-top:{{navTop}}px">
+  <!-- 标题栏 -->
+  <view class="hd">
+    <view class="brand">
+      <text class="brand-name">小偷地图</text>
+      <text class="slogan">共建无扒之旅</text>
+    </view>
+    <view class="pill" hover-class="btn-hover" bindtap="openFont">字号设置</view>
+  </view>
+
+  <!-- 城市 + 搜索 -->
+  <view class="search card">
+    <picker class="city" mode="selector" range="{{cityLabels}}" value="{{cityIdx}}" bindchange="onCity">
+      <view class="city-in"><text class="city-name">{{cityName}}</text><text class="caret"></text></view>
+    </picker>
+    <input class="kw" value="{{kw}}" placeholder="输入景点、车站或酒店名称" placeholder-class="ph" confirm-type="search" bindinput="onKw" bindconfirm="onSearch" />
+    <view class="sbtn" hover-class="btn-hover" bindtap="onSearch">搜索</view>
+  </view>
+  <view class="results soft" wx:if="{{showResults}}">
+    <view wx:if="{{searching}}" class="res-empty">正在搜索…</view>
+    <view wx:elif="{{!results.length}}" class="res-empty">没有找到「{{kw}}」。可以换个写法，或直接点击地图中的地点名称。</view>
+    <view wx:for="{{results}}" wx:key="key" class="res" data-i="{{index}}" bindtap="pickResult">
+      <text class="res-name">{{item.name}}</text>
+      <text class="res-sub">{{item.sub}}</text>
+    </view>
+  </view>
+
+  <!-- 地图 -->
+  <view class="map-card card">
+    <map id="map" class="map" latitude="{{lat}}" longitude="{{lon}}" scale="{{scale}}" markers="{{markers}}"
+      show-location="{{showLoc}}" enable-poi="{{true}}" bindmarkertap="onMarker" bindregionchange="onRegion"
+      bindpoitap="onPoi" bindtap="onMapTap"></map>
+    <view class="toggles">
+      <view wx:for="{{toggles}}" wx:key="key" class="tg" data-k="{{item.key}}" bindtap="onToggle">
+        <image class="tg-pin" src="{{item.icon}}" mode="aspectFit"></image>
+        <text class="tg-name">{{item.key}}</text>
+        <view class="sw {{item.on ? 'on' : ''}}"><view class="knob"></view></view>
+      </view>
+    </view>
+    <view class="locate" hover-class="btn-hover" bindtap="locate">◎</view>
+    <view class="map-tip"><view class="dot"></view><text>可拖动缩放；搜索不可用时点击地图中的地点名称</text></view>
+  </view>
+
+  <!-- 当前区域已标记地点 -->
+  <view class="list card">
+    <view class="list-hd">
+      <text class="list-title">{{cityName}}当前区域已标记地点</text>
+      <text class="count">{{loading ? '—' : count + ' 处'}}</text>
+    </view>
+    <view wx:if="{{statusText}}" class="list-status">{{statusText}}</view>
+    <view wx:for="{{list}}" wx:key="id" class="row" data-id="{{item.id}}" bindtap="openPlace" hover-class="row-hover">
+      <image class="row-pin" src="{{item.icon}}" mode="aspectFit"></image>
+      <view class="row-main">
+        <text class="row-name">{{item.name}}</text>
+        <text class="row-addr">{{item.addr}}</text>
+        <text class="row-ev">{{item.evText}}</text>
+      </view>
+      <view class="row-st {{item.status}}"><text>{{item.mainType}} · {{item.statusText}}</text><text class="arrow"></text></view>
+    </view>
+    <view wx:if="{{list.length}}" class="list-foot">只显示当前地图范围内的地点 · 拖动地图自动更新</view>
+  </view>
+</view>
+
+<!-- 使用说明浮窗 -->
+<view class="guide-float card" wx:if="{{guideFloat}}">
+  <view class="gf-open" bindtap="openGuide">
+    <view class="gf-q">?</view>
+    <view><view class="gf-title">使用说明</view><view class="gf-sub">操作方法与被偷处理</view></view>
+  </view>
+  <view class="gf-x" catchtap="closeFloat">×</view>
+</view>
+
+<!-- 点击地图地点 -->
+<block wx:if="{{poi}}">
+  <view class="mask" bindtap="closePoi"></view>
+  <view class="sheet">
+    <view class="grip"></view>
+    <view class="sheet-title">{{poi.name}}</view>
+    <view class="poi-sub">{{poi.near ? '附近有已标记地点：' + poi.near.name : '这里暂时没有已标记记录'}}</view>
+    <view class="poi-acts">
+      <view wx:if="{{poi.near}}" class="btn btn-sun" hover-class="btn-hover" bindtap="openPoiNear">查看「{{poi.near.name}}」</view>
+      <view class="btn btn-brand" hover-class="btn-hover" bindtap="reportPoi">我在这里被偷过</view>
+      <view class="btn" hover-class="btn-hover" bindtap="navPoi">导航过去</view>
+    </view>
+  </view>
+</block>
+
+<!-- 字号设置 -->
+<block wx:if="{{fontShow}}">
+  <view class="mask" bindtap="closeFont"></view>
+  <view class="sheet">
+    <view class="grip"></view>
+    <view class="sheet-title">字号设置</view>
+    <view class="fs-opts">
+      <view wx:for="{{fontLevels}}" wx:key="key" class="fs {{fontKey === item.key ? 'on' : ''}}" data-k="{{item.key}}" bindtap="setFont">
+        <text style="font-size:{{item.size}}">{{item.name}}</text>
+      </view>
+    </view>
+  </view>
+</block>
+
+<guide show="{{guideShow}}" bind:close="closeGuide"></guide>

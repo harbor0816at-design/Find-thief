@@ -1,0 +1,11 @@
+.wrap { padding-top: 24rpx; }
+.intro { background: var(--brand-soft); color: #3A2FA8; border-radius: 26rpx; padding: 22rpx 26rpx; font-size: 0.82rem; line-height: 1.6; font-weight: 700; margin-bottom: 30rpx; }
+.rp { padding: 28rpx 30rpx; margin-bottom: 30rpx; }
+.rp-hd { display: flex; justify-content: space-between; align-items: flex-start; gap: 16rpx; }
+.rp-name { font-weight: 900; font-size: 1.05rem; }
+.rp-meta { color: var(--brand); font-weight: 800; font-size: 0.78rem; margin-top: 8rpx; }
+.rp-detail { font-size: 0.88rem; line-height: 1.7; margin-top: 12rpx; color: #33365A; }
+.rp-imgs { display: flex; gap: 14rpx; margin-top: 16rpx; }
+.rp-imgs image { width: 150rpx; height: 150rpx; border-radius: 18rpx; border: 2rpx solid var(--line); }
+.rp-why { margin-top: 14rpx; background: #FFEDE6; color: #B5431F; border-radius: 16rpx; padding: 12rpx 18rpx; font-size: 0.8rem; }
+.rp-foot { display: flex; justify-content: space-between; color: var(--muted); font-size: 0.75rem; margin-top: 16rpx; }

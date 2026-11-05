@@ -1,0 +1,43 @@
+{
+  "pages": [
+    "pages/index/index",
+    "pages/appeal/appeal",
+    "pages/me/me",
+    "pages/place/place",
+    "pages/report/report",
+    "pages/appeal-form/appeal-form",
+    "pages/my-reports/my-reports",
+    "pages/admin/admin",
+    "pages/doc/doc"
+  ],
+  "window": {
+    "navigationBarBackgroundColor": "#F7F6FF",
+    "navigationBarTextStyle": "black",
+    "navigationBarTitleText": "小偷地图",
+    "backgroundColor": "#F7F6FF",
+    "backgroundTextStyle": "dark"
+  },
+  "tabBar": {
+    "color": "#9AA0B4",
+    "selectedColor": "#6C5CE7",
+    "backgroundColor": "#FFFFFF",
+    "borderStyle": "white",
+    "list": [
+      { "pagePath": "pages/index/index", "text": "地点", "iconPath": "images/tab/place.png", "selectedIconPath": "images/tab/place-on.png" },
+      { "pagePath": "pages/appeal/appeal", "text": "申诉", "iconPath": "images/tab/appeal.png", "selectedIconPath": "images/tab/appeal-on.png" },
+      { "pagePath": "pages/me/me", "text": "我的", "iconPath": "images/tab/me.png", "selectedIconPath": "images/tab/me-on.png" }
+    ]
+  },
+  "permission": {
+    "scope.userLocation": {
+      "desc": "用于在地图上回到你所在的位置，查看附近的已标记地点"
+    }
+  },
+  "requiredPrivateInfos": ["getLocation", "chooseLocation"],
+  "usingComponents": {
+    "guide": "/components/guide/guide"
+  },
+  "style": "v2",
+  "sitemapLocation": "sitemap.json",
+  "lazyCodeLoading": "requiredComponents"
+}

@@ -1,0 +1,66 @@
+<page-meta root-font-size="{{rootFs}}"></page-meta>
+<view class="wrap" style="padding-top:{{navTop}}px">
+  <view class="page-hd"><text class="page-title">我的标注</text></view>
+  <view class="seg"><text class="seg-on">地点</text></view>
+
+  <view class="ev-row card" hover-class="btn-hover" bindtap="toMine">
+    <view class="ev-ic">✦</view>
+    <view class="ev-main"><view class="ev-t">我提交的证据</view><view class="ev-d">仅你和管理员可见 · 查看审核状态与结果</view></view>
+    <text class="arrow"></text>
+  </view>
+
+  <view class="stat card">
+    <view>
+      <view class="stat-n"><text class="n">{{me.placeCount}}</text><text class="u">处</text></view>
+      <view class="stat-l">曾标注地点<block wx:if="{{me.reportCount}}"> · 共提交 {{me.reportCount}} 条</block></view>
+    </view>
+    <image class="stat-pin" src="/images/pins/pick-admin-1.png" mode="aspectFit"></image>
+  </view>
+
+  <view wx:if="{{!me.placeCount}}" class="empty-card card">
+    <view class="em-art"><view class="em-bag"></view><view class="em-glass"></view></view>
+    <view class="em-title">还没有标注记录</view>
+    <view class="btn btn-sun em-btn" hover-class="btn-hover" bindtap="toHome">去首页搜索</view>
+  </view>
+
+  <view class="like-wrap">
+    <view class="like {{me.liked ? 'on' : ''}}" hover-class="btn-hover" bindtap="like"><text class="like-ic">♥</text><text>{{me.liked ? '已喜欢开发者' : '喜欢开发者'}}</text></view>
+    <view class="like-n">{{me.likeCount}} 人喜欢</view>
+  </view>
+
+  <view class="menu soft">
+    <view class="mi" bindtap="openGuide"><text>使用说明 · 被偷后怎么办</text><text class="arrow"></text></view>
+    <view class="mi" bindtap="openFont"><text>字号设置</text><text class="mi-v">{{fontName}}</text></view>
+    <view class="mi" bindtap="call112"><text>欧洲紧急电话 112</text><text class="mi-v red">拨打</text></view>
+    <view class="mi" bindtap="copy12308"><text>外交部领事保护热线 +86-10-12308</text><text class="mi-v">复制</text></view>
+    <view class="mi" data-t="terms" bindtap="openDoc"><text>用户协议</text><text class="arrow"></text></view>
+    <view class="mi" data-t="privacy" bindtap="openDoc"><text>隐私政策</text><text class="arrow"></text></view>
+    <view wx:if="{{me.isAdmin}}" class="mi" bindtap="toAdmin"><text>管理后台</text><text class="mi-v">审核上报与申诉</text></view>
+  </view>
+  <view class="ver" bindlongpress="askAdmin">小偷地图 · 共建无扒之旅</view>
+</view>
+
+<button class="share" open-type="share" hover-class="btn-hover">转发给朋友 ➦</button>
+
+<block wx:if="{{fontShow}}">
+  <view class="mask" bindtap="closeFont"></view>
+  <view class="sheet">
+    <view class="grip"></view>
+    <view class="sheet-title">字号设置</view>
+    <view class="fs-opts">
+      <view wx:for="{{fontLevels}}" wx:key="key" class="fs {{fontKey === item.key ? 'on' : ''}}" data-k="{{item.key}}" bindtap="setFont"><text style="font-size:{{item.size}}">{{item.name}}</text></view>
+    </view>
+  </view>
+</block>
+
+<block wx:if="{{adminAsk}}">
+  <view class="mask" bindtap="closeAdmin"></view>
+  <view class="sheet">
+    <view class="grip"></view>
+    <view class="sheet-title">管理员登录</view>
+    <input class="input" password value="{{code}}" placeholder="输入管理员邀请码" placeholder-class="ph" bindinput="onCode" />
+    <view class="btn btn-brand" style="margin-top:28rpx" hover-class="btn-hover" bindtap="adminLogin">登录</view>
+  </view>
+</block>
+
+<guide show="{{guideShow}}" bind:close="closeGuide"></guide>
