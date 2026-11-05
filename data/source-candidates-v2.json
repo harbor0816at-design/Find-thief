@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-29T11:39:38.356403+00:00",
+  "generated_at": "2026-11-05T13:24:30.112717+00:00",
   "status": "STAGING_ONLY_NOT_EVIDENCE",
   "source_total": 23,
   "metadata_ok": 10,
@@ -120,7 +120,7 @@
       "url": "https://www.icgc.cat/en/Tools-and-viewers/Viewers/Crime-map",
       "source_kind": "official_statistics",
       "collection_method": "metadata_only",
-      "status": "response_over_limit",
+      "status": "robots_unavailable_fail_closed",
       "theft_keyword_in_metadata": false,
       "ready_for_event_publication": false
     },
@@ -151,7 +151,7 @@
       "status": "metadata_ok",
       "title": "Banche dati e statistiche | Prefettura - Ufficio Territoriale del Governo di Roma",
       "meta_description": "",
-      "last_modified": "Thu, 29 Oct 2026 11:39:29 GMT",
+      "last_modified": "Thu, 05 Nov 2026 13:24:22 GMT",
       "published_meta": "",
       "theft_keyword_in_metadata": false,
       "ready_for_event_publication": false
