@@ -1,2 +1,5 @@
 node_modules/
-weapp/project.private.config.json
+project.private.config.json
+private.key
+env.txt
+cloudfunctions/api/admin-code.json

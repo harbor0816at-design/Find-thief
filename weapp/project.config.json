@@ -1,7 +1,7 @@
 {
   "description": "小偷地图 · 欧洲防扒微信小程序",
   "projectname": "xiaotou-map",
-  "appid": "touristappid",
+  "appid": "wx02fa7b94ea59dc91",
   "compileType": "miniprogram",
   "miniprogramRoot": "miniprogram/",
   "cloudfunctionRoot": "cloudfunctions/",
@@ -16,7 +16,24 @@
     "ignoreUploadUnusedFiles": true
   },
   "packOptions": {
-    "ignore": [],
+    "ignore": [
+      {
+        "type": "folder",
+        "value": "scripts"
+      },
+      {
+        "type": "folder",
+        "value": "node_modules"
+      },
+      {
+        "type": "file",
+        "value": "deploy.js"
+      },
+      {
+        "type": "file",
+        "value": "private.key"
+      }
+    ],
     "include": []
   },
   "editorSetting": {

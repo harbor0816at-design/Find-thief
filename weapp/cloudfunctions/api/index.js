@@ -187,7 +187,8 @@ const actions = {
   // ---------- 管理员 ----------
   async adminLogin({ code }, openid) {
     await ensureCollections();
-    const expected = process.env.ADMIN_INVITE_CODE;
+    let expected = process.env.ADMIN_INVITE_CODE;
+    if (!expected) { try { expected = require('./admin-code.json').code; } catch (e) { /* 未配置 */ } }
     if (!expected || expected.length < 8 || String(code || '') !== expected) throw new UserError('邀请码不正确');
     await db.collection('admins').doc(openid).set({ data: { _openid: openid, createdAt: db.serverDate() } });
     return { isAdmin: true };
