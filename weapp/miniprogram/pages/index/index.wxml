@@ -28,7 +28,7 @@
 
   <!-- 地图 -->
   <view class="map-card card">
-    <map id="map" class="map" latitude="{{lat}}" longitude="{{lon}}" scale="{{scale}}" markers="{{markers}}"
+    <map id="map" class="map" subkey="{{subkey}}" layer-style="{{layerStyle}}" latitude="{{lat}}" longitude="{{lon}}" scale="{{scale}}" markers="{{markers}}"
       show-location="{{showLoc}}" enable-poi="{{true}}" bindmarkertap="onMarker" bindregionchange="onRegion"
       bindpoitap="onPoi" bindtap="onMapTap"></map>
     <view class="toggles">

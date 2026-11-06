@@ -3,6 +3,7 @@ const R = require('../../utils/rules');
 const font = require('../../utils/font');
 const nav = require('../../utils/nav');
 const CITIES = require('../../utils/cities');
+const cfg = require('../../utils/config');
 
 const app = getApp();
 function distM(a, b, c, d) {
@@ -13,7 +14,8 @@ function distM(a, b, c, d) {
 Page({
   data: {
     rootFs: '16px', navTop: 88,
-    cityLabels: CITIES.map(c => c.name + '（' + c.country + '）'), cityIdx: 0, cityName: '罗马',
+    cityLabels: CITIES.map(c => c.name + '（' + c.country + '）'), cityIdx: 0, cityName: '伦敦',
+    subkey: cfg.mapSubkey || '', layerStyle: cfg.mapLayerStyle || 1,
     lat: 41.9028, lon: 12.4964, scale: 12, markers: [], showLoc: false,
     toggles: R.TYPES.map(t => ({ key: t.key, on: true, icon: R.pin(t.key, 'admin', 0) })),
     kw: '', results: [], showResults: false, searching: false,
@@ -43,16 +45,16 @@ Page({
     if (this.needReload) { this.needReload = false; this.load(); }
   },
   onShareAppMessage() {
-    return { title: '小偷地图｜出发前看看' + this.data.cityName + '哪里扒手多', path: '/pages/index/index?city=' + encodeURIComponent(this.data.cityName) };
+    return { title: '小偷地图｜出发前看看' + this.data.cityName + '哪里扒手多', path: '/pages/index/index?city=' + encodeURIComponent(this.data.cityName), imageUrl: '/images/share.png' };
   },
   onShareTimeline() {
-    return { title: '小偷地图｜共建无扒之旅', query: 'city=' + encodeURIComponent(this.data.cityName) };
+    return { title: '小偷地图｜共建无扒之旅', query: 'city=' + encodeURIComponent(this.data.cityName), imageUrl: '/images/share.png' };
   },
 
   /* ---------- 城市与数据 ---------- */
   useCity(name, move) {
     let i = CITIES.findIndex(c => c.name === name);
-    if (i < 0) i = Math.max(0, CITIES.findIndex(c => c.name === '罗马'));
+    if (i < 0) i = Math.max(0, CITIES.findIndex(c => c.name === '伦敦'));
     const c = CITIES[i];
     app.globalData.city = c.name;
     try { wx.setStorageSync('xt.city', c.name); } catch (e) { /* 忽略 */ }
