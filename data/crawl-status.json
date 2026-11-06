@@ -1,12 +1,14 @@
 {
-  "generated_at": "2026-11-05T14:45:40.674961+00:00",
+  "generated_at": "2026-11-06T14:24:12.090612+00:00",
   "sources": [
     {
       "name": "ICGC Crime map",
       "url": "https://www.icgc.cat/en/Tools-and-viewers/Viewers/Crime-map",
       "rights": "check-source-license",
-      "status": "skipped",
-      "reason": "cannot verify robots.txt: URLError"
+      "status": "ok",
+      "http_status": 200,
+      "page_title": "Crime map | icgc",
+      "reason": "HTML metadata only; not a licensed event dataset"
     },
     {
       "name": "Pickpockets.live",
