@@ -1,4 +1,4 @@
-// 小偷地图 · 云函数 api（单入口路由）
+// 小偷在哪 · 云函数 api（单入口路由）
 // 小程序端所有读写都经过这里；数据库集合对客户端一律不开放。
 'use strict';
 const cloud = require('wx-server-sdk');

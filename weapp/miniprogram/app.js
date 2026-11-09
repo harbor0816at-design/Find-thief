@@ -5,7 +5,7 @@ App({
   globalData: { city: '伦敦', pendingPlace: null },
   onLaunch() {
     if (!wx.cloud) {
-      wx.showModal({ title: '版本过低', content: '请升级微信后再使用小偷地图', showCancel: false });
+      wx.showModal({ title: '版本过低', content: '请升级微信后再使用小偷在哪', showCancel: false });
       return;
     }
     wx.cloud.init({ env: cfg.cloudEnv || undefined, traceUser: true });

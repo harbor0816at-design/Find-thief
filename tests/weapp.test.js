@@ -1,4 +1,4 @@
-// 小偷地图微信小程序：工程完整性 + 云函数全流程（内存数据库模拟 wx-server-sdk）
+// 小偷在哪微信小程序：工程完整性 + 云函数全流程（内存数据库模拟 wx-server-sdk）
 const test = require('node:test'), assert = require('node:assert/strict'), fs = require('node:fs'), path = require('node:path'), Module = require('node:module');
 const W = path.join(__dirname, '..', 'weapp'), MP = path.join(W, 'miniprogram'), CF = path.join(W, 'cloudfunctions', 'api');
 const read = p => fs.readFileSync(p, 'utf8');

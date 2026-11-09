@@ -45,10 +45,10 @@ Page({
     if (this.needReload) { this.needReload = false; this.load(); }
   },
   onShareAppMessage() {
-    return { title: '小偷地图｜出发前看看' + this.data.cityName + '哪里扒手多', path: '/pages/index/index?city=' + encodeURIComponent(this.data.cityName), imageUrl: '/images/share.png' };
+    return { title: '小偷在哪｜出发前看看' + this.data.cityName + '哪里扒手多', path: '/pages/index/index?city=' + encodeURIComponent(this.data.cityName), imageUrl: '/images/share.png' };
   },
   onShareTimeline() {
-    return { title: '小偷地图｜共建无扒之旅', query: 'city=' + encodeURIComponent(this.data.cityName), imageUrl: '/images/share.png' };
+    return { title: '小偷在哪｜共建无扒之旅', query: 'city=' + encodeURIComponent(this.data.cityName), imageUrl: '/images/share.png' };
   },
 
   /* ---------- 城市与数据 ---------- */

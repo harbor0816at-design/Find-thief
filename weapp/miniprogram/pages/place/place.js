@@ -10,7 +10,7 @@ Page({
   onShow() { this.setData({ rootFs: font.size() }); },
   onShareAppMessage() {
     const p = this.data.place;
-    return { title: p ? '小偷地图｜' + p.city + ' ' + p.name + ' 的失窃记录' : '小偷地图', path: '/pages/place/place?id=' + this.id };
+    return { title: p ? '小偷在哪｜' + p.city + ' ' + p.name + ' 的失窃记录' : '小偷在哪', path: '/pages/place/place?id=' + this.id };
   },
 
   load() {

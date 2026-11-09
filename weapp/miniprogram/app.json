@@ -13,7 +13,7 @@
   "window": {
     "navigationBarBackgroundColor": "#F7F6FF",
     "navigationBarTextStyle": "black",
-    "navigationBarTitleText": "小偷地图",
+    "navigationBarTitleText": "小偷在哪",
     "backgroundColor": "#F7F6FF",
     "backgroundTextStyle": "dark"
   },

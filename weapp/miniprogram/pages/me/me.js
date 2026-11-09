@@ -11,7 +11,7 @@ Page({
   },
   onLoad() { this.setData({ navTop: nav.top() }); },
   onShow() { this.syncFont(); this.load(); },
-  onShareAppMessage() { return { title: '小偷地图｜出发前看看哪里扒手多', path: '/pages/index/index', imageUrl: '/images/share.png' }; },
+  onShareAppMessage() { return { title: '小偷在哪｜出发前看看哪里扒手多', path: '/pages/index/index', imageUrl: '/images/share.png' }; },
   syncFont() { const k = font.get(); this.setData({ rootFs: font.size(), fontKey: k, fontName: font.LEVELS.find(l => l.key === k).name }); },
   load() { api.call('me').then(me => this.setData({ me })).catch(() => {}); },
 

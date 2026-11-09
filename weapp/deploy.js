@@ -1,5 +1,5 @@
-// 小偷地图 · 一键发布：① 从 GitHub 同步最新代码 ② 部署云函数 api ③ 上传小程序代码（开发版）
-// 用法：双击「发布小偷地图.bat」。本机文件 private.key / env.txt / admin-code.json 永远不会被覆盖。
+// 小偷在哪 · 一键发布：① 从 GitHub 同步最新代码 ② 部署云函数 api ③ 上传小程序代码（开发版）
+// 用法：双击「发布小偷在哪.bat」。本机文件 private.key / env.txt / admin-code.json 永远不会被覆盖。
 'use strict';
 const fs = require('fs');
 const os = require('os');
@@ -83,7 +83,7 @@ async function syncFromGitHub() {
   const version = '1.0.' + (now.getMonth() + 1) + String(now.getDate()).padStart(2, '0') + String(now.getHours()).padStart(2, '0') + String(now.getMinutes()).padStart(2, '0');
   console.log('[3/3] 上传小程序代码，版本 ' + version + ' …');
   await ci.upload({
-    project, version, desc: '小偷地图 ' + version, robot: 1,
+    project, version, desc: '小偷在哪 ' + version, robot: 1,
     setting: { es6: true, es7: true, minify: true, autoPrefixWXSS: true, minifyWXML: true, minifyWXSS: true }
   });
   console.log('      代码已上传为开发版');

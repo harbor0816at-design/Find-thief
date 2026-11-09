@@ -23,7 +23,7 @@ const share = `<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="800"
   <rect x="60" y="60" width="880" height="150" rx="32" fill="#fff" stroke="#1B1D3A" stroke-width="6"/>
   <text x="100" y="152" font-size="64" font-weight="900" fill="#1B1D3A" font-family="Noto Sans CJK SC,PingFang SC,sans-serif">出发前，看看哪里扒手多</text>
   <rect x="60" y="680" width="420" height="80" rx="40" fill="#FFD43B" stroke="#1B1D3A" stroke-width="5"/>
-  <text x="270" y="733" text-anchor="middle" font-size="38" font-weight="900" fill="#1B1D3A" font-family="Noto Sans CJK SC,PingFang SC,sans-serif">小偷地图 · 欧洲</text></svg>`;
+  <text x="270" y="733" text-anchor="middle" font-size="38" font-weight="900" fill="#1B1D3A" font-family="Noto Sans CJK SC,PingFang SC,sans-serif">小偷在哪 · 欧洲防扒</text></svg>`;
 (async () => {
   const b = await pw.chromium.launch(process.env.CHROME ? { executablePath: process.env.CHROME } : {});
   const p = await b.newPage();

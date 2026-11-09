@@ -11,7 +11,7 @@
   <scroll-view scroll-y class="g-body" enhanced show-scrollbar="{{false}}">
     <view class="notice">
       <view class="n-title">使用前须知</view>
-      <view class="n-text">小偷地图汇集欧洲各地有出处的失窃记录：警方通报、官方开放数据、媒体报道，以及经管理员审核的游客上报，帮你出发前了解哪里需要多留心。</view>
+      <view class="n-text">小偷在哪汇集欧洲各地有出处的失窃记录：警方通报、官方开放数据、媒体报道，以及经管理员审核的游客上报，帮你出发前了解哪里需要多留心。</view>
       <view class="n-li">游客上报只代表上报人的经历，不代表警方或平台作出的事实认定。</view>
       <view class="n-li">审查人数表示参与判断的用户数量，不代表专业鉴定人数。</view>
       <view class="n-li">记录多少不等于遇窃概率，人多的景点记录自然更多。</view>

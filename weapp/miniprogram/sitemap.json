@@ -1,5 +1,5 @@
 {
-  "desc": "小偷地图：首页与地点详情允许被微信搜索收录，管理与个人页面不收录",
+  "desc": "小偷在哪：首页与地点详情允许被微信搜索收录，管理与个人页面不收录",
   "rules": [
     { "action": "allow", "page": "pages/index/index" },
     { "action": "allow", "page": "pages/place/place" },

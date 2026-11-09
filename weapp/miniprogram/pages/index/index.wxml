@@ -3,7 +3,7 @@
   <!-- 标题栏 -->
   <view class="hd">
     <view class="brand">
-      <text class="brand-name">小偷地图</text>
+      <text class="brand-name">小偷在哪</text>
       <text class="slogan">共建无扒之旅</text>
     </view>
     <view class="pill" hover-class="btn-hover" bindtap="openFont">字号设置</view>
