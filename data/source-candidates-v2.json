@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-19T14:36:26.319774+00:00",
+  "generated_at": "2026-11-26T15:34:18.616903+00:00",
   "status": "STAGING_ONLY_NOT_EVIDENCE",
   "source_total": 23,
   "metadata_ok": 10,
@@ -151,7 +151,7 @@
       "status": "metadata_ok",
       "title": "Banche dati e statistiche | Prefettura - Ufficio Territoriale del Governo di Roma",
       "meta_description": "",
-      "last_modified": "Thu, 19 Nov 2026 14:36:17 GMT",
+      "last_modified": "Thu, 26 Nov 2026 15:34:11 GMT",
       "published_meta": "",
       "theft_keyword_in_metadata": false,
       "ready_for_event_publication": false
