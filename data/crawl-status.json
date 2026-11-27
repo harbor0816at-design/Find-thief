@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-26T17:03:09.331964+00:00",
+  "generated_at": "2026-11-27T16:48:02.643007+00:00",
   "sources": [
     {
       "name": "ICGC Crime map",
@@ -25,7 +25,7 @@
       "rights": "license-required-for-events",
       "status": "ok",
       "http_status": 200,
-      "page_title": "One moment, please...Loader",
+      "page_title": "Home - PickpocketMaps.com",
       "reason": "HTML metadata only; not a licensed event dataset"
     },
     {
